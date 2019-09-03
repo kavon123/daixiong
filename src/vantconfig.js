@@ -1,4 +1,6 @@
 import Vue from 'vue'
-import { Button } from 'vant';
+import { Button, NavBar, NoticeBar } from 'vant';
 
-Vue.use(Button);
+Vue.use(Button)
+    .use(NavBar)
+    .use(NoticeBar)
