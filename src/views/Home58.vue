@@ -145,18 +145,21 @@
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
+    <m-loading :show="true" />
   </div>
 </template>
 
 <script>
 import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
+import mLoading from "@/components/m-loading";
 
 export default {
   name: "home",
   components: {
     mNav,
-    mBar
+    mBar,
+    mLoading
   },
   methods: {
     goToPage() {
@@ -166,15 +169,6 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.gray {
-  -webkit-filter: grayscale(100%);
-  -moz-filter: grayscale(100%);
-  -ms-filter: grayscale(100%);
-  -o-filter: grayscale(100%);
-  filter: grayscale(100%);
-  filter: gray;
-}
-
 .g-ct {
   overflow: hidden;
   margin-top: -30px;

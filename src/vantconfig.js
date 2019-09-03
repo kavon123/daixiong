@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { Button, NavBar, NoticeBar, Icon, Row, Col } from 'vant';
+import { Button, NavBar, NoticeBar, Icon, Row, Col, Loading } from 'vant';
 
 Vue.use(Button)
     .use(NavBar)
@@ -7,3 +7,4 @@ Vue.use(Button)
     .use(Icon)
     .use(Row)
     .use(Col)
+    .use(Loading)

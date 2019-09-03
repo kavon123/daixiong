@@ -10,14 +10,14 @@ export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
-    // {
-    //   path: '/',
-    //   name: 'home',
-    //   component: Home58
-    // },
     {
       path: '/',
-      name: 'home',
+      name: 'home1',
+      component: Home58
+    },
+    {
+      path: '/home2',
+      name: 'home2',
       component: HomeYG
     },
     {
