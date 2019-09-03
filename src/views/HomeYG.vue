@@ -5,14 +5,17 @@
       text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
     />
     <div class="g-ct">
-      <div class="u-but">了解58棋牌</div>
+      <div class="u-but">了解YG棋牌</div>
       <div class="g-rules-ct">
-        <div class="u-title">代理规则</div>
         <div class="u-rules_text">
-          1. 无需您下载，好友通过您分享的链接下载并注册58棋牌，游戏1分钟，您即可获得2元奖励。
+          1.好友通过您分享的链接注册YG娱乐，进入游戏1分钟，您即可获得2元佣金。
           <br />邀请奖励在本页面提现
         </div>
-        <div class="u-rules_text">2. 佣金模式是以一级返佣一级，每万元最高返佣70元返佣奖励需在“58棋牌”中提现</div>
+        <div class="u-rules_text">
+          2.返佣奖励=直属下级返佣（流水每10万则返佣10000元）+非直属下级返佣（返给上级佣金*级数*30%），详见
+          <span>返佣说明</span>
+          <br />返佣奖励需在“YG电竞”中提现
+        </div>
       </div>
       <div class="g-sum-ct">
         <div class="m-user">
@@ -22,7 +25,7 @@
         </div>
         <div class="m-sum-ct">
           <div class="sum_item">
-            <div class="u-title">邀请奖励</div>
+            <div class="u-title">如何赚钱</div>
             <div class="sum_item_ct">
               <img class="sum_gold" src="@/assets/images/gold.png" alt />
               <div class="sum_num">
@@ -35,7 +38,7 @@
             </div>
           </div>
           <div class="sum_item">
-            <div class="u-title">返佣奖励</div>
+            <div class="u-title">如何赚钱</div>
             <div class="sum_item_ct">
               <img class="sum_golds" src="@/assets/images/golds.png" alt />
               <div class="sum_num">
@@ -50,7 +53,6 @@
         </div>
       </div>
       <div class="g-user-list">
-        <div class="u-title">我的邀请</div>
         <van-row type="flex" class="g-table_head">
           <van-col span="6">用户名</van-col>
           <van-col span="6">收益</van-col>
@@ -58,13 +60,10 @@
           <van-col span="5">状态</van-col>
         </van-row>
         <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5">已发放</van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
+          <van-col span="6">
+            <div class="table_name">asdfasdf</div>
+            <span>*****0128</span>
+          </van-col>
           <van-col span="6" class="u-num">2元</van-col>
           <van-col span="6">20190831</van-col>
           <van-col span="5" class="u-state">
@@ -73,7 +72,10 @@
           </van-col>
         </van-row>
         <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
+          <van-col span="6">
+            <div class="table_name">asdfasdf</div>
+            <span>*****0128</span>
+          </van-col>
           <van-col span="6" class="u-num">2元</van-col>
           <van-col span="6">20190831</van-col>
           <van-col span="5" class="u-state">
@@ -82,7 +84,10 @@
           </van-col>
         </van-row>
         <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
+          <van-col span="6">
+            <div class="table_name">asdfasdf</div>
+            <span>*****0128</span>
+          </van-col>
           <van-col span="6" class="u-num">2元</van-col>
           <van-col span="6">20190831</van-col>
           <van-col span="5" class="u-state">
@@ -91,7 +96,10 @@
           </van-col>
         </van-row>
         <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
+          <van-col span="6">
+            <div class="table_name">asdfasdf</div>
+            <span>*****0128</span>
+          </van-col>
           <van-col span="6" class="u-num">2元</van-col>
           <van-col span="6">20190831</van-col>
           <van-col span="5" class="u-state">
@@ -100,7 +108,10 @@
           </van-col>
         </van-row>
         <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
+          <van-col span="6">
+            <div class="table_name">asdfasdf</div>
+            <span>*****0128</span>
+          </van-col>
           <van-col span="6" class="u-num">2元</van-col>
           <van-col span="6">20190831</van-col>
           <van-col span="5" class="u-state">
@@ -114,15 +125,14 @@
         </div>
       </div>
       <div class="g-tutorial-ct">
-        <div class="u-title">如何赚钱</div>
         <div class="small_coup">推广小妙招</div>
         <div class="tutorial_title">如何获得邀请奖励？</div>
         <div class="g_img_ct">
-          <img class="steps" src="@/assets/images/58steps1.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
-          <img class="steps" src="@/assets/images/58steps2.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
-          <img class="steps" src="@/assets/images/58steps3.png" alt />
+          <img class="steps" src="@/assets/images/YGsteps1.png" alt />
+          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
+          <img class="steps" src="@/assets/images/YGsteps2.png" alt />
+          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
+          <img class="steps" src="@/assets/images/YGsteps3.png" alt />
         </div>
         <div class="g_img_ct">
           <div class="steps_text">邀请好友</div>
@@ -131,9 +141,9 @@
         </div>
         <div class="tutorial_title">如何获得返佣奖励？</div>
         <div class="g_img_ct">
-          <img class="steps" src="@/assets/images/58steps1.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
-          <img class="steps" src="@/assets/images/58steps2.png" alt />
+          <img class="steps" src="@/assets/images/YGsteps1.png" alt />
+          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
+          <img class="steps" src="@/assets/images/YGsteps2.png" alt />
         </div>
         <div class="g_img_ct">
           <div class="steps_text">邀请的好友投注</div>
@@ -165,6 +175,7 @@ export default {
   }
 };
 </script>
+
 <style lang='less' scoped>
 .gray {
   -webkit-filter: grayscale(100%);
@@ -179,11 +190,30 @@ export default {
   overflow: hidden;
   margin-top: -30px;
   width: 375px;
-  height: 1995px;
-  background-image: url("../assets/images/58bg.png");
+  height: 2130px;
+  background-image: url("../assets/images/YGbg.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
+  .u-title {
+    text-align: center;
+    color: #fdfe4a;
+    height: 20px;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 21px;
+    background-image: -webkit-gradient(
+      linear,
+      0 0,
+      0 bottom,
+      from(#eee7d5),
+      to(#ffe9a4)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 28px;
+    margin-bottom: 16px;
+  }
   .u-but {
     width: 145px;
     height: 45px;
@@ -199,9 +229,9 @@ export default {
   }
   .g-rules-ct {
     width: 375px;
-    margin-top: 42px;
-    height: 212px;
-    background-image: url("../assets/images/58bgct1.png");
+    margin-top: 35px;
+    height: 265px;
+    background-image: url("../assets/images/YGbgct1.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -211,38 +241,25 @@ export default {
     .u-rules_text {
       width: 300px;
       font-size: 13px;
-      color: #e39500;
+      color: #a4a69b;
       line-height: 21px;
       padding-bottom: 15px;
+      margin-top: 75px;
+      span {
+        color: #ffd85a;
+      }
     }
     .u-rules_text:last-child {
       padding-bottom: 0;
+      margin-top: 0;
     }
-  }
-  .u-title {
-    color: #efc066;
-    height: 20px;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 21px;
-    background-image: -webkit-gradient(
-      linear,
-      0 0,
-      0 bottom,
-      from(#fff6d4),
-      to(#ebb74b)
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-top: 28px;
-    margin-bottom: 16px;
   }
 
   .g-sum-ct {
     width: 375px;
     margin-top: 30px;
-    height: 313px;
-    background-image: url("../assets/images/58bgct2.png");
+    height: 336px;
+    background-image: url("../assets/images/YGbgct2.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -264,12 +281,9 @@ export default {
       .sum_item_ct {
         width: 145px;
         height: 128px;
-        border: 1px solid #f3c376;
-        background: linear-gradient(
-          0deg,
-          rgba(60, 17, 2, 1) 0%,
-          rgba(108, 32, 5, 1) 100%
-        );
+        background: rgba(55, 53, 105, 1);
+        border: 1px solid rgba(55, 55, 99, 1);
+        box-shadow: 0px 0px 4px 0px rgba(255, 255, 255, 1);
         border-radius: 11px;
         display: flex;
         flex-direction: column;
@@ -279,11 +293,6 @@ export default {
         width: 145px;
         margin-right: 10px;
         margin-left: 10px;
-        .u-title {
-          text-align: center;
-          margin-top: 30px;
-          margin-bottom: 15px;
-        }
       }
       .sum_but {
         width: 122px;
@@ -317,21 +326,21 @@ export default {
   }
   .g-user-list {
     width: 375px;
-    margin-top: 28px;
-    height: 339px;
-    background-image: url("../assets/images/58bgct3.png");
+    height: 392px;
+    background-image: url("../assets/images/YGbgct3.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding-top: 68px;
     .g-table_head {
       width: 85vw;
       margin-bottom: 16px;
       .van-col {
         text-align: center;
-        color: #efc066;
+        color: #c5d7fa;
         font-size: 15px;
         font-weight: 500;
       }
@@ -342,10 +351,18 @@ export default {
 
       .van-col {
         text-align: center;
-        color: #e39500;
+        color: #a4a69b;
+        height: 34px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        .table_name {
+          color: #a5a5c1;
+        }
       }
+
       .u-num {
-        color: #edd221;
+        color: #ffd85a;
         font-size: 15px;
         font-weight: 500;
       }
@@ -356,7 +373,7 @@ export default {
           position: absolute;
           width: 32px;
           display: block;
-          top: 0;
+          top: 8px;
           left: 56px;
         }
       }
@@ -372,12 +389,13 @@ export default {
       margin-top: 12px;
     }
   }
+
   .g-tutorial-ct {
     position: relative;
     width: 375px;
     margin-top: 30px;
-    height: 400px;
-    background-image: url("../assets/images/58bgct4.png");
+    height: 429px;
+    background-image: url("../assets/images/YGbgct4.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
@@ -385,34 +403,37 @@ export default {
     display: flex;
     align-items: center;
     .small_coup {
-      position: absolute;
-      color: #ffee2e;
-      top: 32px;
-      left: 260px;
+      color: #ffd85a;
+      font-weight: 500;
+      margin-top: 60px;
     }
     .tutorial_title {
-      color: #efc066;
+      color: #c5d7fa;
       font-size: 17px;
+      height: 17px;
       font-weight: 500;
-      margin-bottom: 15px;
-      margin-top: 30px;
+      margin-bottom: 20px;
+      margin-top: 24px;
     }
     .g_img_ct {
       display: flex;
+      align-items: center;
       .steps {
-        width: 50px;
+        width: 70px;
+        height: 70px;
         display: block;
       }
       .arrow {
-        width: 58px;
+        width: 46px;
+        height: 34px;
         display: block;
+        margin-top: -15px;
       }
     }
     .steps_text {
-      margin-top: 12px;
       font-weight: 500;
-      color: #e39500;
-      width: 108px;
+      color: #ffffd1;
+      width: 116px;
       text-align: center;
     }
   }
