@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import HomeYG from './views/HomeYG.vue'
 import Home58 from './views/Home58.vue'
 
 
@@ -18,7 +18,7 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home58
+      component: HomeYG
     },
     {
       path: '/about',

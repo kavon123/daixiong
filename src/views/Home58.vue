@@ -166,52 +166,6 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.g-tutorial-ct {
-  position: relative;
-  width: 375px;
-  margin-top: 30px;
-  height: 400px;
-  background-image: url("../assets/images/58bgct4.png");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-  flex-direction: column;
-  display: flex;
-  align-items: center;
-  .small_coup {
-    position: absolute;
-    color: #ffee2e;
-    top: 32px;
-    left: 260px;
-  }
-  .tutorial_title {
-    color: #efc066;
-    font-size: 17px;
-    font-weight: 500;
-    margin-bottom: 15px;
-    margin-top: 30px;
-  }
-  .g_img_ct {
-    display: flex;
-    .steps {
-      width: 50px;
-      display: block;
-    }
-    .arrow {
-      width: 58px;
-      display: block;
-    }
-  }
-  .steps_text {
-    margin-top: 12px;
-    font-weight: 500;
-    color: #e39500;
-    width: 108px;
-    text-align: center;
-  }
-}
-</style>
-<style lang='less' scoped>
 .g-ct {
   overflow: hidden;
   margin-top: -30px;
@@ -409,7 +363,50 @@ export default {
       margin-top: 12px;
     }
   }
-  // _______________________________________________________
+  .g-tutorial-ct {
+    position: relative;
+    width: 375px;
+    margin-top: 30px;
+    height: 400px;
+    background-image: url("../assets/images/58bgct4.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    .small_coup {
+      position: absolute;
+      color: #ffee2e;
+      top: 32px;
+      left: 260px;
+    }
+    .tutorial_title {
+      color: #efc066;
+      font-size: 17px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      margin-top: 30px;
+    }
+    .g_img_ct {
+      display: flex;
+      .steps {
+        width: 50px;
+        display: block;
+      }
+      .arrow {
+        width: 58px;
+        display: block;
+      }
+    }
+    .steps_text {
+      margin-top: 12px;
+      font-weight: 500;
+      color: #e39500;
+      width: 108px;
+      text-align: center;
+    }
+  }
 
   .g-best {
     width: 226px;
