@@ -6,7 +6,23 @@
     />
     <div class="g-ct">
       <div class="u-but">了解YG娱乐</div>
-      <div class="g-rules-ct"></div>
+      <div class="g-rules-ct">
+        <div class="u-rules_text">
+          1.好友通过您分享的链接注册YG娱乐，进入游戏1分钟，您即可获得2元佣金。
+          <br />邀请奖励在本页面提现
+        </div>
+        <div class="u-rules_text">
+          2.返佣奖励=直属下级返佣（流水每10万则返佣10000元）+非直属下级返佣（返给上级佣金*级数*30%），详见
+          <span class="u-rules_inst">返佣说明</span>
+          <br />返佣奖励需在“YG电竞”中提现
+        </div>
+      </div>
+      <div class="g-sum-ct"></div>
+      <div class="g-tutorial-ct"></div>
+      <div class="g-best">
+        <img src="@/assets/images/best.png" alt />
+      </div>
+      <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
   </div>
 </template>
@@ -32,7 +48,7 @@ export default {
 .g-ct {
   overflow: hidden;
   margin-top: -30px;
-  width: 100%;
+  width: 375px;
   height: 2062px;
   background-image: url("../assets/images/bg.png");
   background-repeat: no-repeat;
@@ -52,11 +68,56 @@ export default {
     color: #fff12e;
   }
   .g-rules-ct {
-    height: 2062px;
+    width: 375px;
+    margin-top: 35px;
+    height: 314px;
     background-image: url("../assets/images/rules_bg.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center center;
+    padding: 75px 38px 0 38px;
+    .u-rules_text {
+      width: 300px;
+      font-size: 13px;
+      font-weight: 400;
+      color: rgba(164, 166, 155, 1);
+      line-height: 21px;
+      padding-bottom: 19px;
+      .u-rules_inst {
+        color: #ffd85a;
+      }
+    }
+    .u-rules_text:last-child {
+      padding-bottom: 0;
+    }
+  }
+  .g-sum-ct {
+  }
+
+  .g-tutorial-ct {
+    width: 375px;
+    margin-top: 35px;
+    height: 314px;
+    background-image: url("../assets/images/rules_bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+  }
+  .g-best {
+    width: 226px;
+    height: 52px;
+    margin: 58px auto 21px;
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+  .footer {
+    font-size: 12px;
+    font-weight: 400;
+    color: rgba(137, 134, 128, 1);
+    line-height: 22px;
+    text-align: center;
   }
 }
 </style>
