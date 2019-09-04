@@ -125,7 +125,7 @@
         </div>
       </div>
       <div class="g-tutorial-ct">
-        <div class="small_coup">推广小妙招</div>
+        <div class="small_coup" @click="fnPop('bestShow',true)">推广小妙招</div>
         <div class="tutorial_title">如何获得邀请奖励？</div>
         <div class="g_img_ct">
           <img class="steps" src="@/assets/images/YGsteps1.png" alt />
@@ -161,7 +161,7 @@
     <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
     <!-- <m-rele-err :show="show" @close="fnClose" /> -->
     <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
-    <m-best :show="show" @close="fnClose" />
+    <m-best :show="bestShow" @close="fnPop" />
   </div>
 </template>
 
@@ -192,15 +192,16 @@ export default {
   data() {
     return {
       show: true,
-      first: false
+      first: false,
+      bestShow: false
     };
   },
   methods: {
     goToPage() {
       this.$router.push("/about");
     },
-    fnClose(vla) {
-      this.show = vla;
+    fnPop(key, vla) {
+      this[key] = vla;
     }
   }
 };

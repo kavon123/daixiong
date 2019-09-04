@@ -11,7 +11,7 @@
             <div>3.通过直播平台抖音、快手等资源引流</div>
             <div>4.推荐亲友，一传十，十传百</div>
           </div>
-          <div class="but" @click="fnLogin">知道了</div>
+          <div class="but" @click="fnClose">知道了</div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />
       </div>
@@ -31,10 +31,7 @@ export default {
 
   methods: {
     fnClose() {
-      this.$emit("close", false);
-    },
-    fnLogin() {
-      console.log("object");
+      this.$emit("close", "bestShow", false);
     }
   }
 };
