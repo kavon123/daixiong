@@ -20,8 +20,13 @@
       <div class="g-sum-ct">
         <div class="m-user">
           <van-icon name="user-o" color="#EBB84E" />
-          <span class="u-user">159622212</span>
-          <van-icon name="wap-nav" color="#ffee2e" />
+          <template v-if="!bIsLogin">
+            <span class="u-user">159622212</span>
+            <van-icon name="wap-nav" color="#ffee2e" @click="fnPop('generateShow',true)" />
+          </template>
+          <template v-else>
+            <span class="u-user" @click="fnPop('loginShow',true)">登录</span>
+          </template>
         </div>
         <div class="m-sum-ct">
           <div class="sum_item">
@@ -34,7 +39,12 @@
               <div class="sum_add">累计已获得123元</div>
             </div>
             <div class="sum_but">
-              <img src="@/assets/images/transfer.png" alt />
+              <img
+                :class="bIsLogin?'gray':''"
+                src="@/assets/images/transfer.png"
+                @click="fnWithdrawal"
+                alt
+              />
             </div>
           </div>
           <div class="sum_item">
@@ -47,7 +57,7 @@
               <div class="sum_add">累计已获得123元</div>
             </div>
             <div class="sum_but">
-              <img src="@/assets/images/withdrawal.png" alt />
+              <img :class="bIsLogin?'gray':''" src="@/assets/images/withdrawal.png" alt />
             </div>
           </div>
         </div>
@@ -157,11 +167,12 @@
     </div>
     <m-loading :show="loading" @close="fnPop" />
     <m-generate :show="generateShow" :data="oUserinfo" @close="fnPop" />
-    <!-- <m-login :show="true" @close="fnClose" /> -->
+    <m-login :show="loginShow" @fnLogin="fnLogin" @close="fnPop" />
     <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
     <m-best :show="bestShow" @close="fnPop" />
+    <m-withdrawal :show="withdrawal" @close="fnPop" />
   </div>
 </template>
 
@@ -177,6 +188,7 @@ import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
 import mContacts from "@/components/m-contacts";
 import mBest from "@/components/m-best";
+import mWithdrawal from "@/components/m-withdrawal";
 
 export default {
   name: "home",
@@ -189,17 +201,21 @@ export default {
     mReleSuc,
     mReleErr,
     mContacts,
-    mBest
+    mBest,
+    mWithdrawal
   },
   data() {
     return {
+      loginShow: false,
+      withdrawal: false,
       loading: false,
       show: true,
       first: false,
       bestShow: false,
       generateShow: false,
       errShow: false,
-      oUserinfo: {}
+      oUserinfo: {},
+      bIsLogin: true
     };
   },
   created() {
@@ -211,6 +227,15 @@ export default {
     },
     fnPop(key, vla) {
       this[key] = vla;
+    },
+    fnWithdrawal() {
+      if (this.bIsLogin) return;
+      this.withdrawal = true;
+    },
+    fnLogin(obj) {
+      console.log("kylin");
+      this.bIsLogin = false;
+      this.oUserinfo = obj;
     },
     fnInfo() {
       // $api
@@ -246,15 +271,15 @@ export default {
           _this.loading = false;
           if (res.code === 0) {
             _this.oUserinfo = res.datas;
+            _this.bIsLogin = false;
             if (!res.datas.hasBind) {
-              _this.generateShow = true;
+              // _this.generateShow = true;
             }
           } else {
-            _this.errShow = true;
+            // _this.errShow = true;
           }
         })
         .catch(err => {
-          console.log(err);
           _this.loading = false;
         });
     }

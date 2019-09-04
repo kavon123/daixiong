@@ -71,7 +71,7 @@ export default {
       }, 1000);
     },
     fnClose() {
-      this.$emit("close", false);
+      this.$emit("close", "loginShow", false);
     },
     fnClearInput(key) {
       this[key] = "";
@@ -81,6 +81,14 @@ export default {
       setTimeout(() => {
         this.sPromptText = "登录成功";
         this.bLogin = true;
+        this.fnClose();
+        this.$emit("fnLogin", {});
+        setTimeout(() => {
+          this.bOver = false;
+          this.bLogin = false;
+          this.sUserName = "";
+          this.sPassword = "";
+        }, 1000);
       }, 1000);
     }
   }
