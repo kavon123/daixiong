@@ -156,7 +156,8 @@
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
     <m-loading :show="false" />
-    <m-generate :show="true" />
+    <!-- <m-generate :show="true" /> -->
+    <m-login :show="true" />
   </div>
 </template>
 
@@ -165,6 +166,7 @@ import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
 import mGenerate from "@/components/m-generate";
+import mLogin from "@/components/m-login";
 
 export default {
   name: "home",
@@ -172,7 +174,8 @@ export default {
     mNav,
     mBar,
     mLoading,
-    mGenerate
+    mGenerate,
+    mLogin
   },
   methods: {
     goToPage() {
