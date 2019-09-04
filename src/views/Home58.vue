@@ -5,7 +5,7 @@
       text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
     />
     <div class="g-ct">
-      <div class="u-but">了解58棋牌</div>
+      <div class="u-but" @click="fnJump">了解58棋牌</div>
       <div class="g-rules-ct">
         <div class="u-title">代理规则</div>
         <div class="u-rules_text">
@@ -17,8 +17,13 @@
       <div class="g-sum-ct">
         <div class="m-user">
           <van-icon name="user-o" color="#EBB84E" />
-          <span class="u-user">159622212</span>
-          <van-icon name="wap-nav" color="#ffee2e" />
+          <template v-if="!bIsLogin">
+            <span class="u-user">{{oUserinfo.userId}}</span>
+            <van-icon name="wap-nav" color="#ffee2e" @click="fnPop('generateShow',true)" />
+          </template>
+          <template v-else>
+            <span class="u-user" @click="fnInfo">登录</span>
+          </template>
         </div>
         <div class="m-sum-ct">
           <div class="sum_item">
@@ -31,7 +36,12 @@
               <div class="sum_add">累计已获得123元</div>
             </div>
             <div class="sum_but">
-              <img src="@/assets/images/transfer.png" alt />
+              <img
+                :class="bIsLogin?'gray':''"
+                src="@/assets/images/transfer.png"
+                @click="fnWithdrawal"
+                alt
+              />
             </div>
           </div>
           <div class="sum_item">
@@ -44,7 +54,7 @@
               <div class="sum_add">累计已获得123元</div>
             </div>
             <div class="sum_but">
-              <img src="@/assets/images/withdrawal.png" alt />
+              <img :class="bIsLogin?'gray':''" src="@/assets/images/withdrawal.png" alt />
             </div>
           </div>
         </div>
@@ -115,7 +125,7 @@
       </div>
       <div class="g-tutorial-ct">
         <div class="u-title">如何赚钱</div>
-        <div class="small_coup">推广小妙招</div>
+        <div class="small_coup" @click="fnPop('bestShow',true)">推广小妙招</div>
         <div class="tutorial_title">如何获得邀请奖励？</div>
         <div class="g_img_ct">
           <img class="steps" src="@/assets/images/58steps1.png" alt />
@@ -141,29 +151,130 @@
         </div>
       </div>
       <div class="g-best">
-        <img src="@/assets/images/best.png" alt />
+        <img src="@/assets/images/best.png" @click="fnBest" />
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-loading :show="true" />
+    <m-loading :show="loading" @close="fnPop" />
+    <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
+    <m-rele-suc :show="sucShow" :name="oUserinfo.userId" @close="fnPop" />
+    <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
+    <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
+    <m-best :show="bestShow" @close="fnPop" />
+    <m-withdrawal :show="withdrawal" @close="fnPop" />
   </div>
 </template>
 
 <script>
+import $api from "@/util/api.js";
+import myPromise from "@/util/tolo.js";
 import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
-
+import m58 from "@/components/m-generate/58";
+import mLogin from "@/components/m-login";
+import mReleSuc from "@/components/m-rele/success";
+import mReleErr from "@/components/m-rele/error";
+import mContacts from "@/components/m-contacts";
+import mBest from "@/components/m-best";
+import mWithdrawal from "@/components/m-withdrawal";
 export default {
   name: "home",
   components: {
     mNav,
     mBar,
-    mLoading
+    mLoading,
+    m58,
+    mLogin,
+    mReleSuc,
+    mReleErr,
+    mContacts,
+    mBest,
+    mWithdrawal
+  },
+  data() {
+    return {
+      sucShow: false,
+      withdrawal: false,
+      loading: false,
+      show: true,
+      first: false,
+      bestShow: false,
+      generateShow: false,
+      errShow: false,
+      oUserinfo: {},
+      bIsLogin: true
+    };
+  },
+  created() {
+    this.fnInfo();
   },
   methods: {
-    goToPage() {
-      this.$router.push("/about");
+    fnPop(key, vla) {
+      this[key] = vla;
+    },
+    fnWithdrawal() {
+      if (this.bIsLogin) return;
+      this.withdrawal = true;
+    },
+    fnPromoteList() {
+      this.$router.push("/promote");
+    },
+    fnBest() {
+      this.$router.push("/relative");
+    },
+    fnJump() {
+      console.log(this.oUserinfo.downloadUrl);
+    },
+    fnInfo() {
+      // $api
+      //   .postRequest("/app/user/v3/searchUserFriendPage", {
+      //     appVersion: "ceshi.com.android@1.0.6",
+      //     deviceType: 1,
+      //     devicenId: "1123",
+      //     param: "{'source':'2'}",
+      //     userID: 123
+      //   })
+      //   .then(res => {
+      //     console.log(res);
+      //   });
+      // $api.postRequest("/user/v3/login58").then(res => {
+      //   console.log(res);
+      // });
+      const _this = this;
+      _this.loading = true;
+      myPromise(1, {
+        code: 0,
+        msg: "",
+        datas: {
+          phone: "13812345682",
+          hasBind: 2,
+          pwd: "123456",
+          downloadUrl:
+            "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
+          commision: 0,
+          userId: "ttcm1vwb7k"
+        }
+      })
+        .then(res => {
+          _this.loading = false;
+          if (res.code === 0) {
+            _this.oUserinfo = res.datas;
+            _this.bIsLogin = false;
+            // 1 新注册(新生成) , 2新绑定 3 老账户
+            if (res.datas.hasBind === 1) {
+              _this.generateShow = true;
+            } else if (res.datas.hasBind === 2) {
+              _this.sucShow = true;
+            } else {
+            }
+          } else {
+            _this.errShow = true;
+          }
+        })
+        .catch(err => {
+          _this.loading = false;
+        });
     }
   }
 };

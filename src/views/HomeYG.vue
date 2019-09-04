@@ -166,11 +166,8 @@
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
     <m-loading :show="loading" @close="fnPop" />
-    <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
-    <!-- <m-YG :show="generateShow"  :data="oUserinfo" @close="fnPop" /> -->
-
+    <m-YG :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-login :show="loginShow" @fnLogin="fnLogin" @close="fnPop" />
-    <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
     <m-best :show="bestShow" @close="fnPop" />
@@ -184,9 +181,7 @@ import myPromise from "@/util/tolo.js";
 import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
-import m58 from "@/components/m-generate/58";
 import mYG from "@/components/m-generate/yg";
-
 import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
@@ -200,7 +195,6 @@ export default {
     mNav,
     mBar,
     mLoading,
-    m58,
     mYG,
     mLogin,
     mReleSuc,
@@ -227,9 +221,6 @@ export default {
     this.fnInfo();
   },
   methods: {
-    goToPage() {
-      this.$router.push("/about");
-    },
     fnPop(key, vla) {
       this[key] = vla;
     },
@@ -270,7 +261,7 @@ export default {
         msg: "",
         datas: {
           phone: "13812345682",
-          hasBind: false,
+          hasBind: 1,
           pwd: "123456",
           downloadUrl:
             "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
@@ -283,8 +274,12 @@ export default {
           if (res.code === 0) {
             _this.oUserinfo = res.datas;
             _this.bIsLogin = false;
-            if (!res.datas.hasBind) {
-              // _this.generateShow = true;
+            // 1 新注册(新生成) , 2新绑定 3 老账户
+            if (res.datas.hasBind === 1) {
+              _this.generateShow = true;
+            } else if (res.datas.hasBind === 2) {
+              _this.sucShow = true;
+            } else {
             }
           } else {
             // _this.errShow = true;

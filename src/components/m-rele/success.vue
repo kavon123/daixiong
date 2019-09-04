@@ -7,9 +7,9 @@
           <div class="title">已关联您的58账号</div>
           <div class="cnetent">
             <span>用户名称</span>
-            <div class="name">嗡嗡按销售出身</div>
+            <div class="name">{{name}}</div>
           </div>
-          <div class="but" @click="fnLogin">登录赚钱</div>
+          <div class="but" @click="fnClose">登录赚钱</div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />
       </div>
@@ -24,6 +24,10 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    name: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -32,10 +36,7 @@ export default {
 
   methods: {
     fnClose() {
-      this.$emit("close", false);
-    },
-    fnLogin() {
-      console.log("object");
+      this.$emit("close", "sucShow", false);
     }
   }
 };

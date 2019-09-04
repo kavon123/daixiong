@@ -7,7 +7,7 @@
           <img class="generate" src="./generate.png" alt />
           <div class="centent">
             <div class="item">
-              <div class="item_text">YG网址</div>
+              <div class="item_text">下载地址</div>
               <div class="item_input">baidu,com</div>
             </div>
             <div class="item">
@@ -138,6 +138,10 @@ export default {
           border-radius: 16px;
           line-height: 32px;
           text-align: center;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          padding: 0 15px;
         }
       }
     }
