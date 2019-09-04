@@ -23,14 +23,21 @@ axios.interceptors.response.use(
 );
 
 const $axios = {
-    async postRequest(url, params) {
+    async postRequest(url, params = {}) {
+        let data = {
+            "appVersion": "ceshi.com.android@1.0.6",
+            "deviceType": 1,
+            "devicenId": "1123",
+            "param": params,
+            "userID": 1087001933091328000
+        };
         let instance = axios({
             method: 'post',
             headers: {
                 'Content-Type': 'application/json'
             },
             url,
-            data: params
+            data: data
         });
         return instance;
     },

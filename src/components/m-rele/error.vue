@@ -4,7 +4,7 @@
     <transition>
       <div class="dialog" :class="show?'':'style_show'">
         <div class="dialog_ct">
-          <div class="title">账号生成失败，请重试</div>
+          <div class="title">网络异常，请重试</div>
           <div class="but" @click="fnLogin">重试</div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />
@@ -28,10 +28,11 @@ export default {
 
   methods: {
     fnClose() {
-      this.$emit("close", false);
+      this.$emit("close", "errShow", false);
     },
     fnLogin() {
-      console.log("object");
+      this.$emit("close", "errShow", false);
+      this.$emit("info");
     }
   }
 };

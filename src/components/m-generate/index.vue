@@ -3,7 +3,7 @@
   <div>
     <transition>
       <div class="dialog" :class="show?'':'style_show'">
-        <div class="dialog_ct">
+        <div class="dialog_ct" ref="capture">
           <img class="generate" src="./generate.png" alt />
           <div class="centent">
             <div class="item">
@@ -42,8 +42,13 @@
 </template>
 
 <script>
+import html2canvas from "html2canvas";
 export default {
   props: {
+    data: {
+      type: Object,
+      default: {}
+    },
     show: {
       type: Boolean,
       default: false
@@ -57,13 +62,23 @@ export default {
 
   methods: {
     funSetOver() {
-      this.bOver = true;
-      setTimeout(() => {
-        this.bOver = false;
-      }, 1000);
+      const _this = this;
+      html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
+        let link = document.createElement("a");
+        link.href = canvas.toDataURL();
+        link.setAttribute("download", "图片canvas.png");
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        _this.bOver = true;
+        setTimeout(() => {
+          this.bOver = false;
+        }, 1000);
+      });
     },
     fnClose() {
-      this.$emit("close", false);
+      this.$emit("close", "generateShow", false);
     }
   }
 };

@@ -155,17 +155,19 @@
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <!-- <m-loading :show="true" /> -->
-    <!-- <m-generate :show="true" @close="fnClose" /> -->
+    <m-loading :show="loading" @close="fnPop" />
+    <m-generate :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <!-- <m-login :show="true" @close="fnClose" /> -->
     <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
-    <!-- <m-rele-err :show="show" @close="fnClose" /> -->
+    <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
     <m-best :show="bestShow" @close="fnPop" />
   </div>
 </template>
 
 <script>
+import $api from "@/util/api.js";
+import myPromise from "@/util/tolo.js";
 import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
@@ -191,10 +193,17 @@ export default {
   },
   data() {
     return {
+      loading: false,
       show: true,
       first: false,
-      bestShow: false
+      bestShow: false,
+      generateShow: false,
+      errShow: false,
+      oUserinfo: {}
     };
+  },
+  created() {
+    this.fnInfo();
   },
   methods: {
     goToPage() {
@@ -202,6 +211,52 @@ export default {
     },
     fnPop(key, vla) {
       this[key] = vla;
+    },
+    fnInfo() {
+      // $api
+      //   .postRequest("/app/user/v3/searchUserFriendPage", {
+      //     appVersion: "ceshi.com.android@1.0.6",
+      //     deviceType: 1,
+      //     devicenId: "1123",
+      //     param: "{'source':'2'}",
+      //     userID: 123
+      //   })
+      //   .then(res => {
+      //     console.log(res);
+      //   });
+      // $api.postRequest("/user/v3/login58").then(res => {
+      //   console.log(res);
+      // });
+      const _this = this;
+      _this.loading = true;
+      myPromise(1, {
+        code: 0,
+        msg: "",
+        datas: {
+          phone: "13812345682",
+          hasBind: false,
+          pwd: "123456",
+          downloadUrl:
+            "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
+          commision: 0,
+          userId: "ttcm1vwb7k"
+        }
+      })
+        .then(res => {
+          _this.loading = false;
+          if (res.code === 0) {
+            _this.oUserinfo = res.datas;
+            if (!res.datas.hasBind) {
+              _this.generateShow = true;
+            }
+          } else {
+            _this.errShow = true;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+          _this.loading = false;
+        });
     }
   }
 };

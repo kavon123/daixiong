@@ -4,7 +4,6 @@
     <div class="dialog" :class="show?'':'style_show'">
       <div class="dialog_ct">
         <van-loading type="spinner" class="loading" />
-        <div class="dialog_text">正在为您生成YG账号</div>
       </div>
     </div>
   </transition>
@@ -16,6 +15,11 @@ export default {
     show: {
       type: Boolean,
       default: false
+    }
+  },
+  methods: {
+    fnClose() {
+      this.$emit("close", "loading", false);
     }
   }
 };
