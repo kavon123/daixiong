@@ -159,7 +159,9 @@
     <!-- <m-generate :show="true" @close="fnClose" /> -->
     <!-- <m-login :show="true" @close="fnClose" /> -->
     <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
-    <m-rele-err :show="show" @close="fnClose" />
+    <!-- <m-rele-err :show="show" @close="fnClose" /> -->
+    <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
+    <m-best :show="show" @close="fnClose" />
   </div>
 </template>
 
@@ -171,6 +173,8 @@ import mGenerate from "@/components/m-generate";
 import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
+import mContacts from "@/components/m-contacts";
+import mBest from "@/components/m-best";
 
 export default {
   name: "home",
@@ -181,11 +185,14 @@ export default {
     mGenerate,
     mLogin,
     mReleSuc,
-    mReleErr
+    mReleErr,
+    mContacts,
+    mBest
   },
   data() {
     return {
-      show: true
+      show: true,
+      first: false
     };
   },
   methods: {
