@@ -129,7 +129,7 @@
             <span class="u-alert">提醒</span>
           </van-col>
         </van-row>
-        <div class="user_but">
+        <div class="user_but" @click="fnPromoteList">
           更多
           <van-icon name="arrow" />
         </div>
@@ -236,6 +236,9 @@ export default {
       console.log("kylin");
       this.bIsLogin = false;
       this.oUserinfo = obj;
+    },
+    fnPromoteList() {
+      this.$router.push("/promote");
     },
     fnInfo() {
       // $api
