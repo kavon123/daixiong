@@ -166,7 +166,9 @@
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
     <m-loading :show="loading" @close="fnPop" />
-    <m-generate :show="generateShow" :data="oUserinfo" @close="fnPop" />
+    <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
+    <!-- <m-YG :show="generateShow"  :data="oUserinfo" @close="fnPop" /> -->
+
     <m-login :show="loginShow" @fnLogin="fnLogin" @close="fnPop" />
     <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
@@ -182,7 +184,9 @@ import myPromise from "@/util/tolo.js";
 import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
-import mGenerate from "@/components/m-generate";
+import m58 from "@/components/m-generate/58";
+import mYG from "@/components/m-generate/yg";
+
 import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
@@ -196,7 +200,8 @@ export default {
     mNav,
     mBar,
     mLoading,
-    mGenerate,
+    m58,
+    mYG,
     mLogin,
     mReleSuc,
     mReleErr,

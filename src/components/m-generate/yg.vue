@@ -56,7 +56,8 @@ export default {
   },
   data() {
     return {
-      bOver: false
+      bOver: false,
+      img: "./generate.png"
     };
   },
 
@@ -98,7 +99,6 @@ export default {
   align-items: center;
   .dialog_ct {
     width: 300px;
-    height: 340px;
     background: linear-gradient(#9680cd, #262180);
     box-shadow: inset 0px 0px 5px rgba(255, 255, 255, 0.5);
     display: flex;
@@ -113,13 +113,15 @@ export default {
     }
     .centent {
       width: 278px;
-      height: 222px;
       background: #27266f;
       border-radius: 5px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 24px 0;
+      padding: 20px 0;
+      .item:last-child {
+        margin-bottom: 0;
+      }
       .item {
         display: flex;
         align-items: center;
