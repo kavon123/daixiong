@@ -161,7 +161,7 @@
         </div>
       </div>
       <div class="g-best">
-        <img src="@/assets/images/best.png" alt />
+        <img src="@/assets/images/best.png" alt @click="fnBest" />
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
@@ -239,6 +239,9 @@ export default {
     },
     fnPromoteList() {
       this.$router.push("/promote");
+    },
+    fnBest() {
+      this.$router.push("/relative");
     },
     fnInfo() {
       // $api

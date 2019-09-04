@@ -13,17 +13,22 @@ export default new Router({
     {
       path: '/58',
       name: '58',
-      component: () => import(/* webpackChunkName: "about" */ './views/Home58.vue')
+      component: () => import(/* webpackChunkName: "58" */ './views/Home58.vue')
     },
     {
       path: '/yg',
       name: 'YG',
-      component: () => import(/* webpackChunkName: "about" */ './views/HomeYG.vue')
+      component: () => import(/* webpackChunkName: "YG" */ './views/HomeYG.vue')
     },
     {
       path: '/promote',
       name: 'promoteList',
-      component: () => import(/* webpackChunkName: "about" */ './views/promoteList.vue')
+      component: () => import(/* webpackChunkName: "promoteList" */ './views/promoteList.vue')
+    },
+    {
+      path: '/relative',
+      name: 'relativeList',
+      component: () => import(/* webpackChunkName: "relativeList" */ './views/relativeList.vue')
     }
   ]
 })
