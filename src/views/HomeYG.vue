@@ -155,9 +155,11 @@
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-loading :show="false" />
-    <!-- <m-generate :show="true" /> -->
-    <m-login :show="true" />
+    <!-- <m-loading :show="true" /> -->
+    <!-- <m-generate :show="true" @close="fnClose" /> -->
+    <!-- <m-login :show="true" @close="fnClose" /> -->
+    <!-- <m-rele-suc :show="true" @close="fnClose" /> -->
+    <m-rele-err :show="show" @close="fnClose" />
   </div>
 </template>
 
@@ -167,6 +169,8 @@ import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
 import mGenerate from "@/components/m-generate";
 import mLogin from "@/components/m-login";
+import mReleSuc from "@/components/m-rele/success";
+import mReleErr from "@/components/m-rele/error";
 
 export default {
   name: "home",
@@ -175,11 +179,21 @@ export default {
     mBar,
     mLoading,
     mGenerate,
-    mLogin
+    mLogin,
+    mReleSuc,
+    mReleErr
+  },
+  data() {
+    return {
+      show: true
+    };
   },
   methods: {
     goToPage() {
       this.$router.push("/about");
+    },
+    fnClose(vla) {
+      this.show = vla;
     }
   }
 };

@@ -71,7 +71,7 @@ export default {
       }, 1000);
     },
     fnClose() {
-      this.show = false;
+      this.$emit("close", false);
     },
     fnClearInput(key) {
       this[key] = "";
