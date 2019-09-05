@@ -13,7 +13,7 @@ export default {
   name: "App",
   data() {
     return {
-      keepALivePages: ["home"]
+      keepALivePages: ["58", "YG"]
     };
   }
 };

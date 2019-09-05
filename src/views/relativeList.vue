@@ -1,7 +1,6 @@
 <!--  -->
 <template>
   <div class="promote">
-    <m-nav title="选择亲友" :arrow="true" />
     <div class="centent">
       <van-row type="flex" class="table_head">
         <van-col span="8">姓名</van-col>
@@ -20,12 +19,7 @@
 </template>
 
 <script>
-import mNav from "@/components/m-nav";
-
 export default {
-  components: {
-    mNav
-  },
   data() {
     //这里存放数据
     return {
@@ -180,10 +174,10 @@ export default {
 </script>
 <style lang='less' scoped>
 .centent {
-  height: calc(100vh - 46px);
+  height: 100vh;
   overflow: hidden;
   .scroll {
-    height: calc(100vh - 94px);
+    height: calc(100vh - 48px);
     overflow: auto;
   }
 }

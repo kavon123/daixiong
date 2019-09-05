@@ -1,7 +1,6 @@
 <!--  -->
 <template>
   <div class="promote">
-    <m-nav title="我的邀请" :arrow="true" />
     <div class="centent">
       <div class="table_head">
         <van-row type="flex">
@@ -19,10 +18,14 @@
               <div>{{item.mobile}}</div>
             </van-col>
             <van-col span="6" class="sum">{{item.amount}}元</van-col>
-            <van-col span="6">{{setDate(item.createdDate)}}</van-col>
+            <van-col span="6">{{item.time}}</van-col>
             <van-col span="6" class="state">
               {{item.state===2?"已发放":"未游戏"}}
-              <span class="alert" v-if="item.state!==2">提醒</span>
+              <span
+                class="alert"
+                v-if="item.state!==2"
+                @click="fnRemind"
+              >提醒</span>
             </van-col>
           </van-row>
         </div>
@@ -32,66 +35,28 @@
 </template>
 
 <script>
-import myPromise from "@/util/tolo.js";
-import { getDate } from "@/util/methods.js";
-
-import mNav from "@/components/m-nav";
-
 export default {
-  components: {
-    mNav
-  },
   data() {
-    //这里存放数据
     return {
       lists: []
     };
   },
-  methods: {
-    getUserFriend() {
-      myPromise(1, {
-        code: 0,
-        msg: "",
-        datas: {
-          infoList: [
-            {
-              parentUserId: 123,
-              createdDate: 1567158741000,
-              updateDate: 1567158741000,
-              mobile: "18022226666",
-              name: "l76v1zvcn8",
-              status: "1",
-              source: "1",
-              amount: 0
-            }
-          ],
-          totalSize: 5,
-          totalPage: 1,
-          currPage: 1
-        }
-      })
-        .then(res => {
-          if (res.code === 0) {
-            this.lists = res.datas.infoList;
-          }
-        })
-        .catch(err => {});
-    },
-    setDate(time) {
-      return getDate(time);
-    }
-  },
   created() {
-    this.getUserFriend();
+    this.lists = this.$route.params.lists;
+  },
+  methods: {
+    fnRemind() {
+      console.log("object");
+    }
   }
 };
 </script>
 <style lang='less' scoped>
 .centent {
-  height: calc(100vh - 46px);
+  height: 100vh;
   overflow: hidden;
   .scroll {
-    height: calc(100vh - 94px);
+    height: calc(100vh - 48px);
     overflow: auto;
   }
 }

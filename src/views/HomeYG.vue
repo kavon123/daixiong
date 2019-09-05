@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <m-nav title="任务中心" />
     <m-bar
       text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
     />
@@ -165,7 +164,6 @@
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-loading :show="loading" @close="fnPop" />
     <m-YG :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-login :show="loginShow" @fnLogin="fnLogin" @close="fnPop" />
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
@@ -179,7 +177,6 @@
 import $api from "@/util/api.js";
 import myPromise from "@/util/tolo.js";
 import mBar from "@/components/m-bar";
-import mLoading from "@/components/m-loading";
 import mYG from "@/components/m-generate/yg";
 import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
@@ -192,7 +189,6 @@ export default {
   name: "home",
   components: {
     mBar,
-    mLoading,
     mYG,
     mLogin,
     mReleSuc,
@@ -205,7 +201,6 @@ export default {
     return {
       loginShow: false,
       withdrawal: false,
-      loading: false,
       show: true,
       first: false,
       bestShow: false,
@@ -253,9 +248,13 @@ export default {
       //   console.log(res);
       // });
       const _this = this;
-      _this.loading = true;
+      _this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: "spinner"
+      });
       myPromise(1, {
-        code: 0,
+        code: 2,
         msg: "",
         datas: {
           phone: "13812345682",
@@ -268,7 +267,7 @@ export default {
         }
       })
         .then(res => {
-          _this.loading = false;
+          _this.$toast.clear();
           if (res.code === 0) {
             _this.oUserinfo = res.datas;
             _this.bIsLogin = false;
@@ -284,7 +283,7 @@ export default {
           }
         })
         .catch(err => {
-          _this.loading = false;
+          _this.$toast.clear();
         });
     }
   }

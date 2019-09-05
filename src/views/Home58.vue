@@ -77,7 +77,7 @@
           </van-col>
         </van-row>
 
-        <div class="user_but" @click="fnPromoteList" v-if="lists.length > 7">
+        <div class="user_but" @click="fnPromoteList" v-if="lists.length">
           更多
           <van-icon name="arrow" />
         </div>
@@ -110,17 +110,17 @@
         </div>
       </div>
       <div class="g-best">
-        <img src="@/assets/images/best.png" @click="fnBest" />
+        <img src="@/assets/images/best.png" @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-loading :show="loading" @close="fnPop" />
     <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-rele-suc :show="sucShow" :name="oUserinfo.userId" @close="fnPop" />
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <m-contacts :show="contactsShow" :first="first" @close="fnPop" />
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
+    <m-but-pop :show="butPopShow" @close="fnPop" />
   </div>
 </template>
 
@@ -131,33 +131,32 @@ import $api from "@/util/api.js";
 import { getDate } from "@/util/methods.js";
 
 import mBar from "@/components/m-bar";
-import mLoading from "@/components/m-loading";
 import m58 from "@/components/m-generate/58";
-import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
 import mContacts from "@/components/m-contacts";
 import mBest from "@/components/m-best";
 import mWithdrawal from "@/components/m-withdrawal";
+import mButPop from "@/components/m-but-pop";
+
 export default {
   name: "home",
   components: {
     mBar,
-    mLoading,
     m58,
-    mLogin,
     mReleSuc,
     mReleErr,
     mContacts,
     mBest,
-    mWithdrawal
+    mWithdrawal,
+    mButPop
   },
   data() {
     return {
+      butPopShow: false,
       contactsShow: false,
       sucShow: false,
       withdrawal: false,
-      loading: false,
       show: true,
       first: false,
       bestShow: false,
@@ -191,7 +190,12 @@ export default {
       this.withdrawal = true;
     },
     fnPromoteList() {
-      this.$router.push("/promote", { lists });
+      this.$router.push({
+        name: "promoteList",
+        params: {
+          lists: this.lists
+        }
+      });
     },
     fnBest() {
       this.$router.push("/relative");
@@ -199,7 +203,7 @@ export default {
     fnJump() {
       console.log(this.oUserinfo.downloadUrl);
     },
-    fnInfo() {
+    fnInfo(tyep = 1) {
       // $api
       //   .postRequest("/app/user/v3/searchUserFriendPage", {
       //     appVersion: "ceshi.com.android@1.0.6",
@@ -215,9 +219,14 @@ export default {
       //   console.log(res);
       // });
       const _this = this;
-      _this.loading = true;
+      const _type = tyep;
+      _this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: "spinner"
+      });
       myPromise(1, {
-        code: 1,
+        code: _type,
         msg: "",
         datas: {
           phone: "13812345682",
@@ -233,7 +242,7 @@ export default {
         }
       })
         .then(res => {
-          _this.loading = false;
+          _this.$toast.clear();
           if (res.code === 0) {
             _this.oUserinfo = res.datas;
             _this.bIsLogin = false;
@@ -249,7 +258,7 @@ export default {
           }
         })
         .catch(err => {
-          _this.loading = false;
+          _this.$toast.clear();
         });
     },
     fngetUserFriend() {
@@ -280,10 +289,17 @@ export default {
               item.time = getDate(item.createdDate);
               return item;
             });
-            this.lists = []; //res.datas.infoList;
+            this.lists = res.datas.infoList;
           }
         })
         .catch(err => {});
+    },
+    fnShowButPop() {
+      if (this.bIsLogin) {
+        this.fnInfo(0);
+      } else {
+        this.butPopShow = true;
+      }
     }
   }
 };
