@@ -77,7 +77,7 @@
           </van-col>
         </van-row>
 
-        <div class="user_but" @click="fnPromoteList" v-if="lists.length">
+        <div class="user_but" @click="fnPromoteList" v-if="lists.length>7">
           更多
           <van-icon name="arrow" />
         </div>
