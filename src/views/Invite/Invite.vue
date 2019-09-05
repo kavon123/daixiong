@@ -159,6 +159,7 @@ export default {
         this.$toast("手机号码有误，请重填!");
         return false;
       }
+      this.noticeShow = true;
     },
     fnInvitation(val) {
       this.phone = val;
