@@ -17,7 +17,7 @@
         </van-swipe-item>
       </van-swipe>
       <div class="choose">
-        <div>
+        <div @click="fnClose">
           <img src="./logo.png" alt />
           <div>微信</div>
         </div>
@@ -57,6 +57,10 @@ export default {
     },
     fnBook() {
       this.$router.push("/invite");
+    },
+    fnClose() {
+      this.$emit("close", "butPopShow", false);
+      this.$emit("close", "qrcodeShow", true);
     }
   }
 };

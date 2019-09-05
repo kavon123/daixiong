@@ -120,6 +120,14 @@
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
     <m-but-pop :show="butPopShow" @close="fnPop" />
+    <m-win-pop :show="winShow" type="58" @close="fnPop" />
+    <m-qrcode
+      type="58"
+      :show="qrcodeShow"
+      v-if="oUserinfo.downloadUrl"
+      :downloadUrl="oUserinfo.downloadUrl"
+      @close="fnPop"
+    />
   </div>
 </template>
 
@@ -133,10 +141,11 @@ import mBar from "@/components/m-bar";
 import m58 from "@/components/m-generate/58";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
-// import mContacts from "@/components/m-contacts";
 import mBest from "@/components/m-best";
 import mWithdrawal from "@/components/m-withdrawal";
 import mButPop from "@/components/m-but-pop";
+import mWinPop from "@/components/m-win-pop";
+import mQrcode from "@/components/m-qrcode";
 
 export default {
   name: "home",
@@ -147,10 +156,14 @@ export default {
     mReleErr,
     mBest,
     mWithdrawal,
-    mButPop
+    mButPop,
+    mWinPop,
+    mQrcode
   },
   data() {
     return {
+      qrcodeShow: false,
+      winShow: false,
       butPopShow: false,
       sucShow: false,
       withdrawal: false,
