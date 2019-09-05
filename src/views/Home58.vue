@@ -117,24 +117,21 @@
     <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-rele-suc :show="sucShow" :name="oUserinfo.userId" @close="fnPop" />
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
-    <m-contacts :show="contactsShow" :first="first" @close="fnPop" />
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
-    <m-but-pop :show="butPopShow" @close="fnPop" />
+    <m-but-pop :show="butPopShow" @close="fnPop" :downloadUrl="oUserinfo.downloadUrl" />
   </div>
 </template>
 
 <script>
 import myPromise from "@/util/tolo.js";
 import $api from "@/util/api.js";
-
 import { getDate } from "@/util/methods.js";
-
 import mBar from "@/components/m-bar";
 import m58 from "@/components/m-generate/58";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
-import mContacts from "@/components/m-contacts";
+// import mContacts from "@/components/m-contacts";
 import mBest from "@/components/m-best";
 import mWithdrawal from "@/components/m-withdrawal";
 import mButPop from "@/components/m-but-pop";
@@ -146,7 +143,6 @@ export default {
     m58,
     mReleSuc,
     mReleErr,
-    mContacts,
     mBest,
     mWithdrawal,
     mButPop
@@ -154,7 +150,6 @@ export default {
   data() {
     return {
       butPopShow: false,
-      contactsShow: false,
       sucShow: false,
       withdrawal: false,
       show: true,
@@ -197,13 +192,10 @@ export default {
         }
       });
     },
-    fnBest() {
-      this.$router.push("/relative");
-    },
     fnJump() {
       console.log(this.oUserinfo.downloadUrl);
     },
-    fnInfo(tyep = 1) {
+    fnInfo() {
       // $api
       //   .postRequest("/app/user/v3/searchUserFriendPage", {
       //     appVersion: "ceshi.com.android@1.0.6",
@@ -219,14 +211,13 @@ export default {
       //   console.log(res);
       // });
       const _this = this;
-      const _type = tyep;
       _this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
       myPromise(1, {
-        code: _type,
+        code: 0,
         msg: "",
         datas: {
           phone: "13812345682",
@@ -296,7 +287,7 @@ export default {
     },
     fnShowButPop() {
       if (this.bIsLogin) {
-        this.fnInfo(0);
+        this.fnInfo();
       } else {
         this.butPopShow = true;
       }

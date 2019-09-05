@@ -4,13 +4,14 @@
     <transition>
       <div class="dialog" :class="show?'':'style_show'">
         <div class="dialog_ct">
-          <div class="title">允许访问通讯录</div>
-          <div class="sum" v-if="first">
-            立即得
-            <span>1000</span>红包券
+          <div class="title">推广小妙招</div>
+          <div class="prompt">
+            <div>1.通过微信群、微信朋友圈、QQ群等方式宣传</div>
+            <div>2.通过贴吧、论坛、微博、陌陌等方式推广过</div>
+            <div>3.通过直播平台抖音、快手等资源引流</div>
+            <div>4.推荐亲友，一传十，十传百</div>
           </div>
-          <div class="prompt">邀请通讯录好友成功率增加85％</div>
-          <div class="but" @click="fnLogin">去允许</div>
+          <div class="but" @click="fnClose">知道了</div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />
       </div>
@@ -25,21 +26,12 @@ export default {
     show: {
       type: Boolean,
       default: false
-    },
-    first: {
-      type: Boolean,
-      default: false
     }
   },
 
   methods: {
     fnClose() {
-      this.$emit("close", "contactsShow", false);
-    },
-    fnLogin() {
-      this.fnClose();
-      this.$emit("close", "permissions", true);
-      this.$emit("close", "first", false);
+      this.$emit("close", "noticeShow", false);
     }
   }
 };
@@ -70,17 +62,20 @@ export default {
       font-size: 17px;
       margin-top: 25px;
     }
-    .sum {
-      color: #666;
-      font-size: 15px;
-      margin: 10px 0;
-      span {
-        color: #f8456e;
-      }
-    }
+
     .prompt {
-      color: #999;
+      width: 248px;
       font-size: 14px;
+      font-weight: 400;
+      color: rgba(153, 153, 153, 1);
+      line-height: 20px;
+      margin-top: 8px;
+      div {
+        margin-bottom: 12px;
+      }
+      div:last-child {
+        margin-bottom: 0;
+      }
     }
     .but {
       padding: 10px 40px;
@@ -88,7 +83,6 @@ export default {
       background: #367dfd;
       border-radius: 5px;
       font-size: 15px;
-      font-family: PingFangSC;
       font-weight: 400;
       color: #fff;
       text-align: center;

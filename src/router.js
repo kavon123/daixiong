@@ -29,6 +29,11 @@ export default new Router({
       path: '/relative',
       name: 'relativeList',
       component: () => import(/* webpackChunkName: "relativeList" */ './views/relativeList.vue')
+    },
+    {
+      path: '/invite',
+      name: 'Invite',
+      component: () => import(/* webpackChunkName: "Invite" */ './views/Invite/Invite.vue')
     }
   ]
 })

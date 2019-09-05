@@ -29,7 +29,7 @@
           <img src="./logo.png" alt />
           <div>QQ</div>
         </div>
-        <div>
+        <div @click="fnBook">
           <img src="./logo.png" alt />
           <div>通讯录</div>
         </div>
@@ -44,11 +44,28 @@ export default {
     show: {
       type: Boolean,
       default: false
+    },
+    downloadUrl: {
+      type: String,
+      default: ""
     }
+  },
+  data() {
+    return {
+      activeIndex: 0
+    };
   },
   methods: {
     onChange(index) {
-      console.log(index);
+      this.activeIndex = index;
+    },
+    fnBook() {
+      this.$router.push({
+        name: "Invite",
+        params: {
+          downloadUrl: this.downloadUrl
+        }
+      });
     }
   }
 };

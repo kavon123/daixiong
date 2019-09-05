@@ -1,0 +1,101 @@
+<!--  -->
+<template>
+  <div>
+    <transition>
+      <div class="dialog" :class="show?'':'style_show'">
+        <div class="dialog_ct">
+          <div class="title">扫描二维码，注册YG电竞领取现金</div>
+          <div id="qrcode" class="qrcode"></div>
+        </div>
+        <van-icon name="close" class="close" @click="fnClose" />
+      </div>
+    </transition>
+  </div>
+</template>
+
+<script>
+import QRCode from "qrcodejs2";
+
+export default {
+  props: {
+    show: {
+      type: Boolean,
+      default: false
+    },
+    downloadUrl: {
+      type: String,
+      default: ""
+    }
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      const div = document.getElementById("qrcode");
+      if (div) {
+        this.qrcode(div);
+      }
+    });
+  },
+  methods: {
+    fnClose() {
+      this.$emit("close", "qrcodeShow", false);
+    },
+    qrcode() {
+      const $div = document.getElementById("qrcode");
+      let qrcode = new QRCode("qrcode", {
+        width: $div.clientWidth,
+        height: $div.clientHeight, // 高度
+        text: this.downloadUrl
+      });
+    }
+  }
+};
+</script>
+<style lang='less' scoped>
+.dialog {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99999;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  .dialog_ct {
+    width: 300px;
+    height: 280px;
+    background-image: url("../images/prcodeImg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    .title {
+      font-size: 17px;
+      color: #fff;
+      margin: 32px 0 26px 0;
+    }
+    .qrcode {
+      width: 160px;
+      height: 160px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+    }
+  }
+  .close {
+    font-size: 35px;
+    color: #fff;
+    margin-top: 20px;
+  }
+}
+
+.style_show {
+  visibility: hidden;
+}
+</style>
