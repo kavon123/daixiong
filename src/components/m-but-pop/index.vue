@@ -44,10 +44,6 @@ export default {
     show: {
       type: Boolean,
       default: false
-    },
-    downloadUrl: {
-      type: String,
-      default: ""
     }
   },
   data() {
@@ -60,12 +56,7 @@ export default {
       this.activeIndex = index;
     },
     fnBook() {
-      this.$router.push({
-        name: "Invite",
-        params: {
-          downloadUrl: this.downloadUrl
-        }
-      });
+      this.$router.push("/invite");
     }
   }
 };

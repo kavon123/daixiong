@@ -93,13 +93,13 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import mBar from "@/components/m-bar";
 import mContacts from "@/components/m-contacts";
 import qrcode from "./component/qrcode";
 import notice from "./component/notice";
 
 export default {
-  name: "home",
   components: {
     mBar,
     mContacts,
@@ -111,7 +111,6 @@ export default {
       contactsShow: false,
       qrcodeShow: false,
       noticeShow: false,
-      downloadUrl: "",
       // 当前展示的为
       // phone-invite  手机号邀请
       // txl_invite  通讯录邀请
@@ -128,8 +127,12 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["downloadUrl"])
+  },
   created() {
-    this.downloadUrl = this.$route.params.downloadUrl;
+    console.log(this.downloadUrl);
+    console.log(this.$store.getters.downloadUrl);
   },
   methods: {
     fnPop(key, val) {

@@ -11,7 +11,7 @@
         </van-row>
       </div>
       <div class="scroll">
-        <div class="table_body" v-for="(item,i) in lists" :key="i">
+        <div class="table_body" v-for="(item,i) in promoteList" :key="i">
           <van-row type="flex" justify="center">
             <van-col span="6">
               <div class="name">{{item.name}}</div>
@@ -35,14 +35,15 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 export default {
   data() {
     return {
       lists: []
     };
   },
-  created() {
-    this.lists = this.$route.params.lists;
+  computed: {
+    ...mapGetters(["promoteList"])
   },
   methods: {
     fnRemind() {

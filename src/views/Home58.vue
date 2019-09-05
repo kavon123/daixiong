@@ -119,12 +119,14 @@
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
-    <m-but-pop :show="butPopShow" @close="fnPop" :downloadUrl="oUserinfo.downloadUrl" />
+    <m-but-pop :show="butPopShow" @close="fnPop" />
   </div>
 </template>
 
 <script>
 import myPromise from "@/util/tolo.js";
+// ___________________
+import { mapMutations } from "vuex";
 import $api from "@/util/api.js";
 import { getDate } from "@/util/methods.js";
 import mBar from "@/components/m-bar";
@@ -177,6 +179,10 @@ export default {
     this.fnInfo();
   },
   methods: {
+    ...mapMutations({
+      setDowUrl: "SET_DOW_URL",
+      setPromoteList: "SET_PROMOTE_LIST"
+    }),
     fnPop(key, vla) {
       this[key] = vla;
     },
@@ -185,12 +191,8 @@ export default {
       this.withdrawal = true;
     },
     fnPromoteList() {
-      this.$router.push({
-        name: "promoteList",
-        params: {
-          lists: this.lists
-        }
-      });
+      this.setPromoteList(this.lists);
+      this.$router.push("/promote");
     },
     fnJump() {
       console.log(this.oUserinfo.downloadUrl);
@@ -235,6 +237,7 @@ export default {
         .then(res => {
           _this.$toast.clear();
           if (res.code === 0) {
+            _this.setDowUrl(res.datas.downloadUrl);
             _this.oUserinfo = res.datas;
             _this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
