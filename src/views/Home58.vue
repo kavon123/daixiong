@@ -1,6 +1,5 @@
 <template>
   <div class="home">
-    <m-nav title="任务中心" />
     <m-bar
       text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
     />
@@ -31,9 +30,9 @@
             <div class="sum_item_ct">
               <img class="sum_gold" src="@/assets/images/gold.png" alt />
               <div class="sum_num">
-                <span>6</span>元
+                <span>{{oUserinfo.externalBalance}}</span>元
               </div>
-              <div class="sum_add">累计已获得123元</div>
+              <div class="sum_add">累计已获得{{oUserinfo.externalTotalAmount}}元</div>
             </div>
             <div class="sum_but">
               <img
@@ -49,9 +48,9 @@
             <div class="sum_item_ct">
               <img class="sum_golds" src="@/assets/images/golds.png" alt />
               <div class="sum_num">
-                <span>6</span>元
+                <span>{{oUserinfo.balance}}</span>元
               </div>
-              <div class="sum_add">累计已获得123元</div>
+              <div class="sum_add">累计已获得{{oUserinfo.commision}}元</div>
             </div>
             <div class="sum_but">
               <img :class="bIsLogin?'gray':''" src="@/assets/images/withdrawal.png" alt />
@@ -59,7 +58,7 @@
           </div>
         </div>
       </div>
-      <div class="g-user-list">
+      <div class="g-user-list" v-if="lists.length">
         <div class="u-title">我的邀请</div>
         <van-row type="flex" class="g-table_head">
           <van-col span="6">用户名</van-col>
@@ -67,58 +66,18 @@
           <van-col span="6">日期</van-col>
           <van-col span="5">状态</van-col>
         </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5">已发放</van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
+
+        <van-row type="flex" class="g-table" v-for="(item,i) in viewList" :key="i">
+          <van-col span="6">{{item.mobile}}</van-col>
+          <van-col span="6" class="u-num">{{item.amount}}元</van-col>
+          <van-col span="6">{{item.time}}</van-col>
           <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
+            {{item.state===2?"已发放":"未游戏"}}
+            <span class="u-alert" v-if="item.state!==2">提醒</span>
           </van-col>
         </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">*****0128</van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <div class="user_but">
+
+        <div class="user_but" @click="fnPromoteList" v-if="lists.length > 7">
           更多
           <van-icon name="arrow" />
         </div>
@@ -159,16 +118,18 @@
     <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-rele-suc :show="sucShow" :name="oUserinfo.userId" @close="fnPop" />
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
-    <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
+    <m-contacts :show="contactsShow" :first="first" @close="fnPop" />
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
   </div>
 </template>
 
 <script>
-import $api from "@/util/api.js";
 import myPromise from "@/util/tolo.js";
-import mNav from "@/components/m-nav";
+import $api from "@/util/api.js";
+
+import { getDate } from "@/util/methods.js";
+
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
 import m58 from "@/components/m-generate/58";
@@ -181,7 +142,6 @@ import mWithdrawal from "@/components/m-withdrawal";
 export default {
   name: "home",
   components: {
-    mNav,
     mBar,
     mLoading,
     m58,
@@ -194,6 +154,7 @@ export default {
   },
   data() {
     return {
+      contactsShow: false,
       sucShow: false,
       withdrawal: false,
       loading: false,
@@ -202,11 +163,23 @@ export default {
       bestShow: false,
       generateShow: false,
       errShow: false,
-      oUserinfo: {},
-      bIsLogin: true
+      bIsLogin: true,
+      oUserinfo: {
+        commision: 0,
+        balance: 0,
+        externalBalance: 0,
+        externalTotalAmount: 0
+      },
+      lists: []
     };
   },
+  computed: {
+    viewList() {
+      return this.lists.slice(0, 6);
+    }
+  },
   created() {
+    this.fngetUserFriend();
     this.fnInfo();
   },
   methods: {
@@ -218,7 +191,7 @@ export default {
       this.withdrawal = true;
     },
     fnPromoteList() {
-      this.$router.push("/promote");
+      this.$router.push("/promote", { lists });
     },
     fnBest() {
       this.$router.push("/relative");
@@ -244,15 +217,18 @@ export default {
       const _this = this;
       _this.loading = true;
       myPromise(1, {
-        code: 0,
+        code: 1,
         msg: "",
         datas: {
           phone: "13812345682",
-          hasBind: 2,
+          hasBind: 1,
           pwd: "123456",
           downloadUrl:
             "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
-          commision: 0,
+          commision: 1000,
+          balance: 90,
+          externalBalance: 10,
+          externalTotalAmount: 999,
           userId: "ttcm1vwb7k"
         }
       })
@@ -275,6 +251,39 @@ export default {
         .catch(err => {
           _this.loading = false;
         });
+    },
+    fngetUserFriend() {
+      myPromise(1, {
+        code: 0,
+        msg: "",
+        datas: {
+          infoList: [
+            {
+              parentUserId: 123,
+              createdDate: 1567158741000,
+              updateDate: 1567158741000,
+              mobile: "18022226666",
+              name: "l76v1zvcn8",
+              status: "1",
+              source: "1",
+              amount: 0
+            }
+          ],
+          totalSize: 5,
+          totalPage: 1,
+          currPage: 1
+        }
+      })
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.infoList = res.datas.infoList.map(item => {
+              item.time = getDate(item.createdDate);
+              return item;
+            });
+            this.lists = []; //res.datas.infoList;
+          }
+        })
+        .catch(err => {});
     }
   }
 };
@@ -284,11 +293,11 @@ export default {
   overflow: hidden;
   margin-top: -30px;
   width: 375px;
-  height: 1995px;
+  // height: 1995px;
   background-image: url("../assets/images/58bg.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: top center;
   .u-but {
     width: 145px;
     height: 45px;
@@ -506,6 +515,7 @@ export default {
       display: flex;
       .steps {
         width: 50px;
+        height: 50px;
         display: block;
       }
       .arrow {
@@ -536,6 +546,7 @@ export default {
     color: #f7d99d;
     line-height: 22px;
     text-align: center;
+    margin-bottom: 15px;
   }
 }
 </style>

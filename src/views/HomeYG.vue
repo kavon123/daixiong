@@ -178,7 +178,6 @@
 <script>
 import $api from "@/util/api.js";
 import myPromise from "@/util/tolo.js";
-import mNav from "@/components/m-nav";
 import mBar from "@/components/m-bar";
 import mLoading from "@/components/m-loading";
 import mYG from "@/components/m-generate/yg";
@@ -192,7 +191,6 @@ import mWithdrawal from "@/components/m-withdrawal";
 export default {
   name: "home",
   components: {
-    mNav,
     mBar,
     mLoading,
     mYG,

@@ -16,13 +16,13 @@
           <van-row type="flex" justify="center">
             <van-col span="6">
               <div class="name">{{item.name}}</div>
-              <div>{{item.phone}}</div>
+              <div>{{item.mobile}}</div>
             </van-col>
-            <van-col span="6" class="sum">{{item.sum}}元</van-col>
-            <van-col span="6">{{item.time}}</van-col>
+            <van-col span="6" class="sum">{{item.amount}}元</van-col>
+            <van-col span="6">{{setDate(item.createdDate)}}</van-col>
             <van-col span="6" class="state">
-              {{item.state===1?"已发放":"未游戏"}}
-              <span class="alert" v-if="item.state!==1">提醒</span>
+              {{item.state===2?"已发放":"未游戏"}}
+              <span class="alert" v-if="item.state!==2">提醒</span>
             </van-col>
           </van-row>
         </div>
@@ -32,6 +32,9 @@
 </template>
 
 <script>
+import myPromise from "@/util/tolo.js";
+import { getDate } from "@/util/methods.js";
+
 import mNav from "@/components/m-nav";
 
 export default {
@@ -41,153 +44,46 @@ export default {
   data() {
     //这里存放数据
     return {
-      lists: [
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 0
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 0
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 0
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 0
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        },
-        {
-          name: "asaasdghhc",
-          phone: "*******1223123",
-          sum: "664",
-          time: "2019/09/01",
-          state: 1
-        }
-      ]
+      lists: []
     };
   },
-  //监听属性 类似于data概念
-  computed: {},
-  //监控data中的数据变化
-  watch: {},
-  //方法集合
-  methods: {},
-  //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  methods: {
+    getUserFriend() {
+      myPromise(1, {
+        code: 0,
+        msg: "",
+        datas: {
+          infoList: [
+            {
+              parentUserId: 123,
+              createdDate: 1567158741000,
+              updateDate: 1567158741000,
+              mobile: "18022226666",
+              name: "l76v1zvcn8",
+              status: "1",
+              source: "1",
+              amount: 0
+            }
+          ],
+          totalSize: 5,
+          totalPage: 1,
+          currPage: 1
+        }
+      })
+        .then(res => {
+          if (res.code === 0) {
+            this.lists = res.datas.infoList;
+          }
+        })
+        .catch(err => {});
+    },
+    setDate(time) {
+      return getDate(time);
+    }
+  },
+  created() {
+    this.getUserFriend();
+  }
 };
 </script>
 <style lang='less' scoped>
