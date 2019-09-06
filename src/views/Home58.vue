@@ -276,7 +276,7 @@ export default {
         .then(res => {
           if (res.code === 0) {
             let list = res.datas.map(item => {
-              return `${item.userId} 提现 ${item.obtainCommision}元!           `;
+              return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
             });
             this.barString = list.join("");
             this.setBarString(this.barString);
