@@ -1,8 +1,6 @@
 <template>
   <div class="home">
-    <m-bar
-      text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
-    />
+    <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump">了解58棋牌</div>
       <div class="g-rules-ct">
@@ -39,7 +37,6 @@
                 :class="bIsLogin?'gray':''"
                 src="@/assets/images/transfer.png"
                 @click="fnWithdrawal"
-                alt
               />
             </div>
           </div>
@@ -53,7 +50,11 @@
               <div class="sum_add">累计已获得{{oUserinfo.commision}}元</div>
             </div>
             <div class="sum_but">
-              <img :class="bIsLogin?'gray':''" src="@/assets/images/withdrawal.png" alt />
+              <img
+                @click="fn58Withdrawal"
+                :class="bIsLogin?'gray':''"
+                src="@/assets/images/withdrawal.png"
+              />
             </div>
           </div>
         </div>
@@ -126,8 +127,6 @@
 </template>
 
 <script>
-import myPromise from "@/util/tolo.js";
-// ___________________
 import { mapMutations } from "vuex";
 import $api from "@/util/api.js";
 import { getDate } from "@/util/methods.js";
@@ -173,7 +172,8 @@ export default {
         externalBalance: 0,
         externalTotalAmount: 0
       },
-      lists: []
+      lists: [],
+      barString: ""
     };
   },
   computed: {
@@ -182,13 +182,16 @@ export default {
     }
   },
   created() {
-    // this.fngetUserFriend();
-    // this.fnInfo();
+    this.fnGetUrl();
+    this.fnGetBar();
+    this.fngetUserFriend();
+    this.fnInfo();
   },
   methods: {
     ...mapMutations({
       setDowUrl: "SET_DOW_URL",
-      setPromoteList: "SET_PROMOTE_LIST"
+      setPromoteList: "SET_PROMOTE_LIST",
+      setBarString: "SET_BAR_STRING"
     }),
     fnPop(key, vla) {
       this[key] = vla;
@@ -208,12 +211,16 @@ export default {
           this.$toast(err.msg);
         });
     },
+    fn58Withdrawal() {
+      if (this.bIsLogin) return;
+      console.log(this.oUserinfo.url);
+    },
     fnPromoteList() {
       this.setPromoteList(this.lists);
       this.$router.push("/promote");
     },
     fnJump() {
-      console.log(this.oUserinfo.downloadUrl);
+      console.log(this.oUserinfo.url);
     },
     fnInfo() {
       const _this = this;
@@ -228,7 +235,7 @@ export default {
           _this.$toast.clear();
           if (res.code === 0) {
             _this.setDowUrl(res.datas.downloadUrl);
-            _this.oUserinfo = res.datas;
+            _this.oUserinfo = Object.assign(this.oUserinfo, res.datas);
             _this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
             if (res.datas.hasBind == 1) {
@@ -263,13 +270,44 @@ export default {
           this.$toast(err.msg);
         });
     },
+    fnGetBar() {
+      $api
+        .postRequest("/external/friend/search58CommisionRecord")
+        .then(res => {
+          if (res.code === 0) {
+            let list = res.datas.map(item => {
+              return `${item.userId} 提现 ${item.obtainCommision}元!           `;
+            });
+            this.barString = list.join("");
+            this.setBarString(this.barString);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
+    },
+    fnGetUrl() {
+      $api
+        .postRequest("/external/friend/getUnderstandUrl58")
+        .then(res => {
+          if (res.code === 0) {
+            this.oUserinfo = Object.assign(this.oUserinfo, { url: res.datas });
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
+    },
     fnShowButPop() {
-      this.butPopShow = true;
-      // if (this.bIsLogin) {
-      //   this.fnInfo();
-      // } else {
-      //   this.butPopShow = true;
-      // }
+      if (this.bIsLogin) {
+        this.fnInfo();
+      } else {
+        this.butPopShow = true;
+      }
     }
   }
 };

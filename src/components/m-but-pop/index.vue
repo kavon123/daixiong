@@ -128,7 +128,6 @@ export default {
         .qrcode1 {
           width: 110px;
           height: 110px;
-          background: red;
           position: absolute;
           left: calc(50% - 55px);
           top: 303px;
@@ -136,7 +135,6 @@ export default {
         .qrcode2 {
           width: 73px;
           height: 73px;
-          background: red;
           position: absolute;
           left: 211.5px;
           top: 332.5px;
@@ -144,7 +142,6 @@ export default {
         .qrcode3 {
           width: 73px;
           height: 73px;
-          background: red;
           position: absolute;
           left: 18px;
           top: 338px;

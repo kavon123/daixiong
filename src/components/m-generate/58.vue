@@ -8,7 +8,7 @@
           <div class="centent">
             <div class="item">
               <div class="item_text">下载地址</div>
-              <div class="item_input">{{data.downloadUrl}}</div>
+              <div class="item_input">{{data.url}}</div>
             </div>
             <div class="item">
               <div class="item_text">用户名称</div>
@@ -172,5 +172,8 @@ export default {
   .message_text {
     color: #fff;
   }
+}
+.style_show {
+  display: none;
 }
 </style>

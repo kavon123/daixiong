@@ -6,4 +6,7 @@ export default {
     SET_PROMOTE_LIST(state, param) {
         state.promoteList = param;
     },
+    SET_BAR_STRING(state, param) {
+        state.barString = param;
+    },
 }

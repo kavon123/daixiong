@@ -19,17 +19,13 @@ export default {
   }
 };
 </script>
-<style lang='less' scoped>
+<style lang='less'>
 .u-bar {
   padding: 0 94px;
   height: 30px;
-}
-</style>
-
-<style lang="less">
-.u-bar {
   .van-notice-bar__content {
     font-size: 12px;
+    white-space: pre;
   }
 }
 </style>
