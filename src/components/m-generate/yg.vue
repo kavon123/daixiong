@@ -8,19 +8,19 @@
           <div class="centent">
             <div class="item">
               <div class="item_text">下载地址</div>
-              <div class="item_input">baidu,com</div>
+              <div class="item_input">{{data.ygLoginUrl}}</div>
             </div>
             <div class="item">
               <div class="item_text">用户名称</div>
-              <div class="item_input">嗡嗡按销售出身</div>
+              <div class="item_input">{{data.userId}}</div>
             </div>
             <div class="item">
               <div class="item_text">手机号码</div>
-              <div class="item_input">15788523221</div>
+              <div class="item_input">{{data.userPhone}}</div>
             </div>
-            <div class="item">
+            <div class="item" v-if="data.pwd">
               <div class="item_text">初始密码</div>
-              <div class="item_input">123456</div>
+              <div class="item_input">{{data.pwd}}</div>
             </div>
           </div>
           <div class="footer">

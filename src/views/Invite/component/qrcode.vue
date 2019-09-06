@@ -19,11 +19,11 @@ import QRCode from "qrcodejs2";
 
 export default {
   computed: {
-    ...mapGetters(["downloadUrl"])
+    ...mapGetters(["oUserinfo", "ygUserinfo", "platformType"])
   },
   mounted() {
     this.$nextTick(() => {
-      this.qrcode(div);
+      this.qrcode();
     });
   },
   methods: {
@@ -31,11 +31,15 @@ export default {
       this.$emit("close", "qrcodeShow", false);
     },
     qrcode() {
+      const url =
+        this.platformType === 1
+          ? this.oUserinfo.downloadUrl
+          : this.ygUserinfo.ygSharedUrl;
       const $div = document.getElementById("qrcode");
       let qrcode = new QRCode("qrcode", {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: this.downloadUrl
+        text: url
       });
     }
   }

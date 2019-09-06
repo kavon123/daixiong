@@ -20,10 +20,10 @@
             <van-col span="6" class="sum">{{item.amount}}元</van-col>
             <van-col span="6">{{item.time}}</van-col>
             <van-col span="6" class="state">
-              {{item.state===2?"已发放":"未游戏"}}
+              {{item.status===2?"已发放":"未游戏"}}
               <span
                 class="alert"
-                v-if="item.state!==2"
+                v-if="item.status!==2"
                 @click="fnRemind"
               >提醒</span>
             </van-col>
@@ -36,6 +36,8 @@
 
 <script>
 import $api from "@/util/api.js";
+import { mapGetters } from "vuex";
+
 import { getDate } from "@/util/methods.js";
 
 export default {
@@ -44,17 +46,20 @@ export default {
       lists: []
     };
   },
+  computed: {
+    ...mapGetters(["platformType"])
+  },
   created() {
-    this.fngetUserFriend(1);
+    this.fngetUserFriend(1, this.platformType);
   },
   methods: {
     fnRemind() {
       console.log("object");
     },
-    fngetUserFriend(page) {
+    fngetUserFriend(page, type) {
       $api
         .postRequest("/user/v3/searchUserFriendPage", {
-          source: 1,
+          source: type,
           page,
           size: 20
         })
@@ -64,8 +69,10 @@ export default {
               item.time = getDate(item.createdDate);
               return item;
             });
-            this.totalSize = res.datas.totalSize;
-            this.lists = res.datas.infoList;
+            if (res.datas.totalPage > res.datas.currPage) {
+              this.fngetUserFriend(res.datas.currPage + 1);
+            }
+            this.lists = this.lists.concat(res.datas.infoList);
           } else {
             this.$toast(err.msg);
           }

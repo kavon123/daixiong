@@ -73,8 +73,8 @@
           <van-col span="6" class="u-num">{{item.amount}}元</van-col>
           <van-col span="6">{{item.time}}</van-col>
           <van-col span="5" class="u-state">
-            {{item.state===2?"已发放":"未游戏"}}
-            <span class="u-alert" v-if="item.state!==2">提醒</span>
+            {{item.status===2?"已发放":"未游戏"}}
+            <span class="u-alert" v-if="item.status!==2">提醒</span>
           </van-col>
         </van-row>
 
@@ -281,7 +281,7 @@ export default {
             let list = res.datas.map(item => {
               return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
             });
-            this.barString = list.join("");
+            const barString = list.join("");
             this.setBarString(this.barString);
           } else {
             this.$toast(res.msg);

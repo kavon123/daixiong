@@ -93,7 +93,6 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
 import mBar from "@/components/m-bar";
 import mContacts from "@/components/m-contacts";
 import qrcode from "./component/qrcode";
@@ -126,13 +125,6 @@ export default {
         { name: "李佳佳", phone: "13123456764", money: "10" }
       ]
     };
-  },
-  computed: {
-    ...mapGetters(["downloadUrl"])
-  },
-  created() {
-    console.log(this.downloadUrl);
-    console.log(this.$store.getters.downloadUrl);
   },
   methods: {
     fnPop(key, val) {

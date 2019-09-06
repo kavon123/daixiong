@@ -1,10 +1,8 @@
 <template>
   <div class="home">
-    <m-bar
-      text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
-    />
+    <m-bar :text="barString" />
     <div class="g-ct">
-      <div class="u-but">了解YG棋牌</div>
+      <div class="u-but" @click="fnJump(ygUserinfo.ygLoginUrl)">了解YG棋牌</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
           1.好友通过您分享的链接注册YG娱乐，进入游戏1分钟，您即可获得2元佣金。
@@ -12,7 +10,9 @@
         </div>
         <div class="u-rules_text">
           2.返佣奖励=直属下级返佣（流水每10万则返佣10000元）+非直属下级返佣（返给上级佣金*级数*30%），详见
-          <span>返佣说明</span>
+          <span
+            @click="fnJump(ygUserinfo.commissionUrl)"
+          >返佣说明</span>
           <br />返佣奖励需在“YG电竞”中提现
         </div>
       </div>
@@ -20,7 +20,7 @@
         <div class="m-user">
           <van-icon name="user-o" color="#EBB84E" />
           <template v-if="!bIsLogin">
-            <span class="u-user">159622212</span>
+            <span class="u-user">{{ygUserinfo.userId}}</span>
             <van-icon name="wap-nav" color="#ffee2e" @click="fnPop('generateShow',true)" />
           </template>
           <template v-else>
@@ -33,16 +33,15 @@
             <div class="sum_item_ct">
               <img class="sum_gold" src="@/assets/images/gold.png" alt />
               <div class="sum_num">
-                <span>6</span>元
+                <span>{{ygUserinfo.externalBalance}}</span>元
               </div>
-              <div class="sum_add">累计已获得123元</div>
+              <div class="sum_add">累计已获得{{ygUserinfo.externalTotalAmount}}元</div>
             </div>
             <div class="sum_but">
               <img
                 :class="bIsLogin?'gray':''"
                 src="@/assets/images/transfer.png"
                 @click="fnWithdrawal"
-                alt
               />
             </div>
           </div>
@@ -51,84 +50,42 @@
             <div class="sum_item_ct">
               <img class="sum_golds" src="@/assets/images/golds.png" alt />
               <div class="sum_num">
-                <span>6</span>元
+                <span>{{ygUserinfo.dxUserBalance?ygUserinfo.dxUserBalance.balance:'0'}}</span>元
               </div>
-              <div class="sum_add">累计已获得123元</div>
+              <div
+                class="sum_add"
+              >累计已获得{{ygUserinfo.dxUserBalance?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
             </div>
             <div class="sum_but">
-              <img :class="bIsLogin?'gray':''" src="@/assets/images/withdrawal.png" alt />
+              <img
+                :class="bIsLogin?'gray':''"
+                src="@/assets/images/withdrawal.png"
+                @click="fnYGWithdrawal"
+              />
             </div>
           </div>
         </div>
       </div>
-      <div class="g-user-list">
+      <div class="g-user-list" v-if="totalSize">
         <van-row type="flex" class="g-table_head">
           <van-col span="6">用户名</van-col>
           <van-col span="6">收益</van-col>
           <van-col span="6">日期</van-col>
           <van-col span="5">状态</van-col>
         </van-row>
-        <van-row type="flex" class="g-table">
+        <van-row type="flex" class="g-table" v-for="(row,i) in lists" :key="i">
           <van-col span="6">
-            <div class="table_name">asdfasdf</div>
+            <div class="table_name">{{row.name}}</div>
             <span>*****0128</span>
           </van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
+          <van-col span="6" class="u-num">{{row.amount}}元</van-col>
+          <van-col span="6">{{row.time}}</van-col>
           <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
+            {{row.status===2?"已发放":"未游戏"}}
+            <span class="u-alert" v-if="row.status!==2">提醒</span>
           </van-col>
         </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">
-            <div class="table_name">asdfasdf</div>
-            <span>*****0128</span>
-          </van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">
-            <div class="table_name">asdfasdf</div>
-            <span>*****0128</span>
-          </van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">
-            <div class="table_name">asdfasdf</div>
-            <span>*****0128</span>
-          </van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <van-row type="flex" class="g-table">
-          <van-col span="6">
-            <div class="table_name">asdfasdf</div>
-            <span>*****0128</span>
-          </van-col>
-          <van-col span="6" class="u-num">2元</van-col>
-          <van-col span="6">20190831</van-col>
-          <van-col span="5" class="u-state">
-            已发放
-            <span class="u-alert">提醒</span>
-          </van-col>
-        </van-row>
-        <div class="user_but" @click="fnPromoteList">
+        <div class="user_but" @click="fnPromoteList" v-if="totalSize>6">
           更多
           <van-icon name="arrow" />
         </div>
@@ -160,130 +117,201 @@
         </div>
       </div>
       <div class="g-best">
-        <img src="@/assets/images/best.png" alt @click="fnBest" />
+        <img src="@/assets/images/best.png" alt @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-YG :show="generateShow" :data="oUserinfo" @close="fnPop" />
-    <m-login :show="loginShow" @fnLogin="fnLogin" @close="fnPop" />
-    <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
-    <!-- <m-contacts :show="show" :first="first" @close="fnClose" /> -->
-    <m-best :show="bestShow" @close="fnPop" />
-    <m-withdrawal :show="withdrawal" @close="fnPop" />
+    <m-YG v-if="generateShow" :data="ygUserinfo" @close="fnPop" />
+    <m-login v-if="loginShow" @fnInfoAll="fnInfoAll" @close="fnPop" />
+    <m-rele-err v-if="errShow" @info="fnInfo" @close="fnPop" />
+    <m-rele-suc v-if="sucShow" :name="ygUserinfo.userId" @close="fnPop" />
+    <m-best v-if="bestShow" @close="fnPop" />
+    <m-withdrawal v-if="withdrawal" @close="fnPop" />
+    <m-but-pop v-if="butPopShow" @close="fnPop" />
+    <m-win-pop v-if="winShow" type="58" @close="fnPop" />
+    <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
   </div>
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+import { getDate } from "@/util/methods.js";
 import $api from "@/util/api.js";
-import myPromise from "@/util/tolo.js";
 import mBar from "@/components/m-bar";
 import mYG from "@/components/m-generate/yg";
 import mLogin from "@/components/m-login";
 import mReleSuc from "@/components/m-rele/success";
 import mReleErr from "@/components/m-rele/error";
-import mContacts from "@/components/m-contacts";
 import mBest from "@/components/m-best";
 import mWithdrawal from "@/components/m-withdrawal";
+import mButPop from "@/components/m-but-pop";
+import mWinPop from "@/components/m-win-pop";
+import mQrcode from "@/components/m-qrcode";
 
 export default {
-  name: "home",
   components: {
+    mQrcode,
+    mWinPop,
+    mButPop,
     mBar,
     mYG,
     mLogin,
     mReleSuc,
     mReleErr,
-    mContacts,
     mBest,
     mWithdrawal
   },
   data() {
     return {
+      butPopShow: false,
+      winShow: false,
+      qrcodeShow: false,
+      sucShow: false,
       loginShow: false,
       withdrawal: false,
-      show: true,
       first: false,
       bestShow: false,
       generateShow: false,
       errShow: false,
-      oUserinfo: {},
-      bIsLogin: true
+      bIsLogin: true,
+      totalSize: 0,
+      lists: []
     };
   },
   created() {
+    this.fngetUserFriend();
     this.fnInfo();
+    this.setPlatformType(2);
+  },
+  computed: {
+    ...mapGetters(["ygUserinfo", "barString"])
   },
   methods: {
+    ...mapMutations({
+      setUserInfo: "SET_USER_INFO_YG",
+      setBarString: "SET_BAR_STRING",
+      setPlatformType: "SET_PLATFORM_TYPE"
+    }),
+    fnYGWithdrawal() {
+      if (this.bIsLogin) return;
+      console.log(this.ygUserinfo.ygLoginUrl);
+    },
     fnPop(key, vla) {
       this[key] = vla;
     },
     fnWithdrawal() {
       if (this.bIsLogin) return;
-      this.withdrawal = true;
-    },
-    fnLogin(obj) {
-      console.log("kylin");
-      this.bIsLogin = false;
-      this.oUserinfo = obj;
+      if (!this.ygUserinfo.externalBalance) {
+        this.$toast("余额不足！");
+        return;
+      }
+      $api
+        .postRequest("/user/v3/userCashExternalRedPackage", { source: 2 })
+        .then(res => {
+          if (res.code === 0) {
+            this.withdrawal = true;
+            const oUserinfo = Object.assign(this.ygUserinfo, {
+              externalBalance: 0
+            });
+            _this.setUserInfo(oUserinfo);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
     },
     fnPromoteList() {
       this.$router.push("/promote");
+    },
+    fnShowButPop() {
+      if (this.bIsLogin) {
+        this.fnInfo();
+      } else {
+        this.butPopShow = true;
+      }
     },
     fnBest() {
       this.$router.push("/relative");
     },
     fnInfo() {
-      // $api
-      //   .postRequest("/app/user/v3/searchUserFriendPage", {
-      //     appVersion: "ceshi.com.android@1.0.6",
-      //     deviceType: 1,
-      //     devicenId: "1123",
-      //     param: "{'source':'2'}",
-      //     userID: 123
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //   });
-      // $api.postRequest("/user/v3/login58").then(res => {
-      //   console.log(res);
-      // });
       const _this = this;
       _this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      myPromise(1, {
-        code: 2,
-        msg: "",
-        datas: {
-          phone: "13812345682",
-          hasBind: 1,
-          pwd: "123456",
-          downloadUrl:
-            "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
-          commision: 0,
-          userId: "ttcm1vwb7k"
-        }
-      })
+      $api
+        .postRequest("/user/v3/loginYg", { loginType: 2 })
         .then(res => {
           _this.$toast.clear();
           if (res.code === 0) {
-            _this.oUserinfo = res.datas;
+            this.fnInfoAll();
+            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
+            _this.setUserInfo(oUserinfo);
             _this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
-            if (res.datas.hasBind === 1) {
+            if (res.datas.hasBind == 1) {
               _this.generateShow = true;
-            } else if (res.datas.hasBind === 2) {
+            } else if (res.datas.hasBind == 2) {
               _this.sucShow = true;
-            } else {
             }
           } else {
-            // _this.errShow = true;
+            _this.errShow = true;
           }
         })
         .catch(err => {
-          _this.$toast.clear();
+          this.$toast(err.msg);
+        });
+    },
+    fnInfoAll() {
+      $api
+        .postRequest("/external/friend/getYgDatas")
+        .then(res => {
+          if (res.code === 0) {
+            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
+            let list = res.datas.dxRankingAHundred.map(item => {
+              return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
+                item.sumMoney
+              )} 元！               `;
+            });
+            const text = list.join("");
+            console.log(text);
+            this.setBarString(text);
+            this.setUserInfo(oUserinfo);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
+    },
+    fnJump(url) {
+      console.log(url);
+    },
+    fngetUserFriend() {
+      $api
+        .postRequest("/user/v3/searchUserFriendPage", {
+          source: 2,
+          page: 1,
+          size: 5
+        })
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.infoList = res.datas.infoList.map(item => {
+              item.time = getDate(item.createdDate);
+              return item;
+            });
+            this.totalSize = res.datas.totalSize;
+            this.lists = res.datas.infoList;
+          } else {
+            this.$toast(err.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
         });
     }
   }
@@ -295,11 +323,10 @@ export default {
   overflow: hidden;
   margin-top: -30px;
   width: 375px;
-  height: 2130px;
   background-image: url("../assets/images/YGbg.png");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
+  background-position: top center;
   .u-title {
     text-align: center;
     color: #fdfe4a;
@@ -557,6 +584,7 @@ export default {
     color: #f7d99d;
     line-height: 22px;
     text-align: center;
+    margin-bottom: 15px;
   }
 }
 </style>

@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog">
+      <div class="dialog" :class="show?'style_show':''">
         <div class="dialog_ct">
           <div class="title">登录YG电竞</div>
           <div class="input_ct">
@@ -45,9 +45,14 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
+import $api from "@/util/api.js";
+
 export default {
   data() {
     return {
+      show: false,
       bOver: false,
       sUserName: "",
       sPassword: "",
@@ -55,14 +60,13 @@ export default {
       sPromptText: "正在登录"
     };
   },
-
+  computed: {
+    ...mapGetters(["ygUserinfo"])
+  },
   methods: {
-    funSetOver() {
-      this.bOver = true;
-      setTimeout(() => {
-        this.bOver = false;
-      }, 1000);
-    },
+    ...mapMutations({
+      setUserInfo: "SET_USER_INFO_YG"
+    }),
     fnClose() {
       this.$emit("close", "loginShow", false);
     },
@@ -70,19 +74,45 @@ export default {
       this[key] = "";
     },
     fnLogin() {
-      this.bOver = true;
-      setTimeout(() => {
-        this.sPromptText = "登录成功";
-        this.bLogin = true;
-        this.fnClose();
-        this.$emit("fnLogin", {});
-        setTimeout(() => {
-          this.bOver = false;
-          this.bLogin = false;
-          this.sUserName = "";
-          this.sPassword = "";
-        }, 1000);
-      }, 1000);
+      const _this = this;
+      _this.bOver = true;
+      _this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        loadingType: "spinner"
+      });
+      $api
+        .postRequest("/user/v3/loginYg", {
+          loginType: 1,
+          account: _this.sUserName,
+          pwd: _this.sPassword
+        })
+        .then(res => {
+          _this.$toast.clear();
+
+          if (res.code === 0) {
+            _this.$emit("fnInfoAll");
+            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
+            _this.setUserInfo(oUserinfo);
+            _this.sPromptText = "登录成功";
+            _this.bLogin = true;
+            _this.sUserName = "";
+            _this.sPassword = "";
+            _this.$emit("close", "bIsLogin", false);
+            _this.show = true;
+            setTimeout(() => {
+              _this.bOver = false;
+              _this.fnClose();
+            }, 500);
+          } else {
+            _this.bOver = false;
+            _this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          _this.bOver = false;
+          _this.$toast(err.msg);
+        });
     }
   }
 };
@@ -186,5 +216,8 @@ export default {
   .message_text {
     color: #fff;
   }
+}
+.style_show {
+  display: none;
 }
 </style>
