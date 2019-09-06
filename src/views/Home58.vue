@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="g-user-list" v-if="lists.length">
+      <div class="g-user-list" v-if="totalSize">
         <div class="u-title">我的邀请</div>
         <van-row type="flex" class="g-table_head">
           <van-col span="6">用户名</van-col>
@@ -68,7 +68,7 @@
           <van-col span="5">状态</van-col>
         </van-row>
 
-        <van-row type="flex" class="g-table" v-for="(item,i) in viewList" :key="i">
+        <van-row type="flex" class="g-table" v-for="(item,i) in lists" :key="i">
           <van-col span="6">{{item.mobile}}</van-col>
           <van-col span="6" class="u-num">{{item.amount}}元</van-col>
           <van-col span="6">{{item.time}}</van-col>
@@ -78,7 +78,7 @@
           </van-col>
         </van-row>
 
-        <div class="user_but" @click="fnPromoteList" v-if="lists.length>7">
+        <div class="user_but" @click="fnPromoteList" v-if="totalSize>7">
           更多
           <van-icon name="arrow" />
         </div>
@@ -155,6 +155,7 @@ export default {
   },
   data() {
     return {
+      totalSize: 0,
       qrcodeShow: false,
       winShow: false,
       butPopShow: false,
@@ -170,9 +171,6 @@ export default {
     };
   },
   computed: {
-    viewList() {
-      return this.lists.slice(0, 6);
-    },
     ...mapGetters(["oUserinfo"])
   },
   created() {
@@ -184,8 +182,6 @@ export default {
   methods: {
     ...mapMutations({
       setUserInfo: "SET_USER",
-      setDowUrl: "SET_DOW_URL",
-      setPromoteList: "SET_PROMOTE_LIST",
       setBarString: "SET_BAR_STRING"
     }),
     fnPop(key, vla) {
@@ -219,7 +215,6 @@ export default {
       console.log(this.oUserinfo.url);
     },
     fnPromoteList() {
-      this.setPromoteList(this.lists);
       this.$router.push("/promote");
     },
     fnJump() {
@@ -237,7 +232,6 @@ export default {
         .then(res => {
           _this.$toast.clear();
           if (res.code === 0) {
-            _this.setDowUrl(res.datas.downloadUrl);
             const oUserinfo = Object.assign(this.oUserinfo, res.datas);
             _this.setUserInfo(oUserinfo);
             _this.bIsLogin = false;
@@ -258,13 +252,18 @@ export default {
     },
     fngetUserFriend() {
       $api
-        .postRequest("/user/v3/searchUserFriendPage")
+        .postRequest("/user/v3/searchUserFriendPage", {
+          source: 1,
+          page: 1,
+          size: 6
+        })
         .then(res => {
           if (res.code === 0) {
             res.datas.infoList = res.datas.infoList.map(item => {
               item.time = getDate(item.createdDate);
               return item;
             });
+            this.totalSize = res.datas.totalSize;
             this.lists = res.datas.infoList;
           } else {
             this.$toast(err.msg);

@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["downloadUrl"])
+    ...mapGetters(["oUserinfo"])
   },
   mounted() {
     this.$nextTick(() => {
@@ -92,7 +92,7 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: this.downloadUrl
+        text: this.oUserinfo.downloadUrl
       });
     }
   }

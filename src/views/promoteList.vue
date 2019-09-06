@@ -11,7 +11,7 @@
         </van-row>
       </div>
       <div class="scroll">
-        <div class="table_body" v-for="(item,i) in promoteList" :key="i">
+        <div class="table_body" v-for="(item,i) in lists" :key="i">
           <van-row type="flex" justify="center">
             <van-col span="6">
               <div class="name">{{item.name}}</div>
@@ -35,19 +35,44 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import $api from "@/util/api.js";
+import { getDate } from "@/util/methods.js";
+
 export default {
   data() {
     return {
       lists: []
     };
   },
-  computed: {
-    ...mapGetters(["promoteList"])
+  created() {
+    this.fngetUserFriend(1);
   },
   methods: {
     fnRemind() {
       console.log("object");
+    },
+    fngetUserFriend(page) {
+      $api
+        .postRequest("/user/v3/searchUserFriendPage", {
+          source: 1,
+          page,
+          size: 20
+        })
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.infoList = res.datas.infoList.map(item => {
+              item.time = getDate(item.createdDate);
+              return item;
+            });
+            this.totalSize = res.datas.totalSize;
+            this.lists = res.datas.infoList;
+          } else {
+            this.$toast(err.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
     }
   }
 };
