@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="text">已转账到我的钱包，可前往我的 钱包页面提现</div>
           <div class="but_ct">
@@ -17,15 +17,7 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-
   methods: {
     fnClose() {
       this.$emit("close", "withdrawal", false);
@@ -68,7 +60,6 @@ export default {
         margin: 0 10px;
         width: 100px;
         padding: 10px 0;
-        // background: #367dfd;
         border-radius: 10px;
         font-size: 15px;
         font-weight: 400;
@@ -81,16 +72,6 @@ export default {
         color: #fff;
         background: #367dfd;
       }
-      //   .but {
-      //     padding: 10px 40px;
-      //     background: #367dfd;
-      //     border-radius: 5px;
-      //     font-size: 15px;
-      //     font-weight: 400;
-      //     color: #fff;
-      //     text-align: center;
-      //     margin: 30px 10px;
-      //   }
     }
   }
   .close {
@@ -98,9 +79,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

@@ -114,20 +114,14 @@
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
     </div>
-    <m-58 :show="generateShow" :data="oUserinfo" @close="fnPop" />
-    <m-rele-suc :show="sucShow" :name="oUserinfo.userId" @close="fnPop" />
-    <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
-    <m-best :show="bestShow" @close="fnPop" />
-    <m-withdrawal :show="withdrawal" @close="fnPop" />
-    <m-but-pop :show="butPopShow" v-if="butPopShow" @close="fnPop" />
+    <m-58 v-if="generateShow" :data="oUserinfo" @close="fnPop" />
+    <m-rele-suc v-if="sucShow" :name="oUserinfo.userId" @close="fnPop" />
+    <m-rele-err v-if="errShow" @info="fnInfo" @close="fnPop" />
+    <m-best v-if="bestShow" @close="fnPop" />
+    <m-withdrawal v-if="withdrawal" @close="fnPop" />
+    <m-but-pop v-if="butPopShow" @close="fnPop" />
     <m-win-pop v-if="winShow" type="58" @close="fnPop" />
-    <m-qrcode
-      type="58"
-      :show="qrcodeShow"
-      v-if="oUserinfo.downloadUrl"
-      :downloadUrl="oUserinfo.downloadUrl"
-      @close="fnPop"
-    />
+    <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
   </div>
 </template>
 

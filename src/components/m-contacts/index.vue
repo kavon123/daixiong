@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">允许访问通讯录</div>
           <div class="sum" v-if="first">
@@ -19,13 +19,8 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
   props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
     first: {
       type: Boolean,
       default: false
@@ -100,9 +95,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">扫描二维码，注册YG电竞领取现金</div>
           <div id="qrcode" class="qrcode"></div>
@@ -14,26 +14,16 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
 
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
-    downloadUrl: {
-      type: String,
-      default: ""
-    }
+  computed: {
+    ...mapGetters(["downloadUrl"])
   },
-
   mounted() {
     this.$nextTick(() => {
-      const div = document.getElementById("qrcode");
-      if (div) {
-        this.qrcode(div);
-      }
+      this.qrcode(div);
     });
   },
   methods: {
@@ -93,9 +83,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  visibility: hidden;
 }
 </style>

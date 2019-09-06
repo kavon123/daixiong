@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="centent">告知好友查看短信，可提高30%成功率哦</div>
           <div class="channel">
@@ -24,15 +24,7 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-
   methods: {
     fnClose() {
       this.$emit("close", "noticeShow", false);
@@ -114,9 +106,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

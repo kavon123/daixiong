@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">推广小妙招</div>
           <div class="prompt">
@@ -20,15 +20,7 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
-
   methods: {
     fnClose() {
       this.$emit("close", "bestShow", false);
@@ -96,9 +88,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

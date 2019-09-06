@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">网络异常，请重试</div>
           <div class="but" @click="fnLogin">重试</div>
@@ -14,14 +14,7 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {};
   },
@@ -81,9 +74,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

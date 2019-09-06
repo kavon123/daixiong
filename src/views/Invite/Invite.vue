@@ -86,9 +86,9 @@
         </div>
       </div>
     </div>
-    <m-contacts :show="contactsShow" :first="first" @close="fnPop" />
-    <qrcode :show="qrcodeShow" v-if="downloadUrl" :downloadUrl="downloadUrl" @close="fnPop" />
-    <notice :show="noticeShow" @close="fnPop" />
+    <m-contacts v-if="contactsShow" :first="first" @close="fnPop" />
+    <qrcode v-if="qrcodeShow" @close="fnPop" />
+    <notice v-if="noticeShow" @close="fnPop" />
   </div>
 </template>
 

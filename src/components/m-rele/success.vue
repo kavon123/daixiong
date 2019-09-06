@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">已关联您的58账号</div>
           <div class="cnetent">
@@ -18,13 +18,8 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
   props: {
-    show: {
-      type: Boolean,
-      default: false
-    },
     name: {
       type: String,
       default: ""
@@ -99,9 +94,5 @@ export default {
     color: #fff;
     margin-top: 20px;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

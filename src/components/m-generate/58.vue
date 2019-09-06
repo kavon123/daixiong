@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct" ref="capture">
           <img class="generate" src="./generate1.png" alt />
           <div class="centent">
@@ -44,10 +44,6 @@ export default {
     data: {
       type: Object,
       default: {}
-    },
-    show: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -176,9 +172,5 @@ export default {
   .message_text {
     color: #fff;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>

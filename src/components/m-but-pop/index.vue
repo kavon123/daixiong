@@ -56,16 +56,9 @@
 
 <script>
 import { mapGetters } from "vuex";
-
 import QRCode from "qrcodejs2";
 
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       activeIndex: 0

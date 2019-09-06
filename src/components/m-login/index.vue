@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'':'style_show'">
+      <div class="dialog">
         <div class="dialog_ct">
           <div class="title">登录YG电竞</div>
           <div class="input_ct">
@@ -45,14 +45,7 @@
 </template>
 
 <script>
-import { setTimeout } from "timers";
 export default {
-  props: {
-    show: {
-      type: Boolean,
-      default: false
-    }
-  },
   data() {
     return {
       bOver: false,
@@ -193,9 +186,5 @@ export default {
   .message_text {
     color: #fff;
   }
-}
-
-.style_show {
-  display: none;
 }
 </style>
