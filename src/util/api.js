@@ -29,7 +29,7 @@ const $axios = {
             "deviceType": 1,
             "devicenId": "1123",
             "param": params,
-            "userID": 1087001933091328000
+            "userID": '1077513311572815872'
         };
         let instance = axios({
             method: 'post',

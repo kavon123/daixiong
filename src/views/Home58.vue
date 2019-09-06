@@ -119,8 +119,8 @@
     <m-rele-err :show="errShow" @info="fnInfo" @close="fnPop" />
     <m-best :show="bestShow" @close="fnPop" />
     <m-withdrawal :show="withdrawal" @close="fnPop" />
-    <m-but-pop :show="butPopShow" @close="fnPop" />
-    <m-win-pop :show="winShow" type="58" @close="fnPop" />
+    <m-but-pop :show="butPopShow" v-if="butPopShow" @close="fnPop" />
+    <m-win-pop v-if="winShow" type="58" @close="fnPop" />
     <m-qrcode
       type="58"
       :show="qrcodeShow"
@@ -188,8 +188,8 @@ export default {
     }
   },
   created() {
-    this.fngetUserFriend();
-    this.fnInfo();
+    // this.fngetUserFriend();
+    // this.fnInfo();
   },
   methods: {
     ...mapMutations({
@@ -201,7 +201,18 @@ export default {
     },
     fnWithdrawal() {
       if (this.bIsLogin) return;
-      this.withdrawal = true;
+      $api
+        .postRequest("/user/v3/userCashExternalRedPackage", { source: 1 })
+        .then(res => {
+          if (res.code === 0) {
+            this.withdrawal = true;
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.msg);
+        });
     },
     fnPromoteList() {
       this.setPromoteList(this.lists);
@@ -211,42 +222,14 @@ export default {
       console.log(this.oUserinfo.downloadUrl);
     },
     fnInfo() {
-      // $api
-      //   .postRequest("/app/user/v3/searchUserFriendPage", {
-      //     appVersion: "ceshi.com.android@1.0.6",
-      //     deviceType: 1,
-      //     devicenId: "1123",
-      //     param: "{'source':'2'}",
-      //     userID: 123
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //   });
-      // $api.postRequest("/user/v3/login58").then(res => {
-      //   console.log(res);
-      // });
       const _this = this;
       _this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      myPromise(1, {
-        code: 0,
-        msg: "",
-        datas: {
-          phone: "13812345682",
-          hasBind: 1,
-          pwd: "123456",
-          downloadUrl:
-            "https://5878.com/?channelCode=daili02&code=75b19f7dafaed88387fd2e529bcccbca",
-          commision: 1000,
-          balance: 90,
-          externalBalance: 10,
-          externalTotalAmount: 999,
-          userId: "ttcm1vwb7k"
-        }
-      })
+      $api
+        .postRequest("/user/v3/login58")
         .then(res => {
           _this.$toast.clear();
           if (res.code === 0) {
@@ -254,42 +237,23 @@ export default {
             _this.oUserinfo = res.datas;
             _this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
-            if (res.datas.hasBind === 1) {
+            if (res.datas.hasBind == 1) {
               _this.generateShow = true;
-            } else if (res.datas.hasBind === 2) {
+            } else if (res.datas.hasBind == 2) {
               _this.sucShow = true;
-            } else {
             }
           } else {
             _this.errShow = true;
           }
         })
         .catch(err => {
+          _this.errShow = true;
           _this.$toast.clear();
         });
     },
     fngetUserFriend() {
-      myPromise(1, {
-        code: 0,
-        msg: "",
-        datas: {
-          infoList: [
-            {
-              parentUserId: 123,
-              createdDate: 1567158741000,
-              updateDate: 1567158741000,
-              mobile: "18022226666",
-              name: "l76v1zvcn8",
-              status: "1",
-              source: "1",
-              amount: 0
-            }
-          ],
-          totalSize: 5,
-          totalPage: 1,
-          currPage: 1
-        }
-      })
+      $api
+        .postRequest("/user/v3/searchUserFriendPage")
         .then(res => {
           if (res.code === 0) {
             res.datas.infoList = res.datas.infoList.map(item => {
@@ -297,16 +261,21 @@ export default {
               return item;
             });
             this.lists = res.datas.infoList;
+          } else {
+            this.$toast(err.msg);
           }
         })
-        .catch(err => {});
+        .catch(err => {
+          this.$toast(err.msg);
+        });
     },
     fnShowButPop() {
-      if (this.bIsLogin) {
-        this.fnInfo();
-      } else {
-        this.butPopShow = true;
-      }
+      this.butPopShow = true;
+      // if (this.bIsLogin) {
+      //   this.fnInfo();
+      // } else {
+      //   this.butPopShow = true;
+      // }
     }
   }
 };

@@ -16,7 +16,7 @@
             </div>
             <div class="item">
               <div class="item_text">初始密码</div>
-              <div class="item_input">{{data.pwd}}</div>
+              <div class="item_input">123456</div>
             </div>
           </div>
           <div class="footer">
