@@ -177,4 +177,7 @@ export default {
     color: #fff;
   }
 }
+.style_show {
+  display: none;
+}
 </style>

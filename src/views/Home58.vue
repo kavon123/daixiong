@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import $api from "@/util/api.js";
 import { getDate } from "@/util/methods.js";
 import mBar from "@/components/m-bar";
@@ -160,18 +160,11 @@ export default {
       butPopShow: false,
       sucShow: false,
       withdrawal: false,
-      show: true,
       first: false,
       bestShow: false,
       generateShow: false,
       errShow: false,
       bIsLogin: true,
-      oUserinfo: {
-        commision: 0,
-        balance: 0,
-        externalBalance: 0,
-        externalTotalAmount: 0
-      },
       lists: [],
       barString: ""
     };
@@ -179,7 +172,8 @@ export default {
   computed: {
     viewList() {
       return this.lists.slice(0, 6);
-    }
+    },
+    ...mapGetters(["oUserinfo"])
   },
   created() {
     this.fnGetUrl();
@@ -189,6 +183,7 @@ export default {
   },
   methods: {
     ...mapMutations({
+      setUserInfo: "SET_USER",
       setDowUrl: "SET_DOW_URL",
       setPromoteList: "SET_PROMOTE_LIST",
       setBarString: "SET_BAR_STRING"
@@ -198,11 +193,19 @@ export default {
     },
     fnWithdrawal() {
       if (this.bIsLogin) return;
+      if (!this.oUserinfo.externalBalance) {
+        this.$toast("余额不足！");
+        return;
+      }
       $api
         .postRequest("/user/v3/userCashExternalRedPackage", { source: 1 })
         .then(res => {
           if (res.code === 0) {
             this.withdrawal = true;
+            const oUserinfo = Object.assign(this.oUserinfo, {
+              externalBalance: 0
+            });
+            _this.setUserInfo(oUserinfo);
           } else {
             this.$toast(res.msg);
           }
@@ -235,7 +238,8 @@ export default {
           _this.$toast.clear();
           if (res.code === 0) {
             _this.setDowUrl(res.datas.downloadUrl);
-            _this.oUserinfo = Object.assign(this.oUserinfo, res.datas);
+            const oUserinfo = Object.assign(this.oUserinfo, res.datas);
+            _this.setUserInfo(oUserinfo);
             _this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
             if (res.datas.hasBind == 1) {
