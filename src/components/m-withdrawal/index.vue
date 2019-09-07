@@ -23,7 +23,7 @@ export default {
       this.$emit("close", "withdrawal", false);
     },
     fnWithdrawal() {
-      console.log("object");
+      this.$bridge.callhandler("DX_backToLocal", "提现红包");
     }
   }
 };

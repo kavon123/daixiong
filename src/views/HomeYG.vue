@@ -2,6 +2,16 @@
   <div class="home">
     <m-bar :text="barString" />
     <div class="g-ct">
+      <div
+        style="font-size: 20px;
+    color: red;
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    word-break:break-all;
+    word-wrap:break-word;"
+      >{{log}}</div>
       <div class="u-but" @click="fnJump(ygUserinfo.ygLoginUrl)">了解YG棋牌</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
@@ -50,11 +60,11 @@
             <div class="sum_item_ct">
               <img class="sum_golds" src="@/assets/images/golds.png" alt />
               <div class="sum_num">
-                <span>{{ygUserinfo.dxUserBalance?ygUserinfo.dxUserBalance.balance:'0'}}</span>元
+                <span>{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.balance?ygUserinfo.dxUserBalance.balance:'0'}}</span>元
               </div>
               <div
                 class="sum_add"
-              >累计已获得{{ygUserinfo.dxUserBalance?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
+              >累计已获得{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.sumCommision?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
             </div>
             <div class="sum_but">
               <img
@@ -82,7 +92,11 @@
           <van-col span="6">{{row.time}}</van-col>
           <van-col span="5" class="u-state">
             {{row.status===2?"已发放":"未游戏"}}
-            <span class="u-alert" v-if="row.status!==2">提醒</span>
+            <span
+              class="u-alert"
+              v-if="row.status!==2"
+              @click="fnOpen"
+            >提醒</span>
           </van-col>
         </van-row>
         <div class="user_but" @click="fnPromoteList" v-if="totalSize>6">
@@ -163,6 +177,7 @@ export default {
   },
   data() {
     return {
+      log: "初始化",
       butPopShow: false,
       winShow: false,
       qrcodeShow: false,
@@ -205,22 +220,27 @@ export default {
         this.$toast("余额不足！");
         return;
       }
-      $api
-        .postRequest("/user/v3/userCashExternalRedPackage", { source: 2 })
-        .then(res => {
-          if (res.code === 0) {
-            this.withdrawal = true;
-            const oUserinfo = Object.assign(this.ygUserinfo, {
-              externalBalance: 0
-            });
-            _this.setUserInfo(oUserinfo);
-          } else {
-            this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+      const _this = this;
+      _this.$bridge.callhandler("DX_encryptionRequest", { source: 2 }, function(
+        data
+      ) {
+        $api
+          .postRequest("/user/v3/userCashExternalRedPackage", data)
+          .then(res => {
+            if (res.code === 0) {
+              _this.withdrawal = true;
+              const oUserinfo = Object.assign(_this.ygUserinfo, {
+                externalBalance: 0
+              });
+              _this.setUserInfo(oUserinfo);
+            } else {
+              _this.$toast(res.msg);
+            }
+          })
+          .catch(err => {
+            _this.$toast(err.msg);
+          });
+      });
     },
     fnPromoteList() {
       this.$router.push("/promote");
@@ -242,77 +262,91 @@ export default {
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      $api
-        .postRequest("/user/v3/loginYg", { loginType: 2 })
-        .then(res => {
-          _this.$toast.clear();
-          if (res.code === 0) {
-            this.fnInfoAll();
-            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
-            _this.setUserInfo(oUserinfo);
-            _this.bIsLogin = false;
-            // 1 新注册(新生成) , 2新绑定 3 老账户
-            if (res.datas.hasBind == 1) {
-              _this.generateShow = true;
-            } else if (res.datas.hasBind == 2) {
-              _this.sucShow = true;
+      _this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        { loginType: 2 },
+        function(data) {
+          $api.postRequest("/user/v3/loginYg", data).then(res => {
+            _this.$toast.clear();
+            _this.fnInfoAll();
+            if (res.code === 0) {
+              const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
+              _this.setUserInfo(oUserinfo);
+              _this.bIsLogin = false;
+              // 1 新注册(新生成) , 2新绑定 3 老账户
+              if (res.datas.hasBind == 1) {
+                _this.generateShow = true;
+              } else if (res.datas.hasBind == 2) {
+                _this.sucShow = true;
+              }
+            } else {
+              _this.errShow = true;
             }
-          } else {
-            _this.errShow = true;
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+          });
+        }
+      );
     },
     fnInfoAll() {
-      $api
-        .postRequest("/external/friend/getYgDatas")
-        .then(res => {
-          if (res.code === 0) {
-            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
-            let list = res.datas.dxRankingAHundred.map(item => {
-              return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
-                item.sumMoney
-              )} 元！               `;
-            });
-            const text = list.join("");
-            console.log(text);
-            this.setBarString(text);
-            this.setUserInfo(oUserinfo);
-          } else {
-            this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+      const _this = this;
+      _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
+        $api
+          .postRequest("/external/friend/getYgDatas", data)
+          .then(res => {
+            if (res.code === 0) {
+              const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
+              _this.log = JSON.stringify(oUserinfo);
+              let list = res.datas.dxRankingAHundred.map(item => {
+                return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
+                  item.sumMoney
+                )} 元！               `;
+              });
+              const text = list.join("");
+              _this.setBarString(text);
+              _this.setUserInfo(oUserinfo);
+            } else {
+              _this.$toast(res.msg);
+            }
+          })
+          .catch(err => {
+            _this.$toast(err.msg);
+          });
+      });
     },
     fnJump(url) {
       console.log(url);
     },
     fngetUserFriend() {
-      $api
-        .postRequest("/user/v3/searchUserFriendPage", {
+      const _this = this;
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        {
           source: 2,
           page: 1,
           size: 5
-        })
-        .then(res => {
-          if (res.code === 0) {
-            res.datas.infoList = res.datas.infoList.map(item => {
-              item.time = getDate(item.createdDate);
-              return item;
+        },
+        function(data) {
+          $api
+            .postRequest("/user/v3/searchUserFriendPage", data)
+            .then(res => {
+              if (res.code === 0) {
+                res.datas.infoList = res.datas.infoList.map(item => {
+                  item.time = getDate(item.createdDate);
+                  return item;
+                });
+                _this.totalSize = res.datas.totalSize;
+                _this.lists = res.datas.infoList;
+              } else {
+                _this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              _this.$toast(err.msg);
             });
-            this.totalSize = res.datas.totalSize;
-            this.lists = res.datas.infoList;
-          } else {
-            this.$toast(err.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+        }
+      );
+    },
+    fnOpen() {
+      this.$bridge.callhandler("DX_openWX_QQ_58", "WX");
     }
   }
 };
@@ -322,6 +356,7 @@ export default {
 .g-ct {
   overflow: hidden;
   margin-top: -30px;
+  margin-bottom: 60px;
   width: 375px;
   background-image: url("../assets/images/YGbg.png");
   background-repeat: no-repeat;

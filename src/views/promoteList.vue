@@ -54,32 +54,39 @@ export default {
   },
   methods: {
     fnRemind() {
-      console.log("object");
+      this.$bridge.callhandler("DX_openWX_QQ_58", "WX");
     },
     fngetUserFriend(page, type) {
-      $api
-        .postRequest("/user/v3/searchUserFriendPage", {
+      const _this = this;
+      _this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        {
           source: type,
           page,
           size: 20
-        })
-        .then(res => {
-          if (res.code === 0) {
-            res.datas.infoList = res.datas.infoList.map(item => {
-              item.time = getDate(item.createdDate);
-              return item;
+        },
+        function(data) {
+          $api
+            .postRequest("/user/v3/searchUserFriendPage", data)
+            .then(res => {
+              if (res.code === 0) {
+                res.datas.infoList = res.datas.infoList.map(item => {
+                  item.time = getDate(item.createdDate);
+                  return item;
+                });
+                if (res.datas.totalPage > res.datas.currPage) {
+                  _this.fngetUserFriend(res.datas.currPage + 1);
+                }
+                _this.lists = _this.lists.concat(res.datas.infoList);
+              } else {
+                _this.$toast(err.msg);
+              }
+            })
+            .catch(err => {
+              _this.$toast(err.msg);
             });
-            if (res.datas.totalPage > res.datas.currPage) {
-              this.fngetUserFriend(res.datas.currPage + 1);
-            }
-            this.lists = this.lists.concat(res.datas.infoList);
-          } else {
-            this.$toast(err.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+        }
+      );
     }
   }
 };

@@ -30,14 +30,6 @@
         <van-icon name="close" class="close" @click="fnClose" />
       </div>
     </transition>
-    <transition>
-      <div class="dialog dialog_m" :class="bOver?'':'style_show'">
-        <div class="message">
-          <van-icon name="passed" class="passed" />
-          <div class="message_text">保存成功</div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -52,7 +44,6 @@ export default {
   },
   data() {
     return {
-      bOver: false,
       img: "./generate.png"
     };
   },
@@ -61,17 +52,9 @@ export default {
     funSetOver() {
       const _this = this;
       html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
-        let link = document.createElement("a");
-        link.href = canvas.toDataURL();
-        link.setAttribute("download", "账号密码.png");
-        link.style.display = "none";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        _this.bOver = true;
-        setTimeout(() => {
-          this.bOver = false;
-        }, 1000);
+        const url = canvas.toDataURL();
+        this.$bridge.callhandler("DX_seve_share_Imge", url);
+        this.$toast.success("保存成功");
       });
     },
     fnClose() {

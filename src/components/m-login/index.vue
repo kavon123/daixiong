@@ -79,34 +79,39 @@ export default {
         loadingType: "spinner",
         message: "登录中..."
       });
-      $api
-        .postRequest("/user/v3/loginYg", {
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        {
           loginType: 1,
           account: _this.sUserName,
           pwd: _this.sPassword
-        })
-        .then(res => {
-          _this.$toast.clear();
-
-          if (res.code === 0) {
-            _this.$emit("fnInfoAll");
-            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
-            _this.setUserInfo(oUserinfo);
-            _this.$toast.success("登录成功");
-            _this.sUserName = "";
-            _this.sPassword = "";
-            _this.$emit("close", "bIsLogin", false);
-            _this.show = true;
-            setTimeout(() => {
-              _this.fnClose();
-            }, 500);
-          } else {
-            _this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          _this.$toast(err.msg);
-        });
+        },
+        function(data) {
+          $api
+            .postRequest("/user/v3/loginYg", data)
+            .then(res => {
+              _this.$toast.clear();
+              if (res.code === 0) {
+                _this.$emit("fnInfoAll");
+                const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
+                _this.setUserInfo(oUserinfo);
+                _this.$toast.success("登录成功");
+                _this.sUserName = "";
+                _this.sPassword = "";
+                _this.$emit("close", "bIsLogin", false);
+                _this.show = true;
+                setTimeout(() => {
+                  _this.fnClose();
+                }, 500);
+              } else {
+                _this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              _this.$toast(err.msg);
+            });
+        }
+      );
     }
   }
 };
