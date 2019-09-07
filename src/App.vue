@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="noPC">
     <transition>
       <keep-alive :include="keepALivePages">
         <router-view />
@@ -9,12 +9,25 @@
 </template>
 
 <script>
+import { mapMutations } from "vuex";
+import { judgeClient } from "@/util/methods.js";
 export default {
   name: "App",
   data() {
     return {
-      keepALivePages: ["58", "YG"]
+      keepALivePages: ["58", "YG"],
+      noPC: false
     };
+  },
+  methods: {
+    ...mapMutations({
+      setIsIOS: "SET_IS_IOS"
+    })
+  },
+  created() {
+    const platform = judgeClient();
+    this.noPC = platform !== "PC";
+    this.setIsIOS(platform === "IOS");
   }
 };
 </script>

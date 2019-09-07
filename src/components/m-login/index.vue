@@ -32,15 +32,6 @@
         <van-icon name="close" class="close" @click="fnClose" />
       </div>
     </transition>
-    <transition>
-      <div class="dialog dialog_m" :class="bOver?'':'style_show'">
-        <div class="message">
-          <van-loading type="spinner" class="passed" v-if="!bLogin" />
-          <van-icon name="passed" class="passed" v-if="bLogin" />
-          <div class="message_text">{{sPromptText}}</div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -55,9 +46,7 @@ export default {
       show: false,
       bOver: false,
       sUserName: "",
-      sPassword: "",
-      bLogin: false,
-      sPromptText: "正在登录"
+      sPassword: ""
     };
   },
   computed: {
@@ -75,11 +64,20 @@ export default {
     },
     fnLogin() {
       const _this = this;
-      _this.bOver = true;
+      const { sUserName, sPassword } = _this;
+      if (!sUserName) {
+        this.$toast("请输入用户名");
+        return;
+      }
+      if (!sPassword) {
+        this.$toast("请输入密码");
+        return;
+      }
       _this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
-        loadingType: "spinner"
+        loadingType: "spinner",
+        message: "登录中..."
       });
       $api
         .postRequest("/user/v3/loginYg", {
@@ -94,23 +92,19 @@ export default {
             _this.$emit("fnInfoAll");
             const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
             _this.setUserInfo(oUserinfo);
-            _this.sPromptText = "登录成功";
-            _this.bLogin = true;
+            _this.$toast.success("登录成功");
             _this.sUserName = "";
             _this.sPassword = "";
             _this.$emit("close", "bIsLogin", false);
             _this.show = true;
             setTimeout(() => {
-              _this.bOver = false;
               _this.fnClose();
             }, 500);
           } else {
-            _this.bOver = false;
             _this.$toast(res.msg);
           }
         })
         .catch(err => {
-          _this.bOver = false;
           _this.$toast(err.msg);
         });
     }
@@ -125,7 +119,7 @@ export default {
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   flex-direction: column;

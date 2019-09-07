@@ -9,7 +9,9 @@ export default {
         state.barString = param;
     },
     SET_PLATFORM_TYPE(state, param) {
-        console.log(param)
         state.platformType = param;
+    },
+    SET_IS_IOS(state, param) {
+        state.isIOS = param;
     },
 }

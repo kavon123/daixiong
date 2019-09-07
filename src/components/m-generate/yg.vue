@@ -63,7 +63,7 @@ export default {
       html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
         let link = document.createElement("a");
         link.href = canvas.toDataURL();
-        link.setAttribute("download", "图片canvas.png");
+        link.setAttribute("download", "账号密码.png");
         link.style.display = "none";
         document.body.appendChild(link);
         link.click();
@@ -88,7 +88,7 @@ export default {
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   flex-direction: column;

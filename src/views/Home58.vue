@@ -166,12 +166,11 @@ export default {
       generateShow: false,
       errShow: false,
       bIsLogin: true,
-      lists: [],
-      barString: ""
+      lists: []
     };
   },
   computed: {
-    ...mapGetters(["oUserinfo"])
+    ...mapGetters(["oUserinfo", "barString"])
   },
   created() {
     this.fnGetUrl();
@@ -282,7 +281,7 @@ export default {
               return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
             });
             const barString = list.join("");
-            this.setBarString(this.barString);
+            this.setBarString(barString);
           } else {
             this.$toast(res.msg);
           }
@@ -296,7 +295,8 @@ export default {
         .postRequest("/external/friend/getUnderstandUrl58")
         .then(res => {
           if (res.code === 0) {
-            this.oUserinfo = Object.assign(this.oUserinfo, { url: res.datas });
+            const oUserinfo = Object.assign(this.oUserinfo, { url: res.datas });
+            this.setUserInfo(oUserinfo);
           } else {
             this.$toast(res.msg);
           }
