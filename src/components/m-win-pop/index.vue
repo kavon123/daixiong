@@ -6,12 +6,12 @@
         <div class="dialog_ct" :class="type==='58'?'dialog_ct_58':'dialog_ct_yg'">
           <div class="title">短信邀请成功</div>
           <div class="centent">告知好友查看短信，可提高30%成功率哦</div>
-          <div class="channel" @click="fnOpen('WX')">
-            <div class="item">
+          <div class="channel">
+            <div class="item" @click="fnOpen('WX','微信')">
               <img src="@/assets/images/WX.png" />
               <div class="text_color">告知微信好友</div>
             </div>
-            <div class="item" @click="fnOpen('QQ')">
+            <div class="item" @click="fnOpen('QQ','QQ')">
               <img src="@/assets/images/QQ.png" />
               <div class="text_color">告知QQ好友</div>
             </div>
@@ -32,13 +32,17 @@ export default {
       default: ""
     }
   },
-
   methods: {
     fnClose() {
       this.$emit("close", "winShow", false);
     },
-    fnOpen(platform) {
-      this.$bridge.callhandler("DX_openWX_QQ_58", platform);
+    fnOpen(platform, name) {
+      const _this = this;
+      this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
+        if (data == 0) {
+          _this.$toast(`未安装${name}!请安装`);
+        }
+      });
     }
   }
 };
@@ -51,7 +55,7 @@ export default {
   top: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 99999;
+  z-index: 99;
   display: flex;
   justify-content: center;
   flex-direction: column;

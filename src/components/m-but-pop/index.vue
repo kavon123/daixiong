@@ -4,17 +4,17 @@
     <div class="but_pop">
       <van-swipe @change="onChange" class="swipe" :show-indicators="false" :width="375">
         <van-swipe-item class="item">
-          <div class="swipe_img img_1">
+          <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode1" id="qrcode1"></div>
           </div>
         </van-swipe-item>
         <van-swipe-item class="item">
-          <div class="swipe_img img_2">
+          <div class="swipe_img img_2" ref="capture2">
             <div class="qrcode2" id="qrcode2"></div>
           </div>
         </van-swipe-item>
         <van-swipe-item class="item">
-          <div class="swipe_img img_3">
+          <div class="swipe_img img_3" ref="capture3">
             <div class="qrcode3" id="qrcode3"></div>
           </div>
         </van-swipe-item>
@@ -22,20 +22,20 @@
       <div class="choose">
         <div class="title">分享至</div>
         <div class="items">
-          <div @click="fnClose" class="item">
+          <div class="item" @click="fnShare(1)">
             <div class="img_ct">
               <img src="@/assets/images/WX.png" alt />
             </div>
             <div>微信</div>
           </div>
-          <div class="item">
+          <div class="item" @click="fnShare(2)">
             <div class="img_ct">
               <img src="@/assets/images/circle.png" alt />
             </div>
 
             <div>朋友圈</div>
           </div>
-          <div class="item">
+          <div class="item" @click="fnShare(4)">
             <div class="img_ct">
               <img src="@/assets/images/QQ.png" alt />
             </div>
@@ -55,6 +55,8 @@
 </template>
 
 <script>
+import html2canvas from "html2canvas";
+
 import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
 
@@ -82,11 +84,11 @@ export default {
       this.activeIndex = index;
     },
     fnBook() {
-      this.$router.push("/invite");
+      this.$emit("close", "butPopShow", false);
+      this.$emit("close", "inviteShow", true);
     },
     fnClose() {
       this.$emit("close", "butPopShow", false);
-      // this.$emit("close", "qrcodeShow", true);
     },
     qrcode($div, key) {
       const url =
@@ -97,6 +99,24 @@ export default {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
         text: url
+      });
+    },
+    fnShare(shareType) {
+      const _this = this;
+      const refs = ["capture1", "capture2", "capture3"];
+      html2canvas(_this.$refs[refs[_this.activeIndex]], {
+        allowTaint: true
+      }).then(canvas => {
+        const url = canvas.toDataURL();
+        _this.$bridge.callhandler(
+          "DX_save_share_Image",
+          { type: "share", image: url, shareType },
+          data => {
+            if (data == 1) {
+              _this.$toast.fail(`分享失败`);
+            }
+          }
+        );
       });
     }
   }

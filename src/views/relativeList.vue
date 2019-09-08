@@ -8,18 +8,25 @@
         <van-col span="8">状态</van-col>
       </van-row>
       <div class="scroll">
-        <van-row type="flex" class="table_body" v-for="(item,i) in lists" :key="i">
+        <van-row type="flex" class="table_body" v-for="(item,i) in ContactsList" :key="i">
           <van-col span="8" class="name">{{item.name}}</van-col>
           <van-col span="8">{{item.phone}}</van-col>
-          <van-col span="8" class="state">{{item.state===1?"已发放":"未游戏"}}</van-col>
+          <van-col span="8" class="state" @click="fnChoose(item.phone)">选择TA</van-col>
         </van-row>
       </div>
     </div>
+    <van-icon name="close" class="close" @click="fnClose" />
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    ContactsList: {
+      type: Array,
+      default: []
+    }
+  },
   data() {
     //这里存放数据
     return {
@@ -153,31 +160,44 @@ export default {
       ]
     };
   },
-  //监听属性 类似于data概念
-  computed: {},
-  //监控data中的数据变化
-  watch: {},
-  //方法集合
-  methods: {},
-  //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  methods: {
+    fnClose() {
+      this.$emit("close", "relativeShow", false);
+    },
+    fnChoose(phone) {
+      this.$emit("close", "Phone", phone);
+      this.$emit("close", "inviteShow", true);
+      this.fnClose();
+    }
+  }
 };
 </script>
 <style lang='less' scoped>
+.close {
+  font-size: 35px;
+  color: #fff;
+  margin-top: 20px;
+}
+.promote {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .centent {
-  height: 100vh;
+  height: 500px;
+  width: 90%;
   overflow: hidden;
+  background: #fff;
   .scroll {
-    height: calc(100vh - 48px);
+    height: calc(500px - 48px);
     overflow: auto;
   }
 }

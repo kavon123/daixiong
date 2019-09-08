@@ -3,5 +3,5 @@ export default {
     ygUserinfo: state => state.ygUserinfo,
     barString: state => state.barString,
     platformType: state => state.platformType,
-    isIOS: state => state.isIOS
+    isIOS: state => state.isIOS,
 }

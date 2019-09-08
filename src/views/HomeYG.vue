@@ -2,17 +2,7 @@
   <div class="home">
     <m-bar :text="barString" />
     <div class="g-ct">
-      <div
-        style="font-size: 20px;
-    color: red;
-    width: 300px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    word-break:break-all;
-    word-wrap:break-word;"
-      >{{log}}</div>
-      <div class="u-but" @click="fnJump(ygUserinfo.ygLoginUrl)">了解YG棋牌</div>
+      <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
           1.好友通过您分享的链接注册YG娱乐，进入游戏1分钟，您即可获得2元佣金。
@@ -142,8 +132,11 @@
     <m-best v-if="bestShow" @close="fnPop" />
     <m-withdrawal v-if="withdrawal" @close="fnPop" />
     <m-but-pop v-if="butPopShow" @close="fnPop" />
-    <m-win-pop v-if="winShow" type="58" @close="fnPop" />
-    <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
+    <m-win-pop v-if="winShow" type="YG" @close="fnPop" />
+    <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
+    <m-invite v-if="inviteShow" @close="fnPop" :Phone="Phone" />
+    <promote-list v-if="promoteShow" @close="fnPop" />
+    <relative-list v-if="relativeShow" @close="fnPop" :ContactsList="ContactsList" />
   </div>
 </template>
 
@@ -161,9 +154,15 @@ import mWithdrawal from "@/components/m-withdrawal";
 import mButPop from "@/components/m-but-pop";
 import mWinPop from "@/components/m-win-pop";
 import mQrcode from "@/components/m-qrcode";
+import mInvite from "./Invite/Invite";
+import promoteList from "./promoteList";
+import relativeList from "./relativeList";
 
 export default {
   components: {
+    relativeList,
+    promoteList,
+    mInvite,
     mQrcode,
     mWinPop,
     mButPop,
@@ -177,7 +176,11 @@ export default {
   },
   data() {
     return {
-      log: "初始化",
+      Phone: "",
+      ContactsList: [],
+      relativeShow: false,
+      promoteShow: false,
+      inviteShow: false,
       butPopShow: false,
       winShow: false,
       qrcodeShow: false,
@@ -209,7 +212,15 @@ export default {
     }),
     fnYGWithdrawal() {
       if (this.bIsLogin) return;
-      console.log(this.ygUserinfo.ygLoginUrl);
+      if (
+        this.ygUserinfo.dxUserBalance &&
+        this.ygUserinfo.dxUserBalance.balance
+      ) {
+        this.fnJump(this.ygUserinfo.loginUrl);
+        return;
+      } else {
+        this.$toast("余额不足！");
+      }
     },
     fnPop(key, vla) {
       this[key] = vla;
@@ -243,7 +254,7 @@ export default {
       });
     },
     fnPromoteList() {
-      this.$router.push("/promote");
+      this.promoteShow = true;
     },
     fnShowButPop() {
       if (this.bIsLogin) {
@@ -251,9 +262,6 @@ export default {
       } else {
         this.butPopShow = true;
       }
-    },
-    fnBest() {
-      this.$router.push("/relative");
     },
     fnInfo() {
       const _this = this;
@@ -294,7 +302,6 @@ export default {
           .then(res => {
             if (res.code === 0) {
               const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
-              _this.log = JSON.stringify(oUserinfo);
               let list = res.datas.dxRankingAHundred.map(item => {
                 return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
                   item.sumMoney
@@ -313,7 +320,7 @@ export default {
       });
     },
     fnJump(url) {
-      console.log(url);
+      this.$bridge.callhandler("DX_gotoBrowser", url);
     },
     fngetUserFriend() {
       const _this = this;
@@ -346,7 +353,12 @@ export default {
       );
     },
     fnOpen() {
-      this.$bridge.callhandler("DX_openWX_QQ_58", "WX");
+      const _this = this;
+      this.$bridge.callhandler("DX_openWX_QQ_58", "WX", function(data) {
+        if (data == 0) {
+          _this.$toast(`未安装微信!请安装`);
+        }
+      });
     }
   }
 };
@@ -356,7 +368,6 @@ export default {
 .g-ct {
   overflow: hidden;
   margin-top: -30px;
-  margin-bottom: 60px;
   width: 375px;
   background-image: url("../assets/images/YGbg.png");
   background-repeat: no-repeat;

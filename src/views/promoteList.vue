@@ -31,6 +31,7 @@
         </div>
       </div>
     </div>
+    <van-icon name="close" class="close" @click="fnClose" />
   </div>
 </template>
 
@@ -53,8 +54,16 @@ export default {
     this.fngetUserFriend(1, this.platformType);
   },
   methods: {
+    fnClose() {
+      this.$emit("close", "promoteShow", false);
+    },
     fnRemind() {
-      this.$bridge.callhandler("DX_openWX_QQ_58", "WX");
+      const _this = this;
+      this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
+        if (data == 0) {
+          _this.$toast(`未安装微信!请安装`);
+        }
+      });
     },
     fngetUserFriend(page, type) {
       const _this = this;
@@ -92,11 +101,31 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.close {
+  font-size: 35px;
+  color: #fff;
+  margin-top: 20px;
+}
+.promote {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
 .centent {
-  height: 100vh;
+  height: 500px;
+  width: 90%;
   overflow: hidden;
+  background: #fff;
   .scroll {
-    height: calc(100vh - 48px);
+    height: calc(500px - 48px);
     overflow: auto;
   }
 }

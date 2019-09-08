@@ -8,7 +8,7 @@
           <div class="centent">
             <div class="item">
               <div class="item_text">下载地址</div>
-              <div class="item_input">{{data.ygLoginUrl}}</div>
+              <div class="item_input">{{data.loginUrl}}</div>
             </div>
             <div class="item">
               <div class="item_text">用户名称</div>
@@ -53,8 +53,15 @@ export default {
       const _this = this;
       html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
         const url = canvas.toDataURL();
-        this.$bridge.callhandler("DX_seve_share_Imge", url);
-        this.$toast.success("保存成功");
+        _this.$bridge.callhandler(
+          "DX_save_share_Image",
+          { type: "save", image: url },
+          data => {
+            if (data == 1) {
+              _this.$toast.fail(`保存失败`);
+            }
+          }
+        );
       });
     },
     fnClose() {

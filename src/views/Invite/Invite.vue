@@ -1,10 +1,6 @@
 <template>
   <div class="invite">
-    <m-bar
-      text="通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容 通知内容"
-    />
     <div class="main-wrapper">
-      <div class="banner"></div>
       <div class="title-wrapper">
         <div
           class="nav-title"
@@ -42,13 +38,16 @@
           <div class="step step02">
             <div class="step-icon">第二步</div>
             <div class="invite-btn" @click="fnSubmit" :class="phone?'':'gray'">
-              <div class="xhb-icon"></div>
-              <div class="text">邀请亲友赚现金</div>
+              <div class="invite-btn_1">
+                <div class="xhb-icon"></div>
+                <div class="text">邀请亲友赚现金</div>
+              </div>
             </div>
           </div>
           <div class="bottom-text" @click="fnPop('qrcodeShow',true)">亲友在身边直接扫码</div>
           <div class="tips-wrapper">
-            <div class="tips-icon"></div>
+            <van-icon name="warning" class="tips-icon" />
+            <!-- <div class="tips-icon"></div> -->
             <div class="tips-text">
               <p>选择通讯录好友发送短信给好友，好友通过短信中的链接注册YG账号</p>
               <p>观看视频半小时以上，您即可获得奖励</p>
@@ -58,9 +57,9 @@
         <div class="txl-invite" v-if="activeType==='txl-invite'" key="2">
           <div class="top-text">
             全部邀请成功预计可得
-            <span class="red-money">2200元</span>
+            <span class="red-money">{{moneyAll}}元</span>
           </div>
-          <div class="btn-invite-all" @click="fnInvitationAll">一键全部邀请</div>
+          <!-- <div class="btn-invite-all" @click="fnInvitationAll">一键全部邀请</div> -->
           <div class="invite-table">
             <div class="invite-row invite-t-head">
               <div>昵称</div>
@@ -77,7 +76,7 @@
             <div class="invite-row invite-t-body" v-for="(item,i) in lists" :key="'row'+i">
               <div>{{item.name}}</div>
               <div>{{item.phone}}</div>
-              <div class="money">{{item.money}}元</div>
+              <div class="money">5元</div>
               <div>
                 <span class="invite-btn" @click="fnInvitation(item.phone)">邀请加入</span>
               </div>
@@ -85,45 +84,40 @@
           </div>
         </div>
       </div>
+      <van-icon name="close" class="close" @click="fnClose" />
     </div>
-    <m-contacts v-if="contactsShow" :first="first" @close="fnPop" />
-    <qrcode v-if="qrcodeShow" @close="fnPop" />
-    <notice v-if="noticeShow" @close="fnPop" />
+    <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
   </div>
 </template>
 
 <script>
-import mBar from "@/components/m-bar";
-import mContacts from "@/components/m-contacts";
-import qrcode from "./component/qrcode";
-import notice from "./component/notice";
+import mQrcode from "@/components/m-qrcode";
 
 export default {
+  props: {
+    Phone: {
+      type: String,
+      default: ""
+    }
+  },
   components: {
-    mBar,
-    mContacts,
-    qrcode,
-    notice
+    mQrcode
+  },
+  created() {
+    this.phone = this.Phone;
   },
   data() {
     return {
-      contactsShow: false,
       qrcodeShow: false,
-      noticeShow: false,
       // 当前展示的为
       // phone-invite  手机号邀请
       // txl_invite  通讯录邀请
       activeType: "phone-invite",
       phone: "",
       copyPhone: "",
-      first: true,
       permissions: false,
-      lists: [
-        { name: "李佳佳", phone: "13123456781", money: "10" },
-        { name: "李佳佳", phone: "13123456792", money: "10" },
-        { name: "李佳佳", phone: "13123456773", money: "10" },
-        { name: "李佳佳", phone: "13123456764", money: "10" }
-      ]
+      moneyAll: "",
+      lists: []
     };
   },
   methods: {
@@ -131,11 +125,16 @@ export default {
       this[key] = val;
     },
     fnBest() {
-      if (this.permissions) {
-        this.$router.push("/relative");
-      } else {
-        this.contactsShow = true;
-      }
+      this.$bridge.callhandler("DX_getContactsList", {}, data => {
+        const obj = JSON.parse(data);
+        if (obj.status == 1) {
+          this.lists = obj.list.slice(0, 4);
+          this.moneyAll = obj.list.length * 5;
+          this.$emit("close", "relativeShow", true);
+          this.$emit("close", "ContactsList", obj.list);
+          this.fnClose();
+        }
+      });
     },
     focusTelphone() {
       this.$refs.telphone.focus();
@@ -149,12 +148,28 @@ export default {
     },
     fnSubmit() {
       const { phone } = this;
-      if (!phone) return;
+      if (!phone) {
+        this.$toast("请输入手机号!");
+        return;
+      }
       if (!/^1[3456789]\d{9}$/.test(phone)) {
         this.$toast("手机号码有误，请重填!");
         return false;
       }
-      this.noticeShow = true;
+      this.$bridge.callhandler(
+        "DX_openSystemMessage",
+        {
+          type: "YG",
+          number: phone
+        },
+        function(data) {
+          if (data == 1) {
+            this.noticeShow = true;
+          } else {
+            this.$toast("邀请失败！请再次邀请");
+          }
+        }
+      );
     },
     fnInvitation(val) {
       this.phone = val;
@@ -162,6 +177,9 @@ export default {
     },
     fnInvitationAll() {
       console.log("fnInvitationAll");
+    },
+    fnClose() {
+      this.$emit("close", "inviteShow", false);
     }
   }
 };
@@ -178,28 +196,25 @@ export default {
   }
 }
 .invite {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 99;
   width: 375px;
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(
-    180deg,
-    rgba(144, 20, 31, 1) 0%,
-    rgba(199, 10, 26, 1) 17%,
-    rgba(173, 39, 45, 1) 31%,
-    rgba(174, 39, 45, 1) 100%
-  );
+  justify-content: center;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
 }
 .main-wrapper {
-  overflow: auto;
-  flex: 1;
-  .banner {
-    width: 375px;
-    height: 122px;
-    margin-top: 28px;
-    background-image: url("./images/banner.png");
-    background-size: 100% 100%;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   .title-wrapper {
     display: flex;
     flex-direction: row;
@@ -211,20 +226,19 @@ export default {
       margin-top: -14px;
       width: 172px;
       height: 45px;
-      background: rgba(255, 255, 255, 1);
       border-radius: 10px 10px 0px 0px;
-      background: #fdeaab;
+      background: #5f5ad4;
       text-align: center;
       font-size: 16px;
-      color: #eb6515;
+      color: #c5c5f4;
       p {
         line-height: 22px;
         margin: 9px 0 auto 0;
       }
       &.nav-title-active {
         height: 50px;
-        background: #fff;
-        color: #333333;
+        background: #8a6ad6;
+        color: #f1e7c6;
         p {
           margin: 14px 0;
         }
@@ -234,20 +248,17 @@ export default {
   .content-wrapper {
     margin: 0 auto;
     width: 344px;
-    height: 414px;
-    background: rgba(255, 255, 255, 1);
+    background: linear-gradient(#8a6ad6, #37329d);
     border-radius: 0px 0px 10px 10px;
-    border: 1px solid transparent;
     // 手机号邀请
     .phone-invite {
       .title {
         width: 236px;
         height: 25px;
-        margin: 19px auto 0 auto;
-        background-image: url("./images/title_bg1.png");
+        margin: 16px auto 0 auto;
         background-size: 100% 100%;
         font-size: 16px;
-        color: #b50d1b;
+        color: #f9e467;
         line-height: 22px;
         text-align: center;
       }
@@ -286,10 +297,9 @@ export default {
         }
         .input-wrapper {
           width: 193px;
-          height: 41px;
-          background: rgba(254, 252, 242, 1);
-          border-radius: 3px;
-          border: 1px solid rgba(255, 155, 3, 1);
+          height: 42px;
+          background: #302f77;
+          border-radius: 42px;
           margin: 0 auto;
           position: relative;
           .tel-icon {
@@ -305,47 +315,46 @@ export default {
           }
           > input {
             &::-webkit-input-placeholder {
-              color: #ded5c7;
+              color: #5a5a8c;
             }
+
             position: absolute;
             left: 35px;
             top: 50%;
             transform: translateY(-50%);
             width: 130px;
-            height: 20px;
+            height: 24px;
             font-size: 14px;
             font-weight: 500;
             line-height: 20px;
-            color: #000;
-            background: rgba(254, 252, 242, 1);
+            color: #fff;
+            outline: none;
+            border: 0px;
+            background: none;
             outline: none;
             border: 0px;
           }
         }
+
         .invite-btn {
           position: relative;
           margin: 0 auto;
           width: 210px;
           height: 46px;
-          background: linear-gradient(
-            180deg,
-            rgba(253, 131, 50, 1) 0%,
-            rgba(249, 94, 29, 1) 100%
-          );
-          box-shadow: 0px 5px 5px 0px rgba(174, 39, 45, 0.2);
-          border-radius: 23px;
+          background: url("images/butbg.png") no-repeat;
+          background-size: cover;
           .xhb-icon {
             position: absolute;
-            left: 40px;
+            left: 34px;
             top: 50%;
-            transform: translateY(-50%);
+            transform: translateY(-43%);
             width: 27px;
             height: 33px;
             background-image: url("./images/xhb_icon.png");
             background-size: 100% 100%;
           }
           .text {
-            margin-left: 75px;
+            margin-left: 66px;
             font-size: 14px;
             font-weight: normal;
             color: rgba(255, 255, 255, 1);
@@ -358,25 +367,24 @@ export default {
         margin-top: 20px;
         height: 20px;
         font-size: 14px;
-        color: rgba(250, 104, 35, 1);
+        color: #f4e42d;
         line-height: 20px;
       }
       .tips-wrapper {
-        margin-top: 54px;
+        margin-top: 42px;
         display: flex;
         flex-direction: row;
         .tips-icon {
-          width: 18px;
-          height: 18px;
-          background-image: url("images/tips_icon.png");
-          background-size: 100% 100%;
+          font-size: 20px;
+          color: #a8a7ff;
           margin: 0 8px 0 24px;
         }
         .tips-text {
           width: 270px;
           font-size: 12px;
           color: rgba(102, 102, 102, 1);
-          line-height: 18px;
+          line-height: 20px;
+          margin-bottom: 25px;
           p {
             margin: 0;
           }
@@ -388,32 +396,27 @@ export default {
       .top-text {
         height: 22px;
         font-size: 16px;
-        color: rgba(51, 51, 51, 1);
+        color: #c5d7fa;
         line-height: 22px;
         text-align: center;
-        margin-top: 28px;
+        margin-top: 16px;
         .red-money {
-          color: #d4080c;
+          color: #f4e42d;
         }
       }
       .btn-invite-all {
         margin: 16px auto 0 auto;
         width: 210px;
         height: 46px;
-        background: linear-gradient(
-          180deg,
-          rgba(254, 205, 51, 1) 0%,
-          rgba(243, 152, 32, 1) 100%
-        );
-        box-shadow: 0px 5px 5px 0px rgba(174, 39, 45, 0.2);
-        border-radius: 23px;
-        color: #fff;
+        background: url("images/butbg.png") no-repeat;
+        background-size: cover;
+        color: #502309;
         line-height: 46px;
         text-align: center;
         font-size: 14px;
       }
       .invite-table {
-        margin: 30px 13px 0 13px;
+        margin: 30px 13px;
         .invite-row {
           display: flex;
           flex-direction: row;
@@ -421,7 +424,8 @@ export default {
             > div {
               font-size: 14px;
               font-weight: bold;
-              border-bottom: 1px #979797 dashed;
+              border-bottom: 1px #9573e5 dashed;
+              color: #c5d7fa;
             }
           }
           &.invite-t-body {
@@ -435,7 +439,8 @@ export default {
             flex: 1;
             text-align: center;
             line-height: 42px;
-            border-bottom: 1px #f2f2f2 solid;
+            border-bottom: 1px #6755bc solid;
+            color: #c5d7fa;
             font-size: 13px;
             &:nth-child(1) {
               width: 28px;
@@ -451,20 +456,25 @@ export default {
             }
             &.money {
               font-weight: 600;
-              color: #d4080c;
+              color: #f4e42d;
             }
             .invite-btn {
               font-size: 10px;
-              color: #ff8b29;
+              color: #f4e42d;
               padding: 0 8px;
               height: 19px;
               border-radius: 10px;
-              border: 1px solid rgba(255, 139, 41, 1);
+              border: 1px solid #f4e42d;
             }
           }
         }
       }
     }
   }
+}
+.close {
+  font-size: 35px;
+  color: #fff;
+  margin-top: 20px;
 }
 </style>

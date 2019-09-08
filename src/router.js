@@ -20,20 +20,5 @@ export default new Router({
       name: 'YG',
       component: () => import(/* webpackChunkName: "YG" */ './views/HomeYG.vue')
     },
-    {
-      path: '/promote',
-      name: 'promoteList',
-      component: () => import(/* webpackChunkName: "promoteList" */ './views/promoteList.vue')
-    },
-    {
-      path: '/relative',
-      name: 'relativeList',
-      component: () => import(/* webpackChunkName: "relativeList" */ './views/relativeList.vue')
-    },
-    {
-      path: '/invite',
-      name: 'Invite',
-      component: () => import(/* webpackChunkName: "Invite" */ './views/Invite/Invite.vue')
-    }
   ]
 })

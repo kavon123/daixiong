@@ -192,22 +192,27 @@ export default {
         this.$toast("余额不足！");
         return;
       }
-      $api
-        .postRequest("/user/v3/userCashExternalRedPackage", { source: 1 })
-        .then(res => {
-          if (res.code === 0) {
-            this.withdrawal = true;
-            const oUserinfo = Object.assign(this.oUserinfo, {
-              externalBalance: 0
-            });
-            _this.setUserInfo(oUserinfo);
-          } else {
-            this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+      const _this = this;
+      _this.$bridge.callhandler("DX_encryptionRequest", { source: 1 }, function(
+        data
+      ) {
+        $api
+          .postRequest("/user/v3/userCashExternalRedPackage", data)
+          .then(res => {
+            if (res.code === 0) {
+              _this.withdrawal = true;
+              const oUserinfo = Object.assign(_this.oUserinfo, {
+                externalBalance: 0
+              });
+              _this.setUserInfo(oUserinfo);
+            } else {
+              _this.$toast(res.msg);
+            }
+          })
+          .catch(err => {
+            this.$toast(err.msg);
+          });
+      });
     },
     fn58Withdrawal() {
       if (this.bIsLogin) return;
@@ -226,84 +231,101 @@ export default {
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      $api
-        .postRequest("/user/v3/login58")
-        .then(res => {
-          _this.$toast.clear();
-          if (res.code === 0) {
-            const oUserinfo = Object.assign(this.oUserinfo, res.datas);
-            _this.setUserInfo(oUserinfo);
-            _this.bIsLogin = false;
-            // 1 新注册(新生成) , 2新绑定 3 老账户
-            if (res.datas.hasBind == 1) {
-              _this.generateShow = true;
-            } else if (res.datas.hasBind == 2) {
-              _this.sucShow = true;
+      _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
+        $api
+          .postRequest("/user/v3/login58", data)
+          .then(res => {
+            _this.$toast.clear();
+            if (res.code === 0) {
+              const oUserinfo = Object.assign(_this.oUserinfo, res.datas);
+              _this.setUserInfo(oUserinfo);
+              _this.bIsLogin = false;
+              // 1 新注册(新生成) , 2新绑定 3 老账户
+              if (res.datas.hasBind == 1) {
+                _this.generateShow = true;
+              } else if (res.datas.hasBind == 2) {
+                _this.sucShow = true;
+              }
+            } else {
+              _this.errShow = true;
             }
-          } else {
+          })
+          .catch(err => {
             _this.errShow = true;
-          }
-        })
-        .catch(err => {
-          _this.errShow = true;
-          _this.$toast.clear();
-        });
+            _this.$toast.clear();
+          });
+      });
     },
     fngetUserFriend() {
-      $api
-        .postRequest("/user/v3/searchUserFriendPage", {
+      const _this = this;
+      _this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        {
           source: 1,
           page: 1,
           size: 6
-        })
-        .then(res => {
-          if (res.code === 0) {
-            res.datas.infoList = res.datas.infoList.map(item => {
-              item.time = getDate(item.createdDate);
-              return item;
+        },
+        function(data) {
+          $api
+            .postRequest("/user/v3/searchUserFriendPage", data)
+            .then(res => {
+              if (res.code === 0) {
+                res.datas.infoList = res.datas.infoList.map(item => {
+                  item.time = getDate(item.createdDate);
+                  return item;
+                });
+                _this.totalSize = res.datas.totalSize;
+                _this.lists = res.datas.infoList;
+              } else {
+                _this.$toast(err.msg);
+              }
+            })
+            .catch(err => {
+              _this.$toast(err.msg);
             });
-            this.totalSize = res.datas.totalSize;
-            this.lists = res.datas.infoList;
-          } else {
-            this.$toast(err.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+        }
+      );
     },
     fnGetBar() {
-      $api
-        .postRequest("/external/friend/search58CommisionRecord")
-        .then(res => {
-          if (res.code === 0) {
-            let list = res.datas.map(item => {
-              return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
-            });
-            const barString = list.join("");
-            this.setBarString(barString);
-          } else {
-            this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+      const _this = this;
+      _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
+        $api
+          .postRequest("/external/friend/search58CommisionRecord", data)
+          .then(res => {
+            if (res.code === 0) {
+              let list = res.datas.map(item => {
+                return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
+              });
+              const barString = list.join("");
+              _this.setBarString(barString);
+            } else {
+              _this.$toast(res.msg);
+            }
+          })
+          .catch(err => {
+            _this.$toast(err.msg);
+          });
+      });
     },
     fnGetUrl() {
-      $api
-        .postRequest("/external/friend/getUnderstandUrl58")
-        .then(res => {
-          if (res.code === 0) {
-            const oUserinfo = Object.assign(this.oUserinfo, { url: res.datas });
-            this.setUserInfo(oUserinfo);
-          } else {
-            this.$toast(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast(err.msg);
-        });
+      const _this = this;
+      _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
+        $api
+          .postRequest("/external/friend/getUnderstandUrl58", data)
+          .then(res => {
+            if (res.code === 0) {
+              const oUserinfo = Object.assign(_this.oUserinfo, {
+                url: res.datas
+              });
+              _this.setUserInfo(oUserinfo);
+            } else {
+              _this.$toast(res.msg);
+            }
+          })
+          .catch(err => {
+            _this.$toast(err.msg);
+          });
+      });
     },
     fnShowButPop() {
       if (this.bIsLogin) {
@@ -320,7 +342,6 @@ export default {
   overflow: hidden;
   margin-top: -30px;
   width: 375px;
-  // height: 1995px;
   background-image: url("../assets/images/58bg.png");
   background-repeat: no-repeat;
   background-size: cover;
