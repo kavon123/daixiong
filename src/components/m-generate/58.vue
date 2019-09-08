@@ -45,12 +45,21 @@ export default {
   },
 
   methods: {
-    funSetOver() {
+    funSetOver(event) {
       const _this = this;
       html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
         const url = canvas.toDataURL();
-        this.$bridge.callhandler("DX_seve_share_Imge", url);
-        this.$toast.success("保存成功");
+        _this.$bridge.callhandler(
+          "DX_save_share_Image",
+          { type: "save", image: url },
+          data => {
+            if (data == 1) {
+              _this.$toast.fail(`保存失败`);
+            } else {
+              _this.$toast.success(`保存图片成功`);
+            }
+          }
+        );
       });
     },
     fnClose() {

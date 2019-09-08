@@ -59,6 +59,8 @@ export default {
           data => {
             if (data == 1) {
               _this.$toast.fail(`保存失败`);
+            } else {
+              _this.$toast.success(`保存图片成功`);
             }
           }
         );
