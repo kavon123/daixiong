@@ -8,7 +8,7 @@
         <van-col span="8">状态</van-col>
       </van-row>
       <div class="scroll">
-        <van-row type="flex" class="table_body" v-for="(item,i) in ContactsList" :key="i">
+        <van-row type="flex" class="table_body" v-for="(item,i) in contactsList" :key="i">
           <van-col span="8" class="name">{{item.name}}</van-col>
           <van-col span="8">{{item.phone}}</van-col>
           <van-col span="8" class="state" @click="fnChoose(item.phone)">选择TA</van-col>
@@ -20,13 +20,9 @@
 </template>
 
 <script>
+import { mapMutations, mapGetters } from "vuex";
+
 export default {
-  props: {
-    ContactsList: {
-      type: Array,
-      default: []
-    }
-  },
   data() {
     //这里存放数据
     return {
@@ -160,12 +156,19 @@ export default {
       ]
     };
   },
+  computed: {
+    ...mapGetters(["contactsList"])
+  },
   methods: {
+    ...mapMutations({
+      setPhone: "SET_PHONE"
+    }),
     fnClose() {
       this.$emit("close", "relativeShow", false);
+      this.$emit("close", "inviteShow", true);
     },
     fnChoose(phone) {
-      this.$emit("close", "Phone", phone);
+      this.setPhone(phone);
       this.$emit("close", "inviteShow", true);
       this.fnClose();
     }

@@ -14,4 +14,10 @@ export default {
     SET_IS_IOS(state, param) {
         state.isIOS = param;
     },
+    SET_PHONE(state, param) {
+        state.Phone = param;
+    },
+    SET_CONTACTS_LIST(state, param) {
+        state.contactsList = param;
+    }
 }

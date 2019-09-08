@@ -134,9 +134,9 @@
     <m-but-pop v-if="butPopShow" @close="fnPop" />
     <m-win-pop v-if="winShow" type="YG" @close="fnPop" />
     <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
-    <m-invite v-if="inviteShow" @close="fnPop" :Phone="Phone" />
+    <m-invite v-if="inviteShow" @close="fnPop" />
     <promote-list v-if="promoteShow" @close="fnPop" />
-    <relative-list v-if="relativeShow" @close="fnPop" :ContactsList="ContactsList" />
+    <relative-list v-if="relativeShow" @close="fnPop" />
   </div>
 </template>
 
@@ -176,8 +176,6 @@ export default {
   },
   data() {
     return {
-      Phone: "",
-      ContactsList: [],
       relativeShow: false,
       promoteShow: false,
       inviteShow: false,

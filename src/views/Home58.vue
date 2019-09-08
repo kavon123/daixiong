@@ -74,7 +74,11 @@
           <van-col span="6">{{item.time}}</van-col>
           <van-col span="5" class="u-state">
             {{item.status===2?"已发放":"未游戏"}}
-            <span class="u-alert" v-if="item.status!==2">提醒</span>
+            <span
+              class="u-alert"
+              v-if="item.status!==2"
+              @click="fnOpen"
+            >提醒</span>
           </van-col>
         </van-row>
 
@@ -123,6 +127,9 @@
     <m-but-pop v-if="butPopShow" @close="fnPop" />
     <m-win-pop v-if="winShow" type="58" @close="fnPop" />
     <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
+    <m-invite v-if="inviteShow" @close="fnPop" />
+    <promote-list v-if="promoteShow" @close="fnPop" />
+    <relative-list v-if="relativeShow" @close="fnPop" />
   </div>
 </template>
 
@@ -139,10 +146,16 @@ import mWithdrawal from "@/components/m-withdrawal";
 import mButPop from "@/components/m-but-pop";
 import mWinPop from "@/components/m-win-pop";
 import mQrcode from "@/components/m-qrcode";
+import mInvite from "./Invite/Invite58";
+import promoteList from "./promoteList";
+import relativeList from "./relativeList";
 
 export default {
   name: "home",
   components: {
+    relativeList,
+    promoteList,
+    mInvite,
     mBar,
     m58,
     mReleSuc,
@@ -155,6 +168,9 @@ export default {
   },
   data() {
     return {
+      relativeShow: false,
+      promoteShow: false,
+      inviteShow: false,
       totalSize: 0,
       qrcodeShow: false,
       winShow: false,
@@ -216,13 +232,26 @@ export default {
     },
     fn58Withdrawal() {
       if (this.bIsLogin) return;
-      console.log(this.oUserinfo.url);
+      if (this.oUserinfo.balance) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", "58", data => {
+          if (data == 0) {
+            this.$toast(`未安装58棋牌!请安装`);
+          }
+        });
+      } else {
+        this.$toast("余额不足！");
+      }
     },
     fnPromoteList() {
       this.$router.push("/promote");
     },
     fnJump() {
-      console.log(this.oUserinfo.url);
+      // this.$bridge.callhandler("DX_openWX_QQ_58", "58", function(data) {
+      //   if (data == 0) {
+      //     this.$toast(`未安装58棋牌!请安装`);
+      //   }
+      // });
+      this.$bridge.callhandler("DX_gotoBrowser", this.oUserinfo.url);
     },
     fnInfo() {
       const _this = this;
@@ -333,6 +362,14 @@ export default {
       } else {
         this.butPopShow = true;
       }
+    },
+    fnOpen() {
+      const _this = this;
+      this.$bridge.callhandler("DX_openWX_QQ_58", "WX", function(data) {
+        if (data == 0) {
+          _this.$toast(`未安装微信!请安装`);
+        }
+      });
     }
   }
 };

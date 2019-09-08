@@ -86,7 +86,7 @@
       </div>
       <van-icon name="close" class="close" @click="fnClose" />
     </div>
-    <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
+    <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
   </div>
 </template>
 
@@ -230,18 +230,18 @@ export default {
       width: 172px;
       height: 45px;
       border-radius: 10px 10px 0px 0px;
-      background: #5f5ad4;
+      background: #6e2605;
       text-align: center;
       font-size: 16px;
-      color: #c5c5f4;
+      color: #eb6515;
       p {
         line-height: 22px;
         margin: 9px 0 auto 0;
       }
       &.nav-title-active {
         height: 50px;
-        background: #8a6ad6;
-        color: #f1e7c6;
+        background: #98380c;
+        color: #fcebbd;
         p {
           margin: 14px 0;
         }
@@ -251,7 +251,7 @@ export default {
   .content-wrapper {
     margin: 0 auto;
     width: 344px;
-    background: linear-gradient(#8a6ad6, #37329d);
+    background: linear-gradient(#99380c, #6e2605);
     border-radius: 0px 0px 10px 10px;
     // 手机号邀请
     .phone-invite {
@@ -301,7 +301,7 @@ export default {
         .input-wrapper {
           width: 193px;
           height: 42px;
-          background: #302f77;
+          background: #3d1704;
           border-radius: 42px;
           margin: 0 auto;
           position: relative;
@@ -318,7 +318,7 @@ export default {
           }
           > input {
             &::-webkit-input-placeholder {
-              color: #5a5a8c;
+              color: #a46c00;
             }
 
             position: absolute;
@@ -379,13 +379,13 @@ export default {
         flex-direction: row;
         .tips-icon {
           font-size: 20px;
-          color: #a8a7ff;
+          color: #e69402;
           margin: 0 8px 0 24px;
         }
         .tips-text {
           width: 270px;
           font-size: 12px;
-          color: rgba(102, 102, 102, 1);
+          color: #c5870e;
           line-height: 20px;
           margin-bottom: 25px;
           p {
@@ -399,7 +399,7 @@ export default {
       .top-text {
         height: 22px;
         font-size: 16px;
-        color: #c5d7fa;
+        color: #efc066;
         line-height: 22px;
         text-align: center;
         margin-top: 16px;
@@ -427,8 +427,8 @@ export default {
             > div {
               font-size: 14px;
               font-weight: bold;
-              border-bottom: 1px #9573e5 dashed;
-              color: #c5d7fa;
+              border-bottom: 1px #aa4a1e dashed;
+              color: #efc066;
             }
           }
           &.invite-t-body {
@@ -442,8 +442,8 @@ export default {
             flex: 1;
             text-align: center;
             line-height: 42px;
-            border-bottom: 1px #6755bc solid;
-            color: #c5d7fa;
+            border-bottom: 1px #aa4a1e solid;
+            color: #efc066;
             font-size: 13px;
             &:nth-child(1) {
               width: 28px;

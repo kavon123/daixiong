@@ -1,4 +1,6 @@
 export default {
+    Phone: '',
+    contactsList: [],
     isIOS: false,
     platformType: 1,   //1 58   ,2 YG
     barString: '',
