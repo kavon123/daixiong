@@ -55,8 +55,7 @@
 </template>
 
 <script>
-import html2canvas from "html2canvas";
-
+import domtoimage from "dom-to-image";
 import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
 
@@ -104,16 +103,14 @@ export default {
     fnShare(shareType) {
       const _this = this;
       const refs = ["capture1", "capture2", "capture3"];
-      html2canvas(_this.$refs[refs[_this.activeIndex]], {
-        allowTaint: true
-      }).then(canvas => {
-        const url = canvas.toDataURL();
+      domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl => {
         _this.$bridge.callhandler(
           "DX_save_share_Image",
-          { type: "share", image: url, shareType },
+          { type: "share", image: dataUrl, shareType },
           data => {
             if (data == 1) {
-              _this.$toast.fail(`分享失败`);
+              this.$emit("close", "winShow", true);
+              this.$emit("close", "butPopShow", false);
             }
           }
         );

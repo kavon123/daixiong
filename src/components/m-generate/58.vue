@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import html2canvas from "html2canvas";
+import domtoimage from "dom-to-image";
+
 export default {
   props: {
     data: {
@@ -47,11 +48,10 @@ export default {
   methods: {
     funSetOver(event) {
       const _this = this;
-      html2canvas(_this.$refs.capture, { allowTaint: true }).then(canvas => {
-        const url = canvas.toDataURL();
+      domtoimage.toJpeg(_this.$refs.capture).then(dataUrl => {
         _this.$bridge.callhandler(
           "DX_save_share_Image",
-          { type: "save", image: url },
+          { type: "save", image: dataUrl },
           data => {
             if (data == 1) {
               _this.$toast.success(`保存图片成功`);

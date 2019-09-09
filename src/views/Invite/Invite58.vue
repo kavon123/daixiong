@@ -162,7 +162,7 @@ export default {
       this.$bridge.callhandler(
         "DX_openSystemMessage",
         {
-          type: "YG",
+          type: "58",
           number: phone
         },
         function(data) {
