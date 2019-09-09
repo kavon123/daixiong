@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="pre?'prevent':''">
     <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
@@ -81,10 +81,10 @@
           <van-col span="6" class="u-num">{{row.amount}}元</van-col>
           <van-col span="6">{{row.time}}</van-col>
           <van-col span="5" class="u-state">
-            {{row.status===2?"已发放":"未游戏"}}
+            {{row.status==2?"已发放":"未游戏"}}
             <span
               class="u-alert"
-              v-if="row.status!==2"
+              v-if="row.status!=2"
               @click="fnOpen"
             >提醒</span>
           </van-col>
@@ -247,12 +247,13 @@ export default {
             }
           })
           .catch(err => {
-            _this.$toast(err.msg);
+            _this.$toast(err.message);
           });
       });
     },
     fnPromoteList() {
       this.promoteShow = true;
+      this.pre = true;
     },
     fnShowButPop() {
       if (this.bIsLogin) {
@@ -313,7 +314,7 @@ export default {
             }
           })
           .catch(err => {
-            _this.$toast(err.msg);
+            _this.$toast(err.message);
           });
       });
     },
@@ -345,7 +346,7 @@ export default {
               }
             })
             .catch(err => {
-              _this.$toast(err.msg);
+              _this.$toast(err.message);
             });
         }
       );

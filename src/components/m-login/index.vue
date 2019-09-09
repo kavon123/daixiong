@@ -108,7 +108,7 @@ export default {
               }
             })
             .catch(err => {
-              _this.$toast(err.msg);
+              _this.$toast(err.message);
             });
         }
       );

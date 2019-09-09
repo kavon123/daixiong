@@ -104,6 +104,7 @@ export default {
   created() {
     this.phone = this.Phone;
     this.lists = this.contactsList;
+    this.moneyAll = this.contactsList.length * 5;
   },
   data() {
     return {
@@ -115,7 +116,7 @@ export default {
       phone: "",
       copyPhone: "",
       permissions: false,
-      moneyAll: "",
+      moneyAll: 0,
       lists: []
     };
   },
@@ -133,6 +134,7 @@ export default {
         if (obj.status == 1) {
           this.lists = obj.list.slice(0, 4);
           this.moneyAll = obj.list.length * 5;
+          this.$emit("close", "pre", true);
           this.$emit("close", "relativeShow", true);
           this.setContactsList(obj.list);
           this.fnClose();

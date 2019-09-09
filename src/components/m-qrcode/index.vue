@@ -4,7 +4,7 @@
     <transition>
       <div class="dialog">
         <div class="dialog_ct" :class="type==='58'?'dialog_ct_58':'dialog_ct_yg'">
-          <div class="title">扫描二维码，注册YG电竞领取现金</div>
+          <div class="title">扫描二维码，注册{{type==='58'?'58':"YG"}}电竞领取现金</div>
           <div id="qrcode" class="qrcode"></div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />

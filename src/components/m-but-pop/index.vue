@@ -108,17 +108,21 @@ export default {
     fnShare(shareType) {
       const _this = this;
       const refs = ["capture1", "capture2", "capture3"];
-      domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl => {
-        _this.$bridge.callhandler(
-          "DX_save_share_Image",
-          { type: "share", image: dataUrl, shareType },
-          data => {
-            if (data == 1) {
-              this.$emit("close", "winShow", true);
-              this.$emit("close", "butPopShow", false);
-            }
-          }
-        );
+      domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl1 => {
+        domtoimage
+          .toJpeg(_this.$refs[refs[_this.activeIndex]])
+          .then(dataUrl2 => {
+            _this.$bridge.callhandler(
+              "DX_save_share_Image",
+              { type: "share", image: dataUrl2, shareType },
+              data => {
+                if (data == 1) {
+                  this.$emit("close", "winShow", true);
+                  this.$emit("close", "butPopShow", false);
+                }
+              }
+            );
+          });
       });
     }
   }

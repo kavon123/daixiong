@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="pre?'prevent':''">
     <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump">了解58棋牌</div>
@@ -34,7 +34,7 @@
             </div>
             <div class="sum_but">
               <img
-                :class="bIsLogin?'gray':''"
+                :class="bIsLogin || !oUserinfo.externalBalance?'gray':''"
                 src="@/assets/images/transfer.png"
                 @click="fnWithdrawal"
               />
@@ -52,7 +52,7 @@
             <div class="sum_but">
               <img
                 @click="fn58Withdrawal"
-                :class="bIsLogin?'gray':''"
+                :class="bIsLogin || !oUserinfo.balance?'gray':''"
                 src="@/assets/images/withdrawal.png"
               />
             </div>
@@ -73,10 +73,10 @@
           <van-col span="6" class="u-num">{{item.amount}}元</van-col>
           <van-col span="6">{{item.time}}</van-col>
           <van-col span="5" class="u-state">
-            {{item.status===2?"已发放":"未游戏"}}
+            {{item.status==2?"已发放":"未游戏"}}
             <span
               class="u-alert"
-              v-if="item.status!==2"
+              v-if="item.status!=2"
               @click="fnOpen"
             >提醒</span>
           </van-col>
@@ -151,7 +151,6 @@ import promoteList from "./promoteList";
 import relativeList from "./relativeList";
 
 export default {
-  name: "home",
   components: {
     relativeList,
     promoteList,
@@ -168,6 +167,7 @@ export default {
   },
   data() {
     return {
+      pre: false,
       relativeShow: false,
       promoteShow: false,
       inviteShow: false,
@@ -203,11 +203,7 @@ export default {
       this[key] = vla;
     },
     fnWithdrawal() {
-      if (this.bIsLogin) return;
-      if (!this.oUserinfo.externalBalance) {
-        this.$toast("余额不足！");
-        return;
-      }
+      if (this.bIsLogin || !oUserinfo.externalBalance) return;
       const _this = this;
       _this.$bridge.callhandler("DX_encryptionRequest", { source: 1 }, function(
         data
@@ -226,32 +222,24 @@ export default {
             }
           })
           .catch(err => {
-            this.$toast(err.msg);
+            _this.$toast(err.message);
           });
       });
     },
     fn58Withdrawal() {
-      if (this.bIsLogin) return;
-      if (this.oUserinfo.balance) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", "58", data => {
-          if (data == 0) {
-            this.$toast(`未安装58棋牌!请安装`);
-          }
-        });
-      } else {
-        this.$toast("余额不足！");
-      }
+      if (this.bIsLogin || !this.oUserinfo.balance) return;
+      this.$bridge.callhandler("DX_openWX_QQ_58", "58", data => {
+        if (data == 0) {
+          this.$toast(`未安装58棋牌!请安装`);
+        }
+      });
     },
     fnPromoteList() {
-      this.$router.push("/promote");
+      this.promoteShow = true;
+      this.pre = true;
     },
     fnJump() {
-      // this.$bridge.callhandler("DX_openWX_QQ_58", "58", function(data) {
-      //   if (data == 0) {
-      //     this.$toast(`未安装58棋牌!请安装`);
-      //   }
-      // });
-      this.$bridge.callhandler("DX_gotoBrowser", this.oUserinfo.url);
+      this.$bridge.callhandler("DX_gotoBrowser", this.oUserinfo.downloadUrl);
     },
     fnInfo() {
       const _this = this;
@@ -306,11 +294,11 @@ export default {
                 _this.totalSize = res.datas.totalSize;
                 _this.lists = res.datas.infoList;
               } else {
-                _this.$toast(err.msg);
+                _this.$toast(res.msg);
               }
             })
             .catch(err => {
-              _this.$toast(err.msg);
+              _this.$toast(err.message);
             });
         }
       );
@@ -332,7 +320,7 @@ export default {
             }
           })
           .catch(err => {
-            _this.$toast(err.msg);
+            _this.$toast(err.message);
           });
       });
     },
@@ -352,7 +340,7 @@ export default {
             }
           })
           .catch(err => {
-            _this.$toast(err.msg);
+            _this.$toast(err.message);
           });
       });
     },

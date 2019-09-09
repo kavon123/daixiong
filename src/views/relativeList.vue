@@ -165,6 +165,7 @@ export default {
     }),
     fnClose() {
       this.$emit("close", "relativeShow", false);
+      this.$emit("close", "pre", false);
       this.$emit("close", "inviteShow", true);
     },
     fnChoose(phone) {

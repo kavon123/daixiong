@@ -20,10 +20,10 @@
             <van-col span="6" class="sum">{{item.amount}}元</van-col>
             <van-col span="6">{{item.time}}</van-col>
             <van-col span="6" class="state">
-              {{item.status===2?"已发放":"未游戏"}}
+              {{item.status==2?"已发放":"未游戏"}}
               <span
                 class="alert"
-                v-if="item.status!==2"
+                v-if="item.status!=2"
                 @click="fnRemind"
               >提醒</span>
             </van-col>
@@ -56,6 +56,7 @@ export default {
   methods: {
     fnClose() {
       this.$emit("close", "promoteShow", false);
+      this.$emit("close", "pre", false);
     },
     fnRemind() {
       const _this = this;
@@ -88,11 +89,11 @@ export default {
                 }
                 _this.lists = _this.lists.concat(res.datas.infoList);
               } else {
-                _this.$toast(err.msg);
+                _this.$toast(res.msg);
               }
             })
             .catch(err => {
-              _this.$toast(err.msg);
+              _this.$toast(err.message);
             });
         }
       );
