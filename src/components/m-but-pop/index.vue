@@ -48,7 +48,7 @@
             <div>通讯录</div>
           </div>
         </div>
-        <div class="cancel" @click="fnClose">取消</div>
+        <div class="cancel" @click="fnClose" :style="'margin-bottom:'+height+'px;'">取消</div>
       </div>
     </div>
   </transition>
@@ -62,13 +62,18 @@ import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
-      activeIndex: 0
+      activeIndex: 0,
+      height: 0
     };
   },
   computed: {
     ...mapGetters(["oUserinfo", "ygUserinfo", "platformType"])
   },
   mounted() {
+    const h = window.screen.height;
+    if (h >= 812) {
+      this.height = 35;
+    }
     this.$nextTick(() => {
       const div = document.getElementById("qrcode1");
       const div1 = document.getElementById("qrcode2");
@@ -234,6 +239,7 @@ export default {
       border-top: 10px solid #f5f5f5;
       line-height: 45px;
       text-align: center;
+      margin-bottom: 30px;
     }
   }
 }
