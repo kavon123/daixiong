@@ -99,7 +99,7 @@ export default {
     mQrcode
   },
   computed: {
-    ...mapGetters(["Phone", "contactsList"])
+    ...mapGetters(["Phone", "contactsList", "ygUserinfo"])
   },
   created() {
     this.phone = this.Phone;
@@ -150,7 +150,7 @@ export default {
       this.copyPhone = event.target.value;
     },
     fnSubmit() {
-      const { phone } = this;
+      const { phone, ygUserinfo } = this;
       if (!phone) {
         this.$toast("请输入手机号!");
         return;
@@ -163,6 +163,7 @@ export default {
         "DX_openSystemMessage",
         {
           type: "YG",
+          url: ygUserinfo.ygSharedUrl,
           number: phone
         },
         function(data) {

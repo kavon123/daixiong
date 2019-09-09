@@ -99,7 +99,7 @@ export default {
     mQrcode
   },
   computed: {
-    ...mapGetters(["Phone", "contactsList"])
+    ...mapGetters(["Phone", "contactsList", "oUserinfo"])
   },
   created() {
     this.phone = this.Phone;
@@ -150,7 +150,7 @@ export default {
       this.copyPhone = event.target.value;
     },
     fnSubmit() {
-      const { phone } = this;
+      const { phone, oUserinfo } = this;
       if (!phone) {
         this.$toast("请输入手机号!");
         return;
@@ -163,6 +163,7 @@ export default {
         "DX_openSystemMessage",
         {
           type: "58",
+          url: oUserinfo.downloadUrl,
           number: phone
         },
         function(data) {
