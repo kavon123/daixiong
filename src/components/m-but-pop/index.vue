@@ -141,31 +141,31 @@ export default {
       justify-content: center;
       align-items: center;
       .swipe_img {
-        width: 300px;
-        height: 426px;
+        width: calc(300px * 0.95);
+        height: calc(426px * 0.95);
         background-repeat: no-repeat;
         background-size: cover;
         position: relative;
         .qrcode1 {
-          width: 110px;
-          height: 110px;
+          width: calc(110px * 0.95);
+          height: calc(110px * 0.95);
           position: absolute;
-          left: calc(50% - 55px);
-          top: 303px;
+          left: calc(50% - 52px);
+          top: 286px;
         }
         .qrcode2 {
-          width: 73px;
-          height: 73px;
+          width: 69px;
+          height: 69px;
           position: absolute;
-          left: 211.5px;
-          top: 332.5px;
+          left: 201px;
+          top: 317px;
         }
         .qrcode3 {
-          width: 73px;
-          height: 73px;
+          width: 69px;
+          height: 69px;
           position: absolute;
           left: 18px;
-          top: 338px;
+          top: 322px;
         }
       }
       .img_1 {
