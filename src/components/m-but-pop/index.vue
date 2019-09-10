@@ -300,7 +300,6 @@ export default {
       border-top: 10px solid #f5f5f5;
       line-height: 45px;
       text-align: center;
-      margin-bottom: 30px;
     }
   }
 }
