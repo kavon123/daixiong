@@ -19,7 +19,7 @@
           </div>
         </van-swipe-item>
       </van-swipe>
-      <div class="choose">
+      <div class="choose" :style="'height:'+height+'px;'">
         <div class="title">分享至</div>
         <div class="items">
           <div class="item" @click="fnShare(1)">
@@ -48,7 +48,7 @@
             <div>通讯录</div>
           </div>
         </div>
-        <div class="cancel" @click="fnClose" :style="'margin-bottom:'+height+'px;'">取消</div>
+        <div class="cancel" @click="fnClose">取消</div>
       </div>
     </div>
   </transition>
@@ -72,7 +72,7 @@ export default {
   mounted() {
     const h = window.screen.height;
     if (h >= 812) {
-      this.height = 35;
+      this.height = 217;
     }
     this.$nextTick(() => {
       const div = document.getElementById("qrcode1");

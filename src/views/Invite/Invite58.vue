@@ -103,7 +103,7 @@ export default {
   },
   created() {
     this.phone = this.Phone;
-    this.lists = this.contactsList;
+    this.lists = this.contactsList.slice(0, 4);
     this.moneyAll = this.contactsList.length * 5;
   },
   data() {

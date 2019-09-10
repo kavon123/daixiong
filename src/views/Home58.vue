@@ -235,7 +235,7 @@ export default {
     fn58Withdrawal() {
       if (this.bIsLogin || !this.oUserinfo.balance) return;
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", "58", data => {
+        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "58" }, data => {
           if (data == 0) {
             this.$toast(`未安装58棋牌!请安装`);
           }
@@ -385,7 +385,9 @@ export default {
     fnOpen() {
       const _this = this;
       if (_this.isIOS) {
-        _this.$bridge.callhandler("DX_openWX_QQ_58", "WX", function(data) {
+        _this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, function(
+          data
+        ) {
           if (data == 0) {
             _this.$toast(`未安装微信!请安装`);
           }

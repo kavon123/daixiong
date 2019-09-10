@@ -61,7 +61,9 @@ export default {
     fnRemind() {
       const _this = this;
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, function(
+          data
+        ) {
           if (data == 0) {
             _this.$toast(`未安装微信!请安装`);
           }

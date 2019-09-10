@@ -44,11 +44,15 @@ export default {
     fnOpen(platform, name) {
       const _this = this;
       if (_this.isIOS) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
-          if (data == 0) {
-            _this.$toast(`未安装${name}!请安装`);
+        _this.$bridge.callhandler(
+          "DX_openWX_QQ_58",
+          { type: platform },
+          function(data) {
+            if (data == 0) {
+              _this.$toast(`未安装${name}!请安装`);
+            }
           }
-        });
+        );
       } else {
         console.log("Android");
       }
