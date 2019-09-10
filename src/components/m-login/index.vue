@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" :class="show?'style_show':''">
+      <div class="dialog" @touchmove.prevent>
         <div class="dialog_ct">
           <div class="title">登录YG电竞</div>
           <div class="input_ct">
@@ -43,7 +43,6 @@ import $api from "@/util/api.js";
 export default {
   data() {
     return {
-      show: false,
       bOver: false,
       sUserName: "",
       sPassword: ""

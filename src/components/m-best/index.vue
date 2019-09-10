@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog">
+      <div class="dialog" @touchmove.prevent>
         <div class="dialog_ct">
           <div class="title">推广小妙招</div>
           <div class="prompt">

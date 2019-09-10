@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog">
+      <div class="dialog" @touchmove.prevent>
         <div class="dialog_ct" ref="capture">
           <img class="generate" src="./generate.png" alt />
           <div class="centent">

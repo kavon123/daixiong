@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <transition>
-    <div class="but_pop">
+    <div class="but_pop" @touchmove.prevent>
       <van-swipe @change="onChange" class="swipe" :show-indicators="false" :width="375">
         <van-swipe-item class="item">
           <div class="swipe_img img_1" ref="capture1">

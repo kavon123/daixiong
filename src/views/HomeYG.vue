@@ -1,5 +1,5 @@
 <template>
-  <div class="home" :class="pre?'prevent':''">
+  <div class="home">
     <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
@@ -39,7 +39,7 @@
             </div>
             <div class="sum_but">
               <img
-                :class="bIsLogin?'gray':''"
+                :class="{gray:DX_Draw_Money}"
                 src="@/assets/images/transfer.png"
                 @click="fnWithdrawal"
               />
@@ -58,7 +58,7 @@
             </div>
             <div class="sum_but">
               <img
-                :class="bIsLogin?'gray':''"
+                :class="{gray:YG_Draw_Money}"
                 src="@/assets/images/withdrawal.png"
                 @click="fnYGWithdrawal"
               />
@@ -176,6 +176,7 @@ export default {
   },
   data() {
     return {
+      pre: false,
       relativeShow: false,
       promoteShow: false,
       inviteShow: false,
@@ -200,7 +201,22 @@ export default {
     this.setPlatformType(2);
   },
   computed: {
-    ...mapGetters(["ygUserinfo", "barString", "isIOS"])
+    ...mapGetters(["ygUserinfo", "barString", "isIOS"]),
+    DX_Draw_Money() {
+      return (
+        this.bIsLogin ||
+        !this.ygUserinfo.externalBalance ||
+        this.ygUserinfo.externalBalance == 0
+      );
+    },
+    YG_Draw_Money() {
+      return (
+        this.bIsLogin ||
+        (!this.ygUserinfo.dxUserBalance ||
+          !this.ygUserinfo.dxUserBalance.balance ||
+          this.ygUserinfo.dxUserBalance.balance == 0)
+      );
+    }
   },
   methods: {
     ...mapMutations({
@@ -209,26 +225,14 @@ export default {
       setPlatformType: "SET_PLATFORM_TYPE"
     }),
     fnYGWithdrawal() {
-      if (this.bIsLogin) return;
-      if (
-        this.ygUserinfo.dxUserBalance &&
-        this.ygUserinfo.dxUserBalance.balance
-      ) {
-        this.fnJump(this.ygUserinfo.loginUrl);
-        return;
-      } else {
-        this.$toast("余额不足！");
-      }
+      if (this.YG_Draw_Money) return;
+      this.fnJump(this.ygUserinfo.loginUrl);
     },
     fnPop(key, vla) {
       this[key] = vla;
     },
     fnWithdrawal() {
-      if (this.bIsLogin) return;
-      if (!this.ygUserinfo.externalBalance) {
-        this.$toast("余额不足！");
-        return;
-      }
+      if (this.DX_Draw_Money) return;
       const _this = this;
       if (_this.isIOS) {
         _this.$bridge.callhandler(

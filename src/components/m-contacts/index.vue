@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog">
+      <div class="dialog" @touchmove.prevent>
         <div class="dialog_ct">
           <div class="title">允许访问通讯录</div>
           <div class="sum" v-if="first">
