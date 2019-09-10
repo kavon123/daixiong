@@ -14,8 +14,8 @@
         <div class="table_body" v-for="(item,i) in lists" :key="i">
           <van-row type="flex" justify="center">
             <van-col span="6">
-              <div class="name">{{item.name}}</div>
-              <div>{{item.mobile}}</div>
+              <div class="name" v-if="platformType==2">{{item.name}}</div>
+              <div v-else>{{item.mobile}}</div>
             </van-col>
             <van-col span="6" class="sum">{{item.amount}}元</van-col>
             <van-col span="6">{{item.time}}</van-col>

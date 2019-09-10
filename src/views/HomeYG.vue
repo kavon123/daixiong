@@ -76,7 +76,6 @@
         <van-row type="flex" class="g-table" v-for="(row,i) in lists" :key="i">
           <van-col span="6">
             <div class="table_name">{{row.name}}</div>
-            <span>*****0128</span>
           </van-col>
           <van-col span="6" class="u-num">{{row.amount}}元</van-col>
           <van-col span="6">{{row.time}}</van-col>

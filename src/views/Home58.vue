@@ -93,9 +93,9 @@
         <div class="tutorial_title">如何获得邀请奖励？</div>
         <div class="g_img_ct">
           <img class="steps" src="@/assets/images/58steps1.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
+          <img class="arrow" src="@/assets/images/arrow.png" alt />
           <img class="steps" src="@/assets/images/58steps2.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
+          <img class="arrow" src="@/assets/images/arrow.png" alt />
           <img class="steps" src="@/assets/images/58steps3.png" alt />
         </div>
         <div class="g_img_ct">
@@ -106,7 +106,7 @@
         <div class="tutorial_title">如何获得返佣奖励？</div>
         <div class="g_img_ct">
           <img class="steps" src="@/assets/images/58steps1.png" alt />
-          <img class="arrow" src="@/assets/images/58arrow.png" alt />
+          <img class="arrow" src="@/assets/images/arrow.png" alt />
           <img class="steps" src="@/assets/images/58steps2.png" alt />
         </div>
         <div class="g_img_ct">
@@ -272,10 +272,10 @@ export default {
                 const oUserinfo = Object.assign(_this.oUserinfo, res.datas);
                 _this.setUserInfo(oUserinfo);
                 _this.bIsLogin = false;
-                // 1 新注册(新生成) , 2新绑定 3 老账户
-                if (res.datas.hasBind == 1) {
+                //hasBind 0 新注册(新生成) ,1新绑定 2 老账户
+                if (res.datas.hasBind == 0) {
                   _this.generateShow = true;
-                } else if (res.datas.hasBind == 2) {
+                } else if (res.datas.hasBind == 1) {
                   _this.sucShow = true;
                 }
               } else {
