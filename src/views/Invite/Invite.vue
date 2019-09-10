@@ -1,5 +1,5 @@
 <template>
-  <div class="invite">
+  <div class="invite" @touchmove.prevent @click.prevent>
     <div class="main-wrapper">
       <div class="title-wrapper">
         <div
@@ -102,7 +102,6 @@ export default {
     ...mapGetters(["Phone", "contactsList", "ygUserinfo", "isIOS"])
   },
   created() {
-    this.phone = this.Phone;
     this.lists = this.contactsList.slice(0, 4);
     this.moneyAll = this.contactsList.length * 5;
   },
@@ -135,10 +134,8 @@ export default {
           if (obj.status == 1) {
             this.lists = obj.list.slice(0, 4);
             this.moneyAll = obj.list.length * 5;
-            this.$emit("close", "pre", true);
-            this.$emit("close", "relativeShow", true);
             this.setContactsList(obj.list);
-            this.fnClose();
+            this.$router.push("/relative");
           }
         });
       } else {
@@ -194,6 +191,15 @@ export default {
     },
     fnClose() {
       this.$emit("close", "inviteShow", false);
+    }
+  },
+  watch: {
+    Phone(val) {
+      this.phone = val;
+    },
+    contactsList(val) {
+      this.lists = val.slice(0, 4);
+      this.moneyAll = val.length * 5;
     }
   }
 };

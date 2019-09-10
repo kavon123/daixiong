@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" @touchmove.prevent>
+      <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct">
           <div class="title">网络异常，请重试</div>
           <div class="but" @click="fnLogin">重试</div>

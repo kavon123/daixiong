@@ -1,10 +1,9 @@
 <template>
   <div id="app" v-if="noPC">
-    <transition>
-      <keep-alive :include="keepALivePages">
-        <router-view />
-      </keep-alive>
-    </transition>
+    <keep-alive>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
   </div>
 </template>
 
@@ -15,7 +14,6 @@ export default {
   name: "App",
   data() {
     return {
-      keepALivePages: ["58", "YG"],
       noPC: false
     };
   },

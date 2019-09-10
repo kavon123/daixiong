@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" @touchmove.prevent>
+      <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct">
           <div class="title">已关联您的58账号</div>
           <div class="cnetent">

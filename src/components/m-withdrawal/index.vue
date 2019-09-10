@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" @touchmove.prevent>
+      <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct">
           <div class="text">已转账到我的钱包，可前往我的 钱包页面提现</div>
           <div class="but_ct">
