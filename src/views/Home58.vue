@@ -203,7 +203,7 @@ export default {
       this[key] = vla;
     },
     fnWithdrawal() {
-      if (this.bIsLogin || !oUserinfo.externalBalance) return;
+      if (this.bIsLogin || !this.oUserinfo.externalBalance) return;
       const _this = this;
       if (_this.isIOS) {
         _this.$bridge.callhandler(
