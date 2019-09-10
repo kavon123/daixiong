@@ -174,7 +174,7 @@ export default {
       totalSize: 0,
       qrcodeShow: false,
       winShow: false,
-      butPopShow: false,
+      butPopShow: true,
       sucShow: false,
       withdrawal: false,
       first: false,
@@ -189,10 +189,10 @@ export default {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {
-    this.fnGetUrl();
-    this.fnGetBar();
-    this.fngetUserFriend();
-    this.fnInfo();
+    // this.fnGetUrl();
+    // this.fnGetBar();
+    // this.fngetUserFriend();
+    // this.fnInfo();
   },
   methods: {
     ...mapMutations({

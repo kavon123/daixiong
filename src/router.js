@@ -20,5 +20,10 @@ export default new Router({
       name: 'YG',
       component: () => import(/* webpackChunkName: "YG" */ './views/HomeYG.vue')
     },
+    {
+      path: '/moments',
+      name: 'MomentsTask',
+      component: () => import(/* webpackChunkName: "YG" */ './views/MomentsTask.vue')
+    },
   ]
 })
