@@ -270,7 +270,6 @@ export default {
               _this.$toast.clear();
               if (res.code === 0) {
                 const oUserinfo = Object.assign(_this.oUserinfo, res.datas);
-                console.log(oUserinfo);
                 _this.setUserInfo(oUserinfo);
                 _this.bIsLogin = false;
                 // 1 新注册(新生成) , 2新绑定 3 老账户
