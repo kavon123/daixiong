@@ -2,7 +2,13 @@
 <template>
   <transition>
     <div class="but_pop" @touchmove.prevent>
-      <van-swipe @change="onChange" class="swipe" :show-indicators="false" :width="375">
+      <van-swipe
+        @change="onChange"
+        class="swipe"
+        :show-indicators="false"
+        :width="375"
+        v-if="platformType ===2 "
+      >
         <van-swipe-item class="item">
           <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode1" id="qrcode1"></div>
@@ -16,6 +22,23 @@
         <van-swipe-item class="item">
           <div class="swipe_img img_3" ref="capture3">
             <div class="qrcode3" id="qrcode3"></div>
+          </div>
+        </van-swipe-item>
+      </van-swipe>
+      <van-swipe @change="onChange" class="swipe" :show-indicators="false" :width="375" v-else>
+        <van-swipe-item class="item">
+          <div class="swipe_img img_a" ref="capture1">
+            <div class="qrcode_a" id="qrcode1"></div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item class="item">
+          <div class="swipe_img img_b" ref="capture2">
+            <div class="qrcode_b" id="qrcode2"></div>
+          </div>
+        </van-swipe-item>
+        <van-swipe-item class="item">
+          <div class="swipe_img img_c" ref="capture3">
+            <div class="qrcode_c" id="qrcode3"></div>
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -63,7 +86,7 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      height: 0
+      height: 182
     };
   },
   computed: {
@@ -102,7 +125,7 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: url
+        text: "http://baidu.com"
       });
     },
     fnShare(shareType) {
@@ -160,10 +183,10 @@ export default {
         background-size: cover;
         position: relative;
         .qrcode1 {
-          width: calc(110px * 0.95);
-          height: calc(110px * 0.95);
+          width: 105;
+          height: 105;
           position: absolute;
-          left: calc(50% - 52px);
+          left: 90px;
           top: 286px;
         }
         .qrcode2 {
@@ -180,6 +203,27 @@ export default {
           left: 18px;
           top: 322px;
         }
+        .qrcode_a {
+          width: 65px;
+          height: 65px;
+          position: absolute;
+          left: 111px;
+          top: 318px;
+        }
+        .qrcode_b {
+          width: 69px;
+          height: 69px;
+          position: absolute;
+          left: 201px;
+          top: 317px;
+        }
+        .qrcode_c {
+          width: 69px;
+          height: 69px;
+          position: absolute;
+          left: 201px;
+          top: 322px;
+        }
       }
       .img_1 {
         background-image: url("./swipe1.png");
@@ -189,6 +233,15 @@ export default {
       }
       .img_3 {
         background-image: url("./swipe3.png");
+      }
+      .img_a {
+        background-image: url("./swipeA.png");
+      }
+      .img_b {
+        background-image: url("./swipeB.png");
+      }
+      .img_c {
+        background-image: url("./swipeC.png");
       }
     }
   }
