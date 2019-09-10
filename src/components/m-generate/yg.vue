@@ -35,6 +35,7 @@
 
 <script>
 import domtoimage from "dom-to-image";
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -48,22 +49,28 @@ export default {
       img: "./generate.png"
     };
   },
-
+  computed: {
+    ...mapGetters(["isIOS"])
+  },
   methods: {
     funSetOver() {
       const _this = this;
       domtoimage.toJpeg(_this.$refs.capture).then(dataUrl => {
-        _this.$bridge.callhandler(
-          "DX_save_share_Image",
-          { type: "save", image: dataUrl },
-          data => {
-            if (data == 1) {
-              _this.$toast.success(`保存图片成功`);
-            } else {
-              _this.$toast.fail(`保存失败`);
+        if (_this.isIOS) {
+          _this.$bridge.callhandler(
+            "DX_save_share_Image",
+            { type: "save", image: dataUrl },
+            data => {
+              if (data == 1) {
+                _this.$toast.success(`保存图片成功`);
+              } else {
+                _this.$toast.fail(`保存失败`);
+              }
             }
-          }
-        );
+          );
+        } else {
+          console.log("Android");
+        }
       });
     },
     fnClose() {

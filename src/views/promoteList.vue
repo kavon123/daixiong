@@ -48,7 +48,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["platformType"])
+    ...mapGetters(["platformType", "isIOS"])
   },
   created() {
     this.fngetUserFriend(1, this.platformType);
@@ -60,43 +60,51 @@ export default {
     },
     fnRemind() {
       const _this = this;
-      this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
-        if (data == 0) {
-          _this.$toast(`未安装微信!请安装`);
-        }
-      });
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
+          if (data == 0) {
+            _this.$toast(`未安装微信!请安装`);
+          }
+        });
+      } else {
+        console.log("Android");
+      }
     },
     fngetUserFriend(page, type) {
       const _this = this;
-      _this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        {
-          source: type,
-          page,
-          size: 20
-        },
-        function(data) {
-          $api
-            .postRequest("/user/v3/searchUserFriendPage", data)
-            .then(res => {
-              if (res.code === 0) {
-                res.datas.infoList = res.datas.infoList.map(item => {
-                  item.time = getDate(item.createdDate);
-                  return item;
-                });
-                if (res.datas.totalPage > res.datas.currPage) {
-                  _this.fngetUserFriend(res.datas.currPage + 1);
+      if (_this.isIOS) {
+        _this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          {
+            source: type,
+            page,
+            size: 20
+          },
+          function(data) {
+            $api
+              .postRequest("/user/v3/searchUserFriendPage", data)
+              .then(res => {
+                if (res.code === 0) {
+                  res.datas.infoList = res.datas.infoList.map(item => {
+                    item.time = getDate(item.createdDate);
+                    return item;
+                  });
+                  if (res.datas.totalPage > res.datas.currPage) {
+                    _this.fngetUserFriend(res.datas.currPage + 1);
+                  }
+                  _this.lists = _this.lists.concat(res.datas.infoList);
+                } else {
+                  _this.$toast(res.msg);
                 }
-                _this.lists = _this.lists.concat(res.datas.infoList);
-              } else {
-                _this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              _this.$toast(err.message);
-            });
-        }
-      );
+              })
+              .catch(err => {
+                _this.$toast(err.message);
+              });
+          }
+        );
+      } else {
+        console.log("Android");
+      }
     }
   }
 };

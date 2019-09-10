@@ -67,7 +67,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["oUserinfo", "ygUserinfo", "platformType"])
+    ...mapGetters(["oUserinfo", "ygUserinfo", "platformType", "isIOS"])
   },
   mounted() {
     const h = window.screen.height;
@@ -112,16 +112,20 @@ export default {
         domtoimage
           .toJpeg(_this.$refs[refs[_this.activeIndex]])
           .then(dataUrl2 => {
-            _this.$bridge.callhandler(
-              "DX_save_share_Image",
-              { type: "share", image: dataUrl2, shareType },
-              data => {
-                if (data == 1) {
-                  this.$emit("close", "winShow", true);
-                  this.$emit("close", "butPopShow", false);
+            if (_this.isIOS) {
+              _this.$bridge.callhandler(
+                "DX_save_share_Image",
+                { type: "share", image: dataUrl2, shareType },
+                data => {
+                  if (data == 1) {
+                    this.$emit("close", "winShow", true);
+                    this.$emit("close", "butPopShow", false);
+                  }
                 }
-              }
-            );
+              );
+            } else {
+              console.log("Android");
+            }
           });
       });
     }

@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props: {
     type: {
@@ -32,17 +34,24 @@ export default {
       default: ""
     }
   },
+  computed: {
+    ...mapGetters(["isIOS"])
+  },
   methods: {
     fnClose() {
       this.$emit("close", "winShow", false);
     },
     fnOpen(platform, name) {
       const _this = this;
-      this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
-        if (data == 0) {
-          _this.$toast(`未安装${name}!请安装`);
-        }
-      });
+      if (_this.isIOS) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", platform, function(data) {
+          if (data == 0) {
+            _this.$toast(`未安装${name}!请安装`);
+          }
+        });
+      } else {
+        console.log("Android");
+      }
     }
   }
 };

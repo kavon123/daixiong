@@ -99,7 +99,7 @@ export default {
     mQrcode
   },
   computed: {
-    ...mapGetters(["Phone", "contactsList", "oUserinfo"])
+    ...mapGetters(["Phone", "contactsList", "oUserinfo", "isIOS"])
   },
   created() {
     this.phone = this.Phone;
@@ -129,17 +129,21 @@ export default {
       this[key] = val;
     },
     fnBest() {
-      this.$bridge.callhandler("DX_getContactsList", {}, data => {
-        const obj = JSON.parse(data);
-        if (obj.status == 1) {
-          this.lists = obj.list.slice(0, 4);
-          this.moneyAll = obj.list.length * 5;
-          this.$emit("close", "pre", true);
-          this.$emit("close", "relativeShow", true);
-          this.setContactsList(obj.list);
-          this.fnClose();
-        }
-      });
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_getContactsList", {}, data => {
+          const obj = JSON.parse(data);
+          if (obj.status == 1) {
+            this.lists = obj.list.slice(0, 4);
+            this.moneyAll = obj.list.length * 5;
+            this.$emit("close", "pre", true);
+            this.$emit("close", "relativeShow", true);
+            this.setContactsList(obj.list);
+            this.fnClose();
+          }
+        });
+      } else {
+        console.log("Android");
+      }
     },
     focusTelphone() {
       this.$refs.telphone.focus();
@@ -161,21 +165,25 @@ export default {
         this.$toast("手机号码有误，请重填!");
         return false;
       }
-      this.$bridge.callhandler(
-        "DX_openSystemMessage",
-        {
-          type: "58",
-          url: oUserinfo.downloadUrl,
-          number: phone
-        },
-        function(data) {
-          if (data == 1) {
-            this.noticeShow = true;
-          } else {
-            this.$toast("邀请失败！请再次邀请");
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_openSystemMessage",
+          {
+            type: "58",
+            url: oUserinfo.downloadUrl,
+            number: phone
+          },
+          function(data) {
+            if (data == 1) {
+              this.noticeShow = true;
+            } else {
+              this.$toast("邀请失败！请再次邀请");
+            }
           }
-        }
-      );
+        );
+      } else {
+        console.log("Android");
+      }
     },
     fnInvitation(val) {
       this.phone = val;

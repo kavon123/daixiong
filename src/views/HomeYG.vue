@@ -200,7 +200,7 @@ export default {
     this.setPlatformType(2);
   },
   computed: {
-    ...mapGetters(["ygUserinfo", "barString"])
+    ...mapGetters(["ygUserinfo", "barString", "isIOS"])
   },
   methods: {
     ...mapMutations({
@@ -230,26 +230,32 @@ export default {
         return;
       }
       const _this = this;
-      _this.$bridge.callhandler("DX_encryptionRequest", { source: 2 }, function(
-        data
-      ) {
-        $api
-          .postRequest("/user/v3/userCashExternalRedPackage", data)
-          .then(res => {
-            if (res.code === 0) {
-              _this.withdrawal = true;
-              const oUserinfo = Object.assign(_this.ygUserinfo, {
-                externalBalance: 0
+      if (_this.isIOS) {
+        _this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { source: 2 },
+          function(data) {
+            $api
+              .postRequest("/user/v3/userCashExternalRedPackage", data)
+              .then(res => {
+                if (res.code === 0) {
+                  _this.withdrawal = true;
+                  const oUserinfo = Object.assign(_this.ygUserinfo, {
+                    externalBalance: 0
+                  });
+                  _this.setUserInfo(oUserinfo);
+                } else {
+                  _this.$toast(res.msg);
+                }
+              })
+              .catch(err => {
+                _this.$toast(err.message);
               });
-              _this.setUserInfo(oUserinfo);
-            } else {
-              _this.$toast(res.msg);
-            }
-          })
-          .catch(err => {
-            _this.$toast(err.message);
-          });
-      });
+          }
+        );
+      } else {
+        console.log("Android");
+      }
     },
     fnPromoteList() {
       this.promoteShow = true;
@@ -269,78 +275,51 @@ export default {
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      _this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        { loginType: 2 },
-        function(data) {
-          $api.postRequest("/user/v3/loginYg", data).then(res => {
-            _this.$toast.clear();
-            _this.fnInfoAll();
-            if (res.code === 0) {
-              const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
-              _this.setUserInfo(oUserinfo);
-              _this.bIsLogin = false;
-              // 1 新注册(新生成) , 2新绑定 3 老账户
-              if (res.datas.hasBind == 1) {
-                _this.generateShow = true;
-              } else if (res.datas.hasBind == 2) {
-                _this.sucShow = true;
+      if (_this.isIOS) {
+        _this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { loginType: 2 },
+          function(data) {
+            $api.postRequest("/user/v3/loginYg", data).then(res => {
+              _this.$toast.clear();
+              _this.fnInfoAll();
+              if (res.code === 0) {
+                const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
+                _this.setUserInfo(oUserinfo);
+                _this.bIsLogin = false;
+                // 1 新注册(新生成) , 2新绑定 3 老账户
+                if (res.datas.hasBind == 1) {
+                  _this.generateShow = true;
+                } else if (res.datas.hasBind == 2) {
+                  _this.sucShow = true;
+                }
+              } else {
+                _this.errShow = true;
               }
-            } else {
-              _this.errShow = true;
-            }
-          });
-        }
-      );
+            });
+          }
+        );
+      } else {
+        console.log("Android");
+      }
     },
     fnInfoAll() {
       const _this = this;
-      _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
-        $api
-          .postRequest("/external/friend/getYgDatas", data)
-          .then(res => {
-            if (res.code === 0) {
-              const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
-              let list = res.datas.dxRankingAHundred.map(item => {
-                return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
-                  item.sumMoney
-                )} 元！               `;
-              });
-              const text = list.join("");
-              _this.setBarString(text);
-              _this.setUserInfo(oUserinfo);
-            } else {
-              _this.$toast(res.msg);
-            }
-          })
-          .catch(err => {
-            _this.$toast(err.message);
-          });
-      });
-    },
-    fnJump(url) {
-      this.$bridge.callhandler("DX_gotoBrowser", url);
-    },
-    fngetUserFriend() {
-      const _this = this;
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        {
-          source: 2,
-          page: 1,
-          size: 5
-        },
-        function(data) {
+      if (_this.isIOS) {
+        _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
           $api
-            .postRequest("/user/v3/searchUserFriendPage", data)
+            .postRequest("/external/friend/getYgDatas", data)
             .then(res => {
               if (res.code === 0) {
-                res.datas.infoList = res.datas.infoList.map(item => {
-                  item.time = getDate(item.createdDate);
-                  return item;
+                const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
+                let list = res.datas.dxRankingAHundred.map(item => {
+                  return `YG代理 ${item.userId} 刚刚提现了 ${parseInt(
+                    item.sumMoney
+                  )} 元！               `;
                 });
-                _this.totalSize = res.datas.totalSize;
-                _this.lists = res.datas.infoList;
+                const text = list.join("");
+                _this.setBarString(text);
+                _this.setUserInfo(oUserinfo);
               } else {
                 _this.$toast(res.msg);
               }
@@ -348,16 +327,63 @@ export default {
             .catch(err => {
               _this.$toast(err.message);
             });
-        }
-      );
+        });
+      } else {
+        console.log("Android");
+      }
+    },
+    fnJump(url) {
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_gotoBrowser", url);
+      } else {
+        console.log("Android");
+      }
+    },
+    fngetUserFriend() {
+      const _this = this;
+      if (_this.isIOS) {
+        _this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          {
+            source: 2,
+            page: 1,
+            size: 5
+          },
+          function(data) {
+            $api
+              .postRequest("/user/v3/searchUserFriendPage", data)
+              .then(res => {
+                if (res.code === 0) {
+                  res.datas.infoList = res.datas.infoList.map(item => {
+                    item.time = getDate(item.createdDate);
+                    return item;
+                  });
+                  _this.totalSize = res.datas.totalSize;
+                  _this.lists = res.datas.infoList;
+                } else {
+                  _this.$toast(res.msg);
+                }
+              })
+              .catch(err => {
+                _this.$toast(err.message);
+              });
+          }
+        );
+      } else {
+        console.log("Android");
+      }
     },
     fnOpen() {
       const _this = this;
-      this.$bridge.callhandler("DX_openWX_QQ_58", "WX", function(data) {
-        if (data == 0) {
-          _this.$toast(`未安装微信!请安装`);
-        }
-      });
+      if (_this.isIOS) {
+        _this.$bridge.callhandler("DX_openWX_QQ_58", "WX", function(data) {
+          if (data == 0) {
+            _this.$toast(`未安装微信!请安装`);
+          }
+        });
+      } else {
+        console.log("Android");
+      }
     }
   }
 };

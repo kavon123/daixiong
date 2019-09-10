@@ -17,13 +17,22 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
+  computed: {
+    ...mapGetters(["isIOS"])
+  },
   methods: {
     fnClose() {
       this.$emit("close", "withdrawal", false);
     },
     fnWithdrawal() {
-      this.$bridge.callhandler("DX_backToLocal", "提现红包");
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_backToLocal", "提现红包");
+      } else {
+        console.log("Android");
+      }
     }
   }
 };
