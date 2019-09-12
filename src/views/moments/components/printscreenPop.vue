@@ -24,5 +24,51 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-@import url("../style/index.less");
+.pop {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 99;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+
+  .content {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    background: #fff;
+    border-radius: 9px;
+    padding: 26px 32px 30px;
+    .title {
+      font-size: 17px;
+      color: #333;
+    }
+    .content_text {
+      font-size: 14px;
+      color: #999;
+    }
+    .but {
+      width: 140px;
+      height: 40px;
+      background: #367dfd;
+      border-radius: 5px;
+      font-size: 15px;
+      color: #fff;
+      text-align: center;
+      line-height: 40px;
+    }
+  }
+  .close {
+    font-size: 35px;
+    color: #fff;
+    margin-top: 20px;
+  }
+}
 </style>

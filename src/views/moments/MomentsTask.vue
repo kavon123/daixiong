@@ -87,6 +87,7 @@
       </div>
     </transition>
     <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}"></swipe-pop>
+    <fallback-pop v-if="fallbackPop" :closeFn="()=>{fallbackPop=false}" @determine="fnDetermine"></fallback-pop>
     <printscreenPop v-if="printscreenPop" :closeFn="()=>{printscreenPop=false}"></printscreenPop>
   </div>
 </template>
@@ -94,16 +95,19 @@
 <script>
 import printscreenPop from "@/views/moments/components/printscreenPop.vue";
 import swipePop from "@/components/m-but-pop/swipePop.vue";
+import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     printscreenPop,
-    swipePop
+    swipePop,
+    fallbackPop
   },
   data() {
     //这里存放数据
     return {
+      fallbackPop: false,
       swipePop: false,
       operationPop: false,
       printscreenPop: false,
@@ -133,6 +137,10 @@ export default {
       // this.active = this.active + 1 <= 3 ? this.active + 1 : 0;
     },
     fnGoBack() {
+      this.fallbackPop = true;
+    },
+    fnDetermine() {
+      this.fallbackPop = false;
       this.$bridge.callhandler("DX_goBack");
     }
   },
