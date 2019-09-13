@@ -1,37 +1,34 @@
 <!--  -->
 <template>
-  <div class="promote">
-    <div class="centent">
-      <div class="table_head">
-        <van-row type="flex">
-          <van-col span="6">用户名</van-col>
-          <van-col span="6">收益</van-col>
-          <van-col span="6">日期</van-col>
-          <van-col span="6">状态</van-col>
+  <div class="centent">
+    <div class="table_head">
+      <van-row type="flex">
+        <van-col span="6">用户名</van-col>
+        <van-col span="6">收益</van-col>
+        <van-col span="6">日期</van-col>
+        <van-col span="6">状态</van-col>
+      </van-row>
+    </div>
+    <div class="scroll">
+      <div class="table_body" v-for="(item,i) in lists" :key="i">
+        <van-row type="flex" justify="center">
+          <van-col span="6">
+            <div class="name" v-if="platformType==2">{{item.name}}</div>
+            <div v-else>{{item.mobile}}</div>
+          </van-col>
+          <van-col span="6" class="sum">{{item.amount}}元</van-col>
+          <van-col span="6">{{item.time}}</van-col>
+          <van-col span="6" class="state">
+            {{item.status==2?"已发放":"未游戏"}}
+            <span
+              class="alert"
+              v-if="item.status!=2"
+              @click="fnRemind"
+            >提醒</span>
+          </van-col>
         </van-row>
       </div>
-      <div class="scroll">
-        <div class="table_body" v-for="(item,i) in lists" :key="i">
-          <van-row type="flex" justify="center">
-            <van-col span="6">
-              <div class="name" v-if="platformType==2">{{item.name}}</div>
-              <div v-else>{{item.mobile}}</div>
-            </van-col>
-            <van-col span="6" class="sum">{{item.amount}}元</van-col>
-            <van-col span="6">{{item.time}}</van-col>
-            <van-col span="6" class="state">
-              {{item.status==2?"已发放":"未游戏"}}
-              <span
-                class="alert"
-                v-if="item.status!=2"
-                @click="fnRemind"
-              >提醒</span>
-            </van-col>
-          </van-row>
-        </div>
-      </div>
     </div>
-    <van-icon name="close" class="close" @click="fnClose" />
   </div>
 </template>
 
@@ -54,10 +51,6 @@ export default {
     this.fngetUserFriend(1, this.platformType);
   },
   methods: {
-    fnClose() {
-      this.$emit("close", "promoteShow", false);
-      this.$emit("close", "pre", false);
-    },
     fnRemind() {
       const _this = this;
       if (this.isIOS) {
@@ -112,31 +105,13 @@ export default {
 };
 </script>
 <style lang='less' scoped>
-.close {
-  font-size: 35px;
-  color: #fff;
-  margin-top: 20px;
-}
-.promote {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
 .centent {
-  height: 500px;
-  width: 90%;
+  height: 100vh;
+  width: 100%;
   overflow: hidden;
   background: #fff;
   .scroll {
-    height: calc(500px - 48px);
+    height: calc(100vh - 48px);
     overflow: auto;
   }
 }

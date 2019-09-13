@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" @touchmove.prevent>
+      <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct">
           <div class="title">登录YG电竞</div>
           <div class="input_ct">

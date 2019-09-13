@@ -2,7 +2,7 @@
 <template>
   <div>
     <transition>
-      <div class="dialog" @touchmove.prevent>
+      <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct" :class="type==='58'?'dialog_ct_58':'dialog_ct_yg'">
           <div class="title">短信邀请成功</div>
           <div class="centent">告知好友查看短信，可提高30%成功率哦</div>

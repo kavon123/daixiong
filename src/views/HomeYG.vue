@@ -134,8 +134,6 @@
     <m-win-pop v-if="winShow" type="YG" @close="fnPop" />
     <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
     <m-invite v-if="inviteShow" @close="fnPop" />
-    <promote-list v-if="promoteShow" @close="fnPop" />
-    <relative-list v-if="relativeShow" @close="fnPop" />
   </div>
 </template>
 
@@ -159,8 +157,6 @@ import relativeList from "./relativeList";
 
 export default {
   components: {
-    relativeList,
-    promoteList,
     mInvite,
     mQrcode,
     mWinPop,
@@ -175,9 +171,6 @@ export default {
   },
   data() {
     return {
-      pre: false,
-      relativeShow: false,
-      promoteShow: false,
       inviteShow: false,
       butPopShow: false,
       winShow: false,
@@ -261,8 +254,7 @@ export default {
       }
     },
     fnPromoteList() {
-      this.promoteShow = true;
-      this.pre = true;
+      this.$router.push("/promote");
     },
     fnShowButPop() {
       if (this.bIsLogin) {

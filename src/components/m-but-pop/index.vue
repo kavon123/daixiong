@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <transition>
-    <div class="but_pop" @touchmove.prevent>
+    <div class="but_pop" @touchmove.prevent @click.prevent>
       <van-swipe
         @change="onChange"
         class="swipe"
@@ -11,17 +11,17 @@
       >
         <van-swipe-item class="item">
           <div class="swipe_img img_1" ref="capture1">
-            <div class="qrcode1" id="qrcode1"></div>
+            <div class="qrcode_1" id="qrcode1"></div>
           </div>
         </van-swipe-item>
         <van-swipe-item class="item">
           <div class="swipe_img img_2" ref="capture2">
-            <div class="qrcode2" id="qrcode2"></div>
+            <div class="qrcode_2" id="qrcode2"></div>
           </div>
         </van-swipe-item>
         <van-swipe-item class="item">
           <div class="swipe_img img_3" ref="capture3">
-            <div class="qrcode3" id="qrcode3"></div>
+            <div class="qrcode_3" id="qrcode3"></div>
           </div>
         </van-swipe-item>
       </van-swipe>
@@ -125,7 +125,7 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: "http://baidu.com"
+        text: url
       });
     },
     fnShare(shareType) {
@@ -182,21 +182,21 @@ export default {
         background-repeat: no-repeat;
         background-size: cover;
         position: relative;
-        .qrcode1 {
-          width: 105;
-          height: 105;
+        .qrcode_1 {
+          width: 105px;
+          height: 105px;
           position: absolute;
           left: 90px;
           top: 286px;
         }
-        .qrcode2 {
+        .qrcode_2 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 201px;
           top: 317px;
         }
-        .qrcode3 {
+        .qrcode_3 {
           width: 69px;
           height: 69px;
           position: absolute;

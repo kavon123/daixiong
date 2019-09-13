@@ -1,5 +1,5 @@
 <template>
-  <div class="home" :class="pre?'prevent':''">
+  <div class="home">
     <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump">了解58棋牌</div>
@@ -128,8 +128,6 @@
     <m-win-pop v-if="winShow" type="58" @close="fnPop" />
     <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
     <m-invite v-if="inviteShow" @close="fnPop" />
-    <promote-list v-if="promoteShow" @close="fnPop" />
-    <relative-list v-if="relativeShow" @close="fnPop" />
   </div>
 </template>
 
@@ -147,13 +145,9 @@ import mButPop from "@/components/m-but-pop";
 import mWinPop from "@/components/m-win-pop";
 import mQrcode from "@/components/m-qrcode";
 import mInvite from "./Invite/Invite58";
-import promoteList from "./promoteList";
-import relativeList from "./relativeList";
 
 export default {
   components: {
-    relativeList,
-    promoteList,
     mInvite,
     mBar,
     m58,
@@ -167,9 +161,6 @@ export default {
   },
   data() {
     return {
-      pre: false,
-      relativeShow: false,
-      promoteShow: false,
       inviteShow: false,
       totalSize: 0,
       qrcodeShow: false,
@@ -245,8 +236,7 @@ export default {
       }
     },
     fnPromoteList() {
-      this.promoteShow = true;
-      this.pre = true;
+      this.$router.push("/promote");
     },
     fnJump() {
       if (this.isIOS) {

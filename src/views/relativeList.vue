@@ -1,21 +1,18 @@
 <!--  -->
 <template>
-  <div class="promote">
-    <div class="centent">
-      <van-row type="flex" class="table_head">
-        <van-col span="8">姓名</van-col>
-        <van-col span="8">手机号</van-col>
-        <van-col span="8">状态</van-col>
+  <div class="centent">
+    <van-row type="flex" class="table_head">
+      <van-col span="8">姓名</van-col>
+      <van-col span="8">手机号</van-col>
+      <van-col span="8">状态</van-col>
+    </van-row>
+    <div class="scroll" @touchmove="fnTouchmove">
+      <van-row type="flex" class="table_body" v-for="(item,i) in contactsList" :key="i">
+        <van-col span="8" class="name">{{item.name}}</van-col>
+        <van-col span="8">{{item.phone}}</van-col>
+        <van-col span="8" class="state" @click="fnChoose(item.phone)">选择TA</van-col>
       </van-row>
-      <div class="scroll">
-        <van-row type="flex" class="table_body" v-for="(item,i) in contactsList" :key="i">
-          <van-col span="8" class="name">{{item.name}}</van-col>
-          <van-col span="8">{{item.phone}}</van-col>
-          <van-col span="8" class="state" @click="fnChoose(item.phone)">选择TA</van-col>
-        </van-row>
-      </div>
     </div>
-    <van-icon name="close" class="close" @click="fnClose" />
   </div>
 </template>
 
@@ -36,45 +33,21 @@ export default {
     ...mapMutations({
       setPhone: "SET_PHONE"
     }),
-    fnClose() {
-      this.$emit("close", "relativeShow", false);
-      this.$emit("close", "pre", false);
-      this.$emit("close", "inviteShow", true);
-    },
     fnChoose(phone) {
       this.setPhone(phone);
-      this.$emit("close", "inviteShow", true);
-      this.fnClose();
+      this.$router.back(-1);
     }
   }
 };
 </script>
 <style lang='less' scoped>
-.close {
-  font-size: 35px;
-  color: #fff;
-  margin-top: 20px;
-}
-.promote {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 99;
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-  align-items: center;
-}
 .centent {
-  height: 500px;
-  width: 90%;
+  height: 100vh;
+  width: 100%;
   overflow: hidden;
   background: #fff;
   .scroll {
-    height: calc(500px - 48px);
+    height: calc(100vh - 48px);
     overflow: auto;
   }
 }
