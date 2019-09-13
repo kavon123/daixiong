@@ -83,7 +83,7 @@
         <span class="triangle-up"></span>
         <div class="item item-border">联系客服</div>
         <div class="item item-border" @click="()=>printscreenPop=true">如何截图</div>
-        <div class="item">审核记录</div>
+        <div class="item" @click="()=>this.$router.push('/records')">审核记录</div>
       </div>
     </transition>
     <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}"></swipe-pop>
@@ -142,10 +142,21 @@ export default {
     fnDetermine() {
       this.fallbackPop = false;
       this.$bridge.callhandler("DX_goBack");
+    },
+    fnInfo() {
+      _this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        { taskConfigCode: "SharePoster_58" },
+        function(data) {
+          console.log(data);
+        }
+      );
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    console.log(this.$route.params.id);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
@@ -210,6 +221,7 @@ p {
   background-color: #4c38d8;
   .head {
     position: fixed;
+    background: linear-gradient(to right, #27abf3, #3177f0);
     .nav {
       .g_flex;
       width: 100vw;

@@ -3,7 +3,7 @@
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
       <div class="title">选中海报前往分享</div>
-      <van-swipe @change="onChange" class="swipe" :width="375" v-if="platformType ===2 ">
+      <van-swipe @change="onChange" class="swipe" v-if="platformType ===2 ">
         <van-swipe-item class="item">
           <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode1" id="qrcode1"></div>
@@ -20,7 +20,7 @@
           </div>
         </van-swipe-item>
       </van-swipe>
-      <van-swipe @change="onChange" class="swipe" :width="375" v-else indicator-color="#4c38d8">
+      <van-swipe @change="onChange" class="swipe" v-else indicator-color="#4c38d8">
         <van-swipe-item class="item">
           <div class="swipe_img img_a" ref="capture1">
             <div class="qrcode_a" id="qrcode1"></div>
@@ -161,12 +161,10 @@ export default {
   flex-direction: column;
   align-items: center;
   .title {
-    margin-top: 64px;
     font-size: 20px;
     font-weight: 500;
     color: #fff;
-    height: 87px;
-    padding-top: 38px;
+    // padding-top: 14px;
   }
   .swipe {
     width: 100%;
@@ -258,7 +256,7 @@ export default {
     color: #eceaff;
     font-size: 13px;
     line-height: 18px;
-    padding: 28px 0 10px 0;
+    padding: 22px 0 10px 0;
   }
   .copy_but {
     width: 210px;
@@ -268,7 +266,7 @@ export default {
     color: #5e539d;
     text-align: center;
     line-height: 32px;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
   }
   .share_img {
     width: 218px;

@@ -25,5 +25,15 @@ export default new Router({
       name: 'MomentsTask',
       component: () => import(/* webpackChunkName: "YG" */ './views/moments/MomentsTask.vue')
     },
+    {
+      path: '/records',
+      name: 'AuditRecords',
+      component: () => import(/* webpackChunkName: "YG" */ './views/moments/AuditRecords.vue')
+    },
+    {
+      path: '/status',
+      name: 'AuditStatus',
+      component: () => import(/* webpackChunkName: "YG" */ './views/moments/AuditStatus.vue')
+    },
   ]
 })
