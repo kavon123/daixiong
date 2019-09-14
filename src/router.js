@@ -37,7 +37,7 @@ export default new Router({
       component: () => import(/* webpackChunkName: "promoteList" */ './views/promoteList.vue')
     },
     {
-      path: '/moments',
+      path: '/moments/:type',
       name: 'MomentsTask',
       component: () => import(/* webpackChunkName: "YG" */ './views/moments/MomentsTask.vue')
     },

@@ -1,5 +1,7 @@
 export default {
     taskConfigCode: 'SharePoster_58',
+    itemCode: '58_SHARE_URL',
+    momentsUrl: '',
     Phone: '',
     contactsList: [],
     isIOS: false,

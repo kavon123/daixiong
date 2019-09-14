@@ -22,5 +22,11 @@ export default {
     },
     SET_TASK_CONFIG_CODE(state, param) {
         state.taskConfigCode = param;
+    },
+    SET_ITEM_CODE(state, param) {
+        state.itemCode = param;
+    },
+    SET_MOMENTS_URL(state, param) {
+        state.momentsUrl = param;
     }
 }

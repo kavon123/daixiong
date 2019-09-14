@@ -14,14 +14,15 @@
           <div class="line active"></div>
           <img class="icon" src="@/views/moments/image/wait.png" alt />
           <div class="line" :class="{active:data.status >=1}"></div>
-          <img class="icon" src="@/views/moments/image/credit.png" alt v-if="data.status ==0" />
+
           <img
             class="icon"
             src="@/views/moments/image/throughImg.png"
             alt
             v-if="data.status ==1||data.status ==3"
           />
-          <img class="icon" src="@/views/moments/image/errImg.png" alt v-if="data.status ==2" />
+          <img class="icon" src="@/views/moments/image/errImg.png" alt v-else-if="data.status ==2" />
+          <img class="icon" src="@/views/moments/image/credit.png" alt v-else />
         </div>
         <div class="steps_text">
           <div class="item">
@@ -84,7 +85,7 @@ export default {
   methods: {
     fnEnsure() {
       if (this.data.status != 1) {
-        this.$router.push("/moments");
+        this.$router.push({ name: "MomentsTask" });
       } else {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
@@ -118,6 +119,10 @@ export default {
       this.$router.back(-1);
     },
     fuGetDetail() {
+      console.log(this.userId);
+      const toast = this.$toast.loading({
+        message: "加载中..."
+      });
       this.$bridge.callhandler(
         "DX_encryptionRequest",
         { id: this.userId },
@@ -125,6 +130,7 @@ export default {
           $api
             .postRequest("/poster/searchSharePosterDetail", data)
             .then(res => {
+              toast.clear();
               if (res.code == 0 && res.datas) {
                 this.data = res.datas;
                 this.data.time = getDateAll(res.datas.createdDate);
@@ -136,10 +142,12 @@ export default {
                     this.auditText = "审核通过";
                     break;
                   case "2":
+                    this.butText = "确定";
                     this.auditText = "审核未通过";
                     this.describe = res.datas.remark;
                     break;
                   case "3":
+                    this.butText = "确定";
                     this.auditText = "审核通过";
                     this.describe = "奖励已发放至您的钱包余额";
                     break;

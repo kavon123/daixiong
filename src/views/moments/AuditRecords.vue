@@ -7,7 +7,7 @@
         <van-icon name="arrow-left" class="icon" style="visibility: hidden;" />
       </div>
     </div>
-    <div class="body">
+    <div class="body" @scroll="scroll" ref="scroll">
       <div class="item" v-for="item in lists" :key="item.id" @click="fnViewStatus(item.id)">
         <div class="left">
           <div>{{item.dates[0]}}</div>
@@ -38,6 +38,8 @@ export default {
   data() {
     //这里存放数据
     return {
+      page: 1,
+      totalSize: 0,
       statusList: ["正在审核", "审核已通过", "审核失败", "审核已通过"],
       lists: []
     };
@@ -56,22 +58,29 @@ export default {
     fnViewStatus(id) {
       this.$router.push({ name: "AuditStatus", params: { id } });
     },
-    fnGetList(page) {
+    fnGetList() {
+      const toast = this.$toast.loading({
+        message: "加载中..."
+      });
       this.$bridge.callhandler(
         "DX_encryptionRequest",
         {
           taskConfigCode: this.taskConfigCode,
-          imageList: [{ type: "WeChatMoments", page, size: 20 }]
+          imageList: [{ type: "WeChatMoments", page: this.page, size: 20 }]
         },
         data => {
           $api
             .postRequest("/poster/searchSharePosterHistoryTask", data)
             .then(res => {
+              toast.clear();
               if (res.code == 0) {
-                this.lists = res.datas.infoList.map(item => {
+                this.page = this.page + 1;
+                this.totalSize = res.datas.totalSize;
+                const lists = res.datas.infoList.map(item => {
                   item.dates = getDates(item.createdDate);
                   return item;
                 });
+                this.lists = this.lists.concat(lists);
               } else {
                 this.$toast(res.msg);
               }
@@ -81,11 +90,17 @@ export default {
             });
         }
       );
+    },
+    scroll(event) {
+      const bottom = this.$refs.scroll.offsetHeight - event.target.scrollTop;
+      if (bottom <= 100 && this.lists.length < this.totalSize) {
+        this.fnGetList();
+      }
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    this.fnGetList(1);
+    this.fnGetList();
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},

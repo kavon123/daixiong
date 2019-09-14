@@ -29,13 +29,14 @@
               <img class="steps_text1" src="./image/steps_text1.png" alt />
               <div class="steps_prompt">点击分享按钮，分享文案与海报至朋友圈</div>
               <div class="copy_text">
-                YG电竞顶级代理招募中，长按图片识别图中二维码，即可加入YG电竞，领取188元新手红包！
-                www.baidu.com
-                <div class="copy_but">复制</div>
+                {{copyText}}
+                <br />
+                {{momentsUrl}}
+                <div class="copy_but" @click="fnCopyText(true)">复制</div>
               </div>
               <img
                 class="share_but"
-                @click="()=>swipePop=true"
+                @click="()=>{swipePop=true ; fnCopyText()}"
                 src="@/views/moments/image/shareBut.png"
                 alt
               />
@@ -51,7 +52,7 @@
               <div class="steps_prompt">上传已分享的截图审核</div>
               <div class="uploader_img">
                 <div class="prompt">示例图</div>
-                <van-uploader v-model="fileList" :max-count="2" />
+                <van-uploader v-model="fileList" :max-count="2" :before-read="beforeRead" />
               </div>
             </div>
           </div>
@@ -96,7 +97,7 @@
       </div>
     </transition>
     <reward-pop v-if="rewardPop" :reward="reward"></reward-pop>
-    <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}"></swipe-pop>
+    <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}" :copyText="copyText"></swipe-pop>
     <fallback-pop v-if="fallbackPop" :closeFn="()=>{fallbackPop=false}" @determine="fnDetermine"></fallback-pop>
     <printscreenPop v-if="printscreenPop" :closeFn="()=>{printscreenPop=false}"></printscreenPop>
   </div>
@@ -121,6 +122,8 @@ export default {
   data() {
     //这里存放数据
     return {
+      copyText:
+        "58棋牌顶级代理招募中，长按图片识别图中二维码，即可加入58棋牌，领取188元新手红包！",
       reward: "",
       resp: {
         status: null,
@@ -138,7 +141,7 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    ...mapGetters(["taskConfigCode", "isIOS"])
+    ...mapGetters(["taskConfigCode", "itemCode", "isIOS", "momentsUrl"])
   },
   //监控data中的数据变化
   watch: {},
@@ -146,8 +149,22 @@ export default {
   methods: {
     ...mapMutations({
       setPlatformType: "SET_PLATFORM_TYPE",
-      setTaskConfigCode: "SET_TASK_CONFIG_CODE"
+      setTaskConfigCode: "SET_TASK_CONFIG_CODE",
+      setItemCode: "SET_ITEM_CODE",
+      setMomentsUrl: "SET_MOMENTS_URL"
     }),
+    beforeRead(file) {
+      if (file.size > 10 * 1024 * 1024) {
+        this.$toast.fail("请上传不超过10M的图片!");
+        return false;
+      }
+      if (!/image\/\w+/.test(file.type)) {
+        this.$toast.fail("请上传图片!");
+        return false;
+      }
+
+      return true;
+    },
     fnJump() {
       if (this.isIOS) {
         this.$bridge.callhandler(
@@ -173,6 +190,9 @@ export default {
       this.$bridge.callhandler("DX_goBack");
     },
     fnInfo() {
+      const toast = this.$toast.loading({
+        message: "加载中..."
+      });
       this.$bridge.callhandler(
         "DX_encryptionRequest",
         { taskConfigCode: this.taskConfigCode },
@@ -180,6 +200,7 @@ export default {
           $api
             .postRequest("/poster/searchSharePosterTask", data)
             .then(res => {
+              toast.clear();
               if (res.code == 0) {
                 this.resp.status = res.datas.status;
                 this.resp.remark = res.datas.remark;
@@ -189,9 +210,6 @@ export default {
                     break;
                   case "1":
                     this.submitText = "审核完成,待领取";
-                    break;
-                  case "3":
-                    this.submitText = "已领取奖励";
                     break;
                   default:
                     this.submitText = "提交审核";
@@ -213,6 +231,9 @@ export default {
           this.$toast("请上传截图后提交审核");
           return;
         }
+        const toast = this.$toast.loading({
+          message: "提交中..."
+        });
         this.$bridge.callhandler(
           "DX_encryptionRequest",
           {
@@ -225,10 +246,14 @@ export default {
             $api
               .postRequest("/user/task/v3/sharePoster", data)
               .then(res => {
+                toast.clear();
                 if (res.code == 0) {
                   this.$toast.success("提交成功等待审核！");
-                  this.$router.push({ name: "AuditStatus", id: res.datas.id });
                   this.fnInfo();
+                  this.$router.push({
+                    name: "AuditStatus",
+                    params: { id: res.datas }
+                  });
                 } else {
                   this.$toast(res.msg);
                 }
@@ -238,14 +263,6 @@ export default {
               });
           }
         );
-      } else {
-        if (this.resp.status == 1) {
-          this.rewardPop = true;
-          setTimeout(() => {
-            this.rewardPop = false;
-          }, 2000);
-          console.log("object");
-        }
       }
     },
     fnGetReward() {
@@ -275,14 +292,46 @@ export default {
       setTimeout(() => {
         this.fuGetDetail();
       }, 1000);
+    },
+    fnCopyText(type) {
+      const copy = this.copyText + this.momentsUrl;
+      this.$bridge.callhandler("DX_copy", copy, data => {
+        if (data == 1 && type) {
+          this.$toast.success("复制成功！");
+        }
+      });
+    },
+    fnGetUrl() {
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        { classCode: "EXTERNAL_SHARE_URL", itemCode: this.itemCode },
+        data => {
+          $api
+            .postRequest("/lookup/searchLookupItem", data)
+            .then(res => {
+              if (res.code == 0) {
+                this.setMomentsUrl(res.datas[0].attribute1);
+              } else {
+                this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              this.$toast(err.message);
+            });
+        }
+      );
     }
   },
   created() {
     if (this.$route.params.type === "YG") {
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
+      this.setItemCode("YG_SHARE_URL");
+      this.copyText =
+        "YG娱乐顶级代理招募中，长按图片识别图中二维码，即可加入YG娱乐，领取188元新手红包！";
     }
     this.fnInfo();
+    this.fnGetUrl();
   }
 };
 </script>
@@ -518,6 +567,7 @@ p {
     }
     .submit_but_color {
       background: linear-gradient(#a28bff 0%, #826cff 50%, #a28bff 100%);
+      border: none;
     }
     .get_reward_but {
       display: flex;

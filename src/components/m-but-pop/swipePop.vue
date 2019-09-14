@@ -3,7 +3,7 @@
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
       <div class="title">选中海报前往分享</div>
-      <van-swipe @change="onChange" class="swipe" v-if="platformType ===2 ">
+      <van-swipe @change="onChange" class="swipe" v-if="itemCode ==='YG_SHARE_URL'">
         <van-swipe-item class="item">
           <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode1" id="qrcode1"></div>
@@ -38,8 +38,9 @@
         </van-swipe-item>
       </van-swipe>
       <div class="copy_text">
-        YG电竞顶级代理招募中，长按图片识别图中的二维码，即可加入YG电竞，领取188元新手红包！
-        <br />>www.baidu.com
+        {{copyText}}
+        <br />
+        {{momentsUrl}}
       </div>
       <div class="copy_but">文案已复制到剪切板，记得粘贴哦</div>
       <div>
@@ -60,6 +61,10 @@ export default {
     closeFn: {
       type: Function,
       default: () => {}
+    },
+    copyText: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -69,7 +74,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["oUserinfo", "ygUserinfo", "platformType", "isIOS"])
+    ...mapGetters(["momentsUrl", "isIOS", "itemCode"])
   },
   mounted() {
     const h = window.screen.height;
@@ -97,14 +102,10 @@ export default {
       this.$emit("close", "butPopShow", false);
     },
     qrcode($div, key) {
-      const url =
-        this.platformType === 1
-          ? this.oUserinfo.downloadUrl
-          : this.ygUserinfo.ygSharedUrl;
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: "http://baidu.com"
+        text: this.momentsUrl
       });
     },
     fnShare() {

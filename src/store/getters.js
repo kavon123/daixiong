@@ -7,4 +7,6 @@ export default {
     Phone: state => state.Phone,
     contactsList: state => state.contactsList,
     taskConfigCode: state => state.taskConfigCode,
+    itemCode: state => state.itemCode,
+    momentsUrl: state => state.momentsUrl,
 }
