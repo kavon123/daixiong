@@ -291,23 +291,28 @@ export default {
       }
     },
     fnInfoReq(data) {
-      $api.postRequest("/user/v3/loginYg", data).then(res => {
-        this.$toast.clear();
-        this.fnInfoAll();
-        if (res.code === 0) {
-          const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
-          this.setUserInfo(oUserinfo);
-          this.bIsLogin = false;
-          // 1 新注册(新生成) , 2新绑定 3 老账户
-          if (res.datas.hasBind == 1) {
-            this.generateShow = true;
-          } else if (res.datas.hasBind == 2) {
-            this.sucShow = true;
+      $api
+        .postRequest("/user/v3/loginYg", data)
+        .then(res => {
+          this.$toast.clear();
+          this.fnInfoAll();
+          if (res.code === 0) {
+            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
+            this.setUserInfo(oUserinfo);
+            this.bIsLogin = false;
+            // 1 新注册(新生成) , 2新绑定 3 老账户
+            if (res.datas.hasBind == 1) {
+              this.generateShow = true;
+            } else if (res.datas.hasBind == 2) {
+              this.sucShow = true;
+            }
+          } else {
+            this.$toast(res.msg);
           }
-        } else {
+        })
+        .catch(err => {
           this.errShow = true;
-        }
-      });
+        });
     },
     fnInfoAll() {
       if (this.isIOS) {
