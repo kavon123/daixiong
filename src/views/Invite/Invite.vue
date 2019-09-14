@@ -139,7 +139,15 @@ export default {
           }
         });
       } else {
-        console.log("Android");
+        const data = android.DX_getContactsList({});
+        console.log(data);
+        const obj = JSON.parse(data);
+        if (obj.status == 1) {
+          this.lists = obj.list.slice(0, 4);
+          this.moneyAll = obj.list.length * 5;
+          this.setContactsList(obj.list);
+          this.$router.push("/relative");
+        }
       }
     },
     focusTelphone() {
@@ -170,7 +178,7 @@ export default {
             url: ygUserinfo.ygSharedUrl,
             number: phone
           },
-          function(data) {
+          data => {
             if (data == 1) {
               this.noticeShow = true;
             } else {
@@ -179,7 +187,18 @@ export default {
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_openSystemMessage(
+          JSON.stringify({
+            type: "YG",
+            url: ygUserinfo.ygSharedUrl,
+            number: phone
+          })
+        );
+        if (data == 1) {
+          this.noticeShow = true;
+        } else {
+          this.$toast("邀请失败！请再次邀请");
+        }
       }
     },
     fnInvitation(val) {

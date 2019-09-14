@@ -46,7 +46,7 @@ export default {
   },
   //监听属性 类似于data概念
   computed: {
-    ...mapGetters(["taskConfigCode"])
+    ...mapGetters(["taskConfigCode", "isIOS"])
   },
   //监控data中的数据变化
   watch: {},
@@ -59,37 +59,51 @@ export default {
       this.$router.push({ name: "AuditStatus", params: { id } });
     },
     fnGetList() {
-      const toast = this.$toast.loading({
+      this.$toast.loading({
+        duration: 0,
         message: "加载中..."
       });
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        {
-          taskConfigCode: this.taskConfigCode,
-          imageList: [{ type: "WeChatMoments", page: this.page, size: 20 }]
-        },
-        data => {
-          $api
-            .postRequest("/poster/searchSharePosterHistoryTask", data)
-            .then(res => {
-              toast.clear();
-              if (res.code == 0) {
-                this.page = this.page + 1;
-                this.totalSize = res.datas.totalSize;
-                const lists = res.datas.infoList.map(item => {
-                  item.dates = getDates(item.createdDate);
-                  return item;
-                });
-                this.lists = this.lists.concat(lists);
-              } else {
-                this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              this.$toast(err.message);
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          {
+            taskConfigCode: this.taskConfigCode,
+            imageList: [{ type: "WeChatMoments", page: this.page, size: 20 }]
+          },
+          data => {
+            this.fnGetListReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            taskConfigCode: this.taskConfigCode,
+            imageList: [{ type: "WeChatMoments", page: this.page, size: 20 }]
+          })
+        );
+        this.fnGetListReq(data);
+      }
+    },
+    fnGetListReq(data) {
+      $api
+        .postRequest("/poster/searchSharePosterHistoryTask", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 0) {
+            this.page = this.page + 1;
+            this.totalSize = res.datas.totalSize;
+            const lists = res.datas.infoList.map(item => {
+              item.dates = getDates(item.createdDate);
+              return item;
             });
-        }
-      );
+            this.lists = this.lists.concat(lists);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     scroll(event) {
       const bottom = this.$refs.scroll.offsetHeight - event.target.scrollTop;

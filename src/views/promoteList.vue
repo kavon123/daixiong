@@ -52,54 +52,63 @@ export default {
   },
   methods: {
     fnRemind() {
-      const _this = this;
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, function(
-          data
-        ) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {
-            _this.$toast(`未安装微信!请安装`);
+            this.$toast(`未安装微信!请安装`);
           }
         });
       } else {
-        console.log("Android");
+        const data = android.DX_openWX_QQ_58(JSON.stringify({ type: "WX" }));
+        if (data == 0) {
+          this.$toast(`未安装微信!请安装`);
+        }
       }
     },
     fngetUserFriend(page, type) {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler(
+      if (this.isIOS) {
+        this.$bridge.callhandler(
           "DX_encryptionRequest",
           {
             source: type,
             page,
             size: 20
           },
-          function(data) {
-            $api
-              .postRequest("/user/v3/searchUserFriendPage", data)
-              .then(res => {
-                if (res.code === 0) {
-                  res.datas.infoList = res.datas.infoList.map(item => {
-                    item.time = getDate(item.createdDate);
-                    return item;
-                  });
-                  if (res.datas.totalPage > res.datas.currPage) {
-                    _this.fngetUserFriend(res.datas.currPage + 1);
-                  }
-                  _this.lists = _this.lists.concat(res.datas.infoList);
-                } else {
-                  _this.$toast(res.msg);
-                }
-              })
-              .catch(err => {
-                _this.$toast(err.message);
-              });
+          data => {
+            this.fnGetUserFriendReq(data);
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            source: type,
+            page,
+            size: 20
+          })
+        );
+        this.fnGetUserFriendReq(data);
       }
+    },
+    fnGetUserFriendReq(data) {
+      $api
+        .postRequest("/user/v3/searchUserFriendPage", data)
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.infoList = res.datas.infoList.map(item => {
+              item.time = getDate(item.createdDate);
+              return item;
+            });
+            if (res.datas.totalPage > res.datas.currPage) {
+              this.fngetUserFriend(res.datas.currPage + 1);
+            }
+            this.lists = _this.lists.concat(res.datas.infoList);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     }
   }
 };

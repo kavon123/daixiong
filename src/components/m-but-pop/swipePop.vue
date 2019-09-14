@@ -126,7 +126,16 @@ export default {
                 }
               );
             } else {
-              console.log("Android");
+              const data = android.DX_save_share_Image(
+                JSON.stringify({
+                  type: "share",
+                  image: dataUrl2,
+                  shareType: 2
+                })
+              );
+              if (data == 1) {
+                this.closeFn();
+              }
             }
           });
       });

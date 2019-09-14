@@ -147,7 +147,17 @@ export default {
                 }
               );
             } else {
-              console.log("Android");
+              const data = android.DX_save_share_Image(
+                JSON.stringify({
+                  type: "share",
+                  image: dataUrl2,
+                  shareType
+                })
+              );
+              if (data == 1) {
+                this.$emit("close", "winShow", true);
+                this.$emit("close", "butPopShow", false);
+              }
             }
           });
       });
@@ -156,6 +166,10 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
 .but_pop {
   position: fixed;
   left: 0;

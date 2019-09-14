@@ -31,7 +31,7 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_backToLocal", "提现红包");
       } else {
-        console.log("Android");
+        android.DX_backToLocal("提现红包");
       }
     }
   }

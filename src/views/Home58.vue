@@ -165,7 +165,7 @@ export default {
       totalSize: 0,
       qrcodeShow: false,
       winShow: false,
-      butPopShow: true,
+      butPopShow: false,
       sucShow: false,
       withdrawal: false,
       first: false,
@@ -180,10 +180,10 @@ export default {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {
-    // this.fnGetUrl();
-    // this.fnGetBar();
-    // this.fngetUserFriend();
-    // this.fnInfo();
+    this.fnGetUrl();
+    this.fnGetBar();
+    this.fngetUserFriend();
+    this.fnInfo();
   },
   methods: {
     ...mapMutations({
@@ -195,33 +195,38 @@ export default {
     },
     fnWithdrawal() {
       if (this.bIsLogin || !this.oUserinfo.externalBalance) return;
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler(
+      if (this.isIOS) {
+        this.$bridge.callhandler(
           "DX_encryptionRequest",
           { source: 1 },
-          function(data) {
-            $api
-              .postRequest("/user/v3/userCashExternalRedPackage", data)
-              .then(res => {
-                if (res.code === 0) {
-                  _this.withdrawal = true;
-                  const oUserinfo = Object.assign(_this.oUserinfo, {
-                    externalBalance: 0
-                  });
-                  _this.setUserInfo(oUserinfo);
-                } else {
-                  _this.$toast(res.msg);
-                }
-              })
-              .catch(err => {
-                _this.$toast(err.message);
-              });
+          data => {
+            this.fnWithdrawalReq(data);
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ source: 1 })
+        );
+        this.fnWithdrawalReq(data);
       }
+    },
+    fnWithdrawalReq(data) {
+      $api
+        .postRequest("/user/v3/userCashExternalRedPackage", data)
+        .then(res => {
+          if (res.code === 0) {
+            this.withdrawal = true;
+            const oUserinfo = Object.assign(this.oUserinfo, {
+              externalBalance: 0
+            });
+            this.setUserInfo(oUserinfo);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     fn58Withdrawal() {
       if (this.bIsLogin || !this.oUserinfo.balance) return;
@@ -232,7 +237,10 @@ export default {
           }
         });
       } else {
-        console.log("Android");
+        const code = android.DX_openWX_QQ_58(JSON.stringify({ type: "58" }));
+        if (code == 0) {
+          this.$toast(`未安装58棋牌!请安装`);
+        }
       }
     },
     fnPromoteList() {
@@ -242,127 +250,146 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_gotoBrowser", this.oUserinfo.downloadUrl);
       } else {
-        console.log("Android");
+        android.DX_gotoBrowser(this.oUserinfo.downloadUrl);
       }
     },
     fnInfo() {
-      const _this = this;
-      _this.$toast.loading({
+      this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner"
       });
-      if (_this.isIOS) {
-        _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
-          $api
-            .postRequest("/user/v3/login58", data)
-            .then(res => {
-              _this.$toast.clear();
-              if (res.code === 0) {
-                const oUserinfo = Object.assign(_this.oUserinfo, res.datas);
-                _this.setUserInfo(oUserinfo);
-                _this.bIsLogin = false;
-                //hasBind 0 新注册(新生成) ,1新绑定 2 老账户
-                if (res.datas.hasBind == 0) {
-                  _this.generateShow = true;
-                } else if (res.datas.hasBind == 1) {
-                  _this.sucShow = true;
-                }
-              } else {
-                _this.errShow = true;
-              }
-            })
-            .catch(err => {
-              _this.errShow = true;
-              _this.$toast.clear();
-            });
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
+          this.fnInfoReq(data);
         });
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest({});
+        this.fnInfoReq(data);
       }
     },
+    fnInfoReq(data) {
+      $api
+        .postRequest("/user/v3/login58", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code === 0) {
+            const oUserinfo = Object.assign(this.oUserinfo, res.datas);
+            this.setUserInfo(oUserinfo);
+            this.bIsLogin = false;
+            //hasBind 0 新注册(新生成) ,1新绑定 2 老账户
+            if (res.datas.hasBind == 0) {
+              this.generateShow = true;
+            } else if (res.datas.hasBind == 1) {
+              this.sucShow = true;
+            }
+          } else {
+            this.errShow = true;
+          }
+        })
+        .catch(err => {
+          this.errShow = true;
+          this.$toast.clear();
+        });
+    },
     fngetUserFriend() {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler(
+      if (this.isIOS) {
+        this.$bridge.callhandler(
           "DX_encryptionRequest",
           {
             source: 1,
             page: 1,
             size: 6
           },
-          function(data) {
-            $api
-              .postRequest("/user/v3/searchUserFriendPage", data)
-              .then(res => {
-                if (res.code === 0) {
-                  res.datas.infoList = res.datas.infoList.map(item => {
-                    item.time = getDate(item.createdDate);
-                    return item;
-                  });
-                  _this.totalSize = res.datas.totalSize;
-                  _this.lists = res.datas.infoList;
-                } else {
-                  _this.$toast(res.msg);
-                }
-              })
-              .catch(err => {
-                _this.$toast(err.message);
-              });
+          data => {
+            this.fngetUserFriendReq(data);
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            source: 1,
+            page: 1,
+            size: 6
+          })
+        );
+        this.fngetUserFriendReq(data);
       }
     },
-    fnGetBar() {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
-          $api
-            .postRequest("/external/friend/search58CommisionRecord", data)
-            .then(res => {
-              if (res.code === 0) {
-                let list = res.datas.map(item => {
-                  return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
-                });
-                const barString = list.join("");
-                _this.setBarString(barString);
-              } else {
-                _this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              _this.$toast(err.message);
+    fngetUserFriendReq(data) {
+      $api
+        .postRequest("/user/v3/searchUserFriendPage", data)
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.infoList = res.datas.infoList.map(item => {
+              item.time = getDate(item.createdDate);
+              return item;
             });
+            this.totalSize = res.datas.totalSize;
+            this.lists = res.datas.infoList;
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
+    },
+
+    fnGetBar() {
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
+          this.fnGetBarReq(data);
         });
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest({});
+        this.fnGetBarReq(data);
       }
+    },
+    fnGetBarReq(data) {
+      $api
+        .postRequest("/external/friend/search58CommisionRecord", data)
+        .then(res => {
+          if (res.code === 0 && res.datas) {
+            let list = res.datas.map(item => {
+              return `58代理 ${item.userId} 刚刚提现了 ${item.obtainCommision} 元！               `;
+            });
+            const barString = list.join("");
+            this.setBarString(barString);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     fnGetUrl() {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler("DX_encryptionRequest", {}, function(data) {
-          $api
-            .postRequest("/external/friend/getUnderstandUrl58", data)
-            .then(res => {
-              if (res.code === 0) {
-                const oUserinfo = Object.assign(_this.oUserinfo, {
-                  url: res.datas
-                });
-                _this.setUserInfo(oUserinfo);
-              } else {
-                _this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              _this.$toast(err.message);
-            });
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
+          this.fnGetUrlReq(data);
         });
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest({});
+        this.fnGetUrlReq(data);
       }
+    },
+    fnGetUrlReq(data) {
+      $api
+        .postRequest("/external/friend/getUnderstandUrl58", data)
+        .then(res => {
+          if (res.code === 0) {
+            const oUserinfo = Object.assign(this.oUserinfo, {
+              url: res.datas
+            });
+            this.setUserInfo(oUserinfo);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     fnShowButPop() {
       if (this.bIsLogin) {
@@ -372,23 +399,27 @@ export default {
       }
     },
     fnOpen() {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, function(
-          data
-        ) {
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {
-            _this.$toast(`未安装微信!请安装`);
+            this.$toast(`未安装微信!请安装`);
           }
         });
       } else {
-        console.log("Android");
+        const data = android.DX_openWX_QQ_58(JSON.stringify({ type: "WX" }));
+        if (data == 0) {
+          this.$toast(`未安装微信!请安装`);
+        }
       }
     }
   }
 };
 </script>
 <style lang='less' scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
 .g-ct {
   overflow: hidden;
   margin-top: -30px;

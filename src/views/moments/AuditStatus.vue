@@ -87,103 +87,110 @@ export default {
       if (this.data.status != 1) {
         this.$router.push({ name: "MomentsTask" });
       } else {
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          { taskConfigCode: this.taskConfigCode },
-          data => {
-            $api
-              .postRequest("/user/task/v3/receivePosterAward", data)
-              .then(res => {
-                if (res.code == 0) {
-                  this.rewardPop = true;
-                  this.reward = `+${res.datas}红包券`;
-                  this.fuGetDetail();
-                  setTimeout(() => {
-                    this.rewardPop = false;
-                  }, 1000);
-                } else {
-                  this.$toast(res.msg);
-                }
-              })
-              .catch(err => {
-                this.$toast(err.message);
-              });
-          }
-        );
-        setTimeout(() => {
-          this.fuGetDetail();
-        }, 1000);
+        if (this.isIOS) {
+          this.$bridge.callhandler(
+            "DX_encryptionRequest",
+            { taskConfigCode: this.taskConfigCode },
+            data => {
+              this.fnEnsureReq(data);
+            }
+          );
+        } else {
+          const data = android.DX_encryptionRequest(
+            JSON.stringify({ taskConfigCode: this.taskConfigCode })
+          );
+          this.fnEnsureReq(data);
+        }
       }
+    },
+    fnEnsureReq(data) {
+      $api
+        .postRequest("/user/task/v3/receivePosterAward", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.rewardPop = true;
+            this.reward = `+${res.datas}红包券`;
+            this.fuGetDetail();
+            setTimeout(() => {
+              this.rewardPop = false;
+            }, 1000);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     fnGoBack() {
       this.$router.back(-1);
     },
     fuGetDetail() {
-      console.log(this.userId);
-      const toast = this.$toast.loading({
+      this.$toast.loading({
+        duration: 0,
         message: "加载中..."
       });
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        { id: this.userId },
-        data => {
-          $api
-            .postRequest("/poster/searchSharePosterDetail", data)
-            .then(res => {
-              toast.clear();
-              if (res.code == 0 && res.datas) {
-                this.data = res.datas;
-                this.data.time = getDateAll(res.datas.createdDate);
-                this.data.update = getDateAll(res.datas.updateDate);
-                switch (res.datas.status) {
-                  case "1":
-                    this.butText = "领取";
-                    this.describe = "审核已通过，请领取奖励";
-                    this.auditText = "审核通过";
-                    break;
-                  case "2":
-                    this.butText = "确定";
-                    this.auditText = "审核未通过";
-                    this.describe = res.datas.remark;
-                    break;
-                  case "3":
-                    this.butText = "确定";
-                    this.auditText = "审核通过";
-                    this.describe = "奖励已发放至您的钱包余额";
-                    break;
-                  default:
-                    this.butText = "确定";
-                    this.auditText = "审核通过，发放奖励";
-                    this.describe =
-                      "审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。";
-                    break;
-                }
-              } else {
-                this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              this.$toast(err.message);
-            });
-        }
-      );
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { id: this.userId },
+          data => {
+            this.fuGetDetailReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ id: this.userId })
+        );
+        this.fuGetDetailReq(data);
+      }
+    },
+    fuGetDetailReq(data) {
+      $api
+        .postRequest("/poster/searchSharePosterDetail", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 0 && res.datas) {
+            this.data = res.datas;
+            this.data.time = getDateAll(res.datas.createdDate);
+            this.data.update = getDateAll(res.datas.updateDate);
+            switch (res.datas.status) {
+              case "1":
+                this.butText = "领取";
+                this.describe = "审核已通过，请领取奖励";
+                this.auditText = "审核通过";
+                break;
+              case "2":
+                this.butText = "确定";
+                this.auditText = "审核未通过";
+                this.describe = res.datas.remark;
+                break;
+              case "3":
+                this.butText = "确定";
+                this.auditText = "审核通过";
+                this.describe = "奖励已发放至您的钱包余额";
+                break;
+              default:
+                this.butText = "确定";
+                this.auditText = "审核通过，发放奖励";
+                this.describe =
+                  "审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。";
+                break;
+            }
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
     this.userId = this.$route.params.id;
     this.fuGetDetail();
-    // console.log(this.$route.params.id);
-  },
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+  }
 };
 </script>
 <style lang='less' scoped>

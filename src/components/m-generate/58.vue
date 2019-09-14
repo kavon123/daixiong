@@ -65,7 +65,17 @@ export default {
             }
           );
         } else {
-          console.log("Android");
+          const data = android.DX_save_share_Image(
+            JSON.stringify({
+              type: "save",
+              image: dataUrl
+            })
+          );
+          if (data == 1) {
+            _this.$toast.success(`保存图片成功`);
+          } else {
+            _this.$toast.fail(`保存失败`);
+          }
         }
       });
     },
@@ -76,6 +86,10 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+img {
+  width: 100%;
+  height: 100%;
+}
 .dialog {
   position: fixed;
   left: 0;

@@ -86,35 +86,45 @@ export default {
             account: _this.sUserName,
             pwd: _this.sPassword
           },
-          function(data) {
-            $api
-              .postRequest("/user/v3/loginYg", data)
-              .then(res => {
-                _this.$toast.clear();
-                if (res.code === 0) {
-                  _this.$emit("fnInfoAll");
-                  const oUserinfo = Object.assign(_this.ygUserinfo, res.datas);
-                  _this.setUserInfo(oUserinfo);
-                  _this.$toast.success("登录成功");
-                  _this.sUserName = "";
-                  _this.sPassword = "";
-                  _this.$emit("close", "bIsLogin", false);
-                  _this.show = true;
-                  setTimeout(() => {
-                    _this.fnClose();
-                  }, 500);
-                } else {
-                  _this.$toast(res.msg);
-                }
-              })
-              .catch(err => {
-                _this.$toast(err.message);
-              });
+          data => {
+            this.fnLoginReq(data);
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            loginType: 1,
+            account: _this.sUserName,
+            pwd: _this.sPassword
+          })
+        );
+        this.fnLoginReq(data);
       }
+    },
+    fnLoginReq(data) {
+      $api
+        .postRequest("/user/v3/loginYg", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code === 0) {
+            this.$emit("fnInfoAll");
+            const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
+            this.setUserInfo(oUserinfo);
+            this.$toast.success("登录成功");
+            this.sUserName = "";
+            this.sPassword = "";
+            this.$emit("close", "bIsLogin", false);
+            this.show = true;
+            setTimeout(() => {
+              this.fnClose();
+            }, 500);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     }
   }
 };

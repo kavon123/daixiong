@@ -42,19 +42,23 @@ export default {
       this.$emit("close", "winShow", false);
     },
     fnOpen(platform, name) {
-      const _this = this;
-      if (_this.isIOS) {
-        _this.$bridge.callhandler(
+      if (this.isIOS) {
+        this.$bridge.callhandler(
           "DX_openWX_QQ_58",
           { type: platform },
-          function(data) {
+          data => {
             if (data == 0) {
-              _this.$toast(`未安装${name}!请安装`);
+              this.$toast(`未安装${name}!请安装`);
             }
           }
         );
       } else {
-        console.log("Android");
+        const data = android.DX_openWX_QQ_58(
+          JSON.stringify({ type: platform })
+        );
+        if (data == 0) {
+          this.$toast(`未安装${name}!请安装`);
+        }
       }
     }
   }

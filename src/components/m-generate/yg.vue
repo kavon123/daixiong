@@ -69,7 +69,17 @@ export default {
             }
           );
         } else {
-          console.log("Android");
+          const data = android.DX_save_share_Image(
+            JSON.stringify({
+              type: "save",
+              image: dataUrl
+            })
+          );
+          if (data == 1) {
+            _this.$toast.success(`保存图片成功`);
+          } else {
+            _this.$toast.fail(`保存失败`);
+          }
         }
       });
     },

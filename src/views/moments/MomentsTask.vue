@@ -158,8 +158,12 @@ export default {
         this.$toast.fail("请上传不超过10M的图片!");
         return false;
       }
-      if (!/image\/\w+/.test(file.type)) {
-        this.$toast.fail("请上传图片!");
+      if (
+        file.type == "image/jpeg" ||
+        file.type == "image/jpg" ||
+        file.type == "image/png"
+      ) {
+        this.$toast.fail("上传图片格式 jpg、jpeg、png");
         return false;
       }
 
@@ -172,7 +176,7 @@ export default {
           "https://jq.qq.com/?_wv=1027&k=5ooi2Pw"
         );
       } else {
-        console.log("Android");
+        android.DX_gotoBrowser("https://jq.qq.com/?_wv=1027&k=5ooi2Pw");
       }
     },
     fnSetOperationPop() {
@@ -182,144 +186,215 @@ export default {
       if (this.fileList.length == 2) {
         this.fallbackPop = true;
       } else {
-        this.$bridge.callhandler("DX_goBack");
+        if (this.isIOS) {
+          this.$bridge.callhandler("DX_goBack");
+        } else {
+          android.DX_goBack({});
+        }
       }
     },
     fnDetermine() {
       this.fallbackPop = false;
-      this.$bridge.callhandler("DX_goBack");
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_goBack");
+      } else {
+        android.DX_goBack({});
+      }
     },
     fnInfo() {
-      const toast = this.$toast.loading({
+      this.$toast.loading({
+        duration: 0,
         message: "加载中..."
       });
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        { taskConfigCode: this.taskConfigCode },
-        data => {
-          $api
-            .postRequest("/poster/searchSharePosterTask", data)
-            .then(res => {
-              toast.clear();
-              if (res.code == 0) {
-                this.resp.status = res.datas.status;
-                this.resp.remark = res.datas.remark;
-                switch (res.datas.status) {
-                  case "0":
-                    this.submitText = "审核中，请耐心等待";
-                    break;
-                  case "1":
-                    this.submitText = "审核完成,待领取";
-                    break;
-                  default:
-                    this.submitText = "提交审核";
-                    break;
-                }
-              } else {
-                this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              this.$toast(err.message);
-            });
-        }
-      );
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { taskConfigCode: this.taskConfigCode },
+          data => {
+            this.fnInfoReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            taskConfigCode: this.taskConfigCode
+          })
+        );
+        this.fnInfoReq(data);
+      }
     },
+    fnInfoReq(data) {
+      $api
+        .postRequest("/poster/searchSharePosterTask", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 0) {
+            this.resp.status = res.datas.status;
+            this.resp.remark = res.datas.remark;
+            switch (res.datas.status) {
+              case "0":
+                this.submitText = "审核中，请耐心等待";
+                break;
+              case "1":
+                this.submitText = "审核完成,待领取";
+                break;
+              default:
+                this.submitText = "提交审核";
+                break;
+            }
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
+    },
+
     fnSubmit() {
       if (this.submitText == "提交审核") {
         if (this.fileList.length !== 2) {
           this.$toast("请上传截图后提交审核");
           return;
         }
-        const toast = this.$toast.loading({
+        this.$toast.loading({
+          duration: 0,
           message: "提交中..."
         });
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          {
-            taskConfigCode: this.taskConfigCode,
-            imageList: [
-              { type: "WeChatMoments", base64List: [this.fileList[1].content] }
-            ]
-          },
-          data => {
-            $api
-              .postRequest("/user/task/v3/sharePoster", data)
-              .then(res => {
-                toast.clear();
-                if (res.code == 0) {
-                  this.$toast.success("提交成功等待审核！");
-                  this.fnInfo();
-                  this.$router.push({
-                    name: "AuditStatus",
-                    params: { id: res.datas }
-                  });
-                } else {
-                  this.$toast(res.msg);
+        if (this.isIOS) {
+          this.$bridge.callhandler(
+            "DX_encryptionRequest",
+            {
+              taskConfigCode: this.taskConfigCode,
+              imageList: [
+                {
+                  type: "WeChatMoments",
+                  base64List: [this.fileList[1].content]
                 }
-              })
-              .catch(err => {
-                this.$toast(err.message);
-              });
-          }
-        );
+              ]
+            },
+            data => {
+              this.fnSubmitReq(data, toast);
+            }
+          );
+        } else {
+          const data = android.DX_encryptionRequest(
+            JSON.stringify({
+              taskConfigCode: this.taskConfigCode,
+              imageList: [
+                {
+                  type: "WeChatMoments",
+                  base64List: [this.fileList[1].content]
+                }
+              ]
+            })
+          );
+          this.fnSubmitReq(data, toast);
+        }
       }
     },
-    fnGetReward() {
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        { taskConfigCode: this.taskConfigCode },
-        data => {
-          $api
-            .postRequest("/user/task/v3/receivePosterAward", data)
-            .then(res => {
-              if (res.code == 0) {
-                this.rewardPop = true;
-                this.reward = `+${res.datas}红包券`;
-                this.fnInfo();
-                setTimeout(() => {
-                  this.rewardPop = false;
-                }, 1000);
-              } else {
-                this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              this.$toast(err.message);
+    fnSubmitReq(data) {
+      $api
+        .postRequest("/user/task/v3/sharePoster", data)
+        .then(res => {
+          this.$toast.clear();
+          if (res.code == 0) {
+            this.$toast.success("提交成功等待审核！");
+            this.fnInfo();
+            this.$router.push({
+              name: "AuditStatus",
+              params: { id: res.datas }
             });
-        }
-      );
-      setTimeout(() => {
-        this.fuGetDetail();
-      }, 1000);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
+    },
+    fnGetReward() {
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { taskConfigCode: this.taskConfigCode },
+          data => {
+            this.fnGetRewardReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ taskConfigCode: this.taskConfigCode })
+        );
+        this.fnGetRewardReq(data);
+      }
+    },
+    fnGetRewardReq(data) {
+      $api
+        .postRequest("/user/task/v3/receivePosterAward", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.rewardPop = true;
+            this.reward = `+${res.datas}红包券`;
+            this.fnInfo();
+            setTimeout(() => {
+              this.rewardPop = false;
+            }, 1000);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     },
     fnCopyText(type) {
       const copy = this.copyText + this.momentsUrl;
-      this.$bridge.callhandler("DX_copy", copy, data => {
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_copy", copy, data => {
+          if (data == 1 && type) {
+            this.$toast.success("复制成功！");
+          }
+        });
+      } else {
+        const data = android.DX_copy(copy);
         if (data == 1 && type) {
           this.$toast.success("复制成功！");
         }
-      });
+      }
     },
     fnGetUrl() {
-      this.$bridge.callhandler(
-        "DX_encryptionRequest",
-        { classCode: "EXTERNAL_SHARE_URL", itemCode: this.itemCode },
-        data => {
-          $api
-            .postRequest("/lookup/searchLookupItem", data)
-            .then(res => {
-              if (res.code == 0) {
-                this.setMomentsUrl(res.datas[0].attribute1);
-              } else {
-                this.$toast(res.msg);
-              }
-            })
-            .catch(err => {
-              this.$toast(err.message);
-            });
-        }
-      );
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode: "EXTERNAL_SHARE_URL", itemCode: this.itemCode },
+          data => {
+            this.fnGetUrlReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            classCode: "EXTERNAL_SHARE_URL",
+            itemCode: this.itemCode
+          })
+        );
+        this.fnGetUrlReq(data);
+      }
+    },
+    fnGetUrlReq(data) {
+      $api
+        .postRequest("/lookup/searchLookupItem", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.setMomentsUrl(res.datas[0].attribute1);
+          } else {
+            this.$toast(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast(err.message);
+        });
     }
   },
   created() {
@@ -397,7 +472,7 @@ p {
       color: #fff;
       font-weight: 500;
       padding: 0 15px;
-      margin-top: 24px;
+      margin-top: 30px;
       .title {
         flex: 1;
         font-size: 18px;
@@ -541,15 +616,16 @@ p {
       }
     }
     .mb30 {
-      margin-bottom: 30px;
+      margin-bottom: 105px;
     }
   }
   .footer {
     position: fixed;
+    z-index: 98;
     bottom: 0;
     width: 100%;
     .g_flex;
-    background: rgba(0, 0, 0, 0.6);
+    background: #1e1656;
     height: 75px;
 
     .submit_but {

@@ -43,8 +43,8 @@ export default {
           : this.ygUserinfo.ygSharedUrl;
       const $div = document.getElementById("qrcode");
       let qrcode = new QRCode("qrcode", {
-        width: $div.clientWidth,
-        height: $div.clientHeight, // 高度
+        width: $div.clientWidth - 20,
+        height: $div.clientHeight - 20, // 高度
         text: url
       });
     }
