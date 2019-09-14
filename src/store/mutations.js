@@ -19,5 +19,8 @@ export default {
     },
     SET_CONTACTS_LIST(state, param) {
         state.contactsList = param;
+    },
+    SET_TASK_CONFIG_CODE(state, param) {
+        state.taskConfigCode = param;
     }
 }

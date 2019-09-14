@@ -43,7 +43,7 @@
       </div>
       <div class="copy_but">文案已复制到剪切板，记得粘贴哦</div>
       <div>
-        <img class="share_img" src="./shareImg.png" alt />
+        <img class="share_img" src="./shareImg.png" alt @click="fnShare" />
       </div>
       <div class="cancel" @click="closeFn">取消</div>
     </div>
@@ -107,7 +107,7 @@ export default {
         text: "http://baidu.com"
       });
     },
-    fnShare(shareType) {
+    fnShare() {
       const _this = this;
       const refs = ["capture1", "capture2", "capture3"];
       domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl1 => {
@@ -117,11 +117,10 @@ export default {
             if (_this.isIOS) {
               _this.$bridge.callhandler(
                 "DX_save_share_Image",
-                { type: "share", image: dataUrl2, shareType },
+                { type: "share", image: dataUrl2, shareType: 2 },
                 data => {
                   if (data == 1) {
-                    this.$emit("close", "winShow", true);
-                    this.$emit("close", "butPopShow", false);
+                    this.closeFn();
                   }
                 }
               );

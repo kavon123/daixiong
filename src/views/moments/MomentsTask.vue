@@ -11,8 +11,8 @@
       <div class="prompt_copy">
         <div class="prompt_content">
           <p class="fixed_text">分享文案与海报到朋友圈，上传朋友圈截图给客服审核，通过后奖励将发放到账户余额</p>
-          <p class="submit_text">
-            您的审核未通过，经检查你上传的图片涉嫌P图，失败原因，后台上传。
+          <p class="submit_text" v-if="resp.status==2">
+            {{resp.remark}}
             <br />请重新上传截图并提交。
           </p>
         </div>
@@ -76,16 +76,26 @@
       </div>
     </div>
     <footer class="footer">
-      <div class="submit_but">{{submitText}}</div>
+      <div
+        v-if="resp.status !=1"
+        @click="fnSubmit"
+        class="submit_but"
+        :class="{submit_but_color:submitText=='提交审核'&&fileList.length==2}"
+      >{{submitText}}</div>
+      <div v-else @click="fnGetReward" class="submit_but get_reward_but">
+        <img src="@/views/moments/image/redIcon.png" alt />
+        {{submitText}}
+      </div>
     </footer>
     <transition>
       <div class="operation" v-if="operationPop">
         <span class="triangle-up"></span>
-        <div class="item item-border">联系客服</div>
+        <div class="item item-border" @click="fnJump">联系客服</div>
         <div class="item item-border" @click="()=>printscreenPop=true">如何截图</div>
         <div class="item" @click="()=>this.$router.push('/records')">审核记录</div>
       </div>
     </transition>
+    <reward-pop v-if="rewardPop" :reward="reward"></reward-pop>
     <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}"></swipe-pop>
     <fallback-pop v-if="fallbackPop" :closeFn="()=>{fallbackPop=false}" @determine="fnDetermine"></fallback-pop>
     <printscreenPop v-if="printscreenPop" :closeFn="()=>{printscreenPop=false}"></printscreenPop>
@@ -93,79 +103,187 @@
 </template>
 
 <script>
+import $api from "@/util/api.js";
+import { mapMutations, mapGetters } from "vuex";
 import printscreenPop from "@/views/moments/components/printscreenPop.vue";
 import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
+import rewardPop from "@/views/moments/components/rewardPop.vue";
 
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
     printscreenPop,
     swipePop,
-    fallbackPop
+    fallbackPop,
+    rewardPop
   },
   data() {
     //这里存放数据
     return {
+      reward: "",
+      resp: {
+        status: null,
+        remark: ""
+      },
+      rewardPop: false,
       fallbackPop: false,
       swipePop: false,
       operationPop: false,
       printscreenPop: false,
       active: 0,
-      submitText: "提交中",
-      fileList: [
-        { url: "https://img.yzcdn.cn/vant/cat.jpeg" }
-        // Uploader 根据文件后缀来判断是否为图片文件
-        // 如果图片 URL 中不包含类型信息，可以添加 isImage 标记来声明
-      ]
+      submitText: "提交审核",
+      fileList: [{ url: "https://img.yzcdn.cn/vant/cat.jpeg" }]
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    ...mapGetters(["taskConfigCode", "isIOS"])
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
-    fnPop(key, val) {
-      this[key] = val;
+    ...mapMutations({
+      setPlatformType: "SET_PLATFORM_TYPE",
+      setTaskConfigCode: "SET_TASK_CONFIG_CODE"
+    }),
+    fnJump() {
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_gotoBrowser",
+          "https://jq.qq.com/?_wv=1027&k=5ooi2Pw"
+        );
+      } else {
+        console.log("Android");
+      }
     },
     fnSetOperationPop() {
       this.operationPop = !this.operationPop;
     },
-    fnSetActive() {
-      this.printscreenPop = true;
-      // this.active = this.active + 1 <= 3 ? this.active + 1 : 0;
-    },
     fnGoBack() {
-      this.fallbackPop = true;
+      if (this.fileList.length == 2) {
+        this.fallbackPop = true;
+      } else {
+        this.$bridge.callhandler("DX_goBack");
+      }
     },
     fnDetermine() {
       this.fallbackPop = false;
       this.$bridge.callhandler("DX_goBack");
     },
     fnInfo() {
-      _this.$bridge.callhandler(
+      this.$bridge.callhandler(
         "DX_encryptionRequest",
-        { taskConfigCode: "SharePoster_58" },
-        function(data) {
-          console.log(data);
+        { taskConfigCode: this.taskConfigCode },
+        data => {
+          $api
+            .postRequest("/poster/searchSharePosterTask", data)
+            .then(res => {
+              if (res.code == 0) {
+                this.resp.status = res.datas.status;
+                this.resp.remark = res.datas.remark;
+                switch (res.datas.status) {
+                  case "0":
+                    this.submitText = "审核中，请耐心等待";
+                    break;
+                  case "1":
+                    this.submitText = "审核完成,待领取";
+                    break;
+                  case "3":
+                    this.submitText = "已领取奖励";
+                    break;
+                  default:
+                    this.submitText = "提交审核";
+                    break;
+                }
+              } else {
+                this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              this.$toast(err.message);
+            });
         }
       );
+    },
+    fnSubmit() {
+      if (this.submitText == "提交审核") {
+        if (this.fileList.length !== 2) {
+          this.$toast("请上传截图后提交审核");
+          return;
+        }
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          {
+            taskConfigCode: this.taskConfigCode,
+            imageList: [
+              { type: "WeChatMoments", base64List: [this.fileList[1].content] }
+            ]
+          },
+          data => {
+            $api
+              .postRequest("/user/task/v3/sharePoster", data)
+              .then(res => {
+                if (res.code == 0) {
+                  this.$toast.success("提交成功等待审核！");
+                  this.$router.push({ name: "AuditStatus", id: res.datas.id });
+                  this.fnInfo();
+                } else {
+                  this.$toast(res.msg);
+                }
+              })
+              .catch(err => {
+                this.$toast(err.message);
+              });
+          }
+        );
+      } else {
+        if (this.resp.status == 1) {
+          this.rewardPop = true;
+          setTimeout(() => {
+            this.rewardPop = false;
+          }, 2000);
+          console.log("object");
+        }
+      }
+    },
+    fnGetReward() {
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        { taskConfigCode: this.taskConfigCode },
+        data => {
+          $api
+            .postRequest("/user/task/v3/receivePosterAward", data)
+            .then(res => {
+              if (res.code == 0) {
+                this.rewardPop = true;
+                this.reward = `+${res.datas}红包券`;
+                this.fnInfo();
+                setTimeout(() => {
+                  this.rewardPop = false;
+                }, 1000);
+              } else {
+                this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              this.$toast(err.message);
+            });
+        }
+      );
+      setTimeout(() => {
+        this.fuGetDetail();
+      }, 1000);
     }
   },
-  //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    console.log(this.$route.params.id);
-  },
-  //生命周期 - 挂载完成（可以访问DOM元素）
-  mounted() {},
-  beforeCreate() {}, //生命周期 - 创建之前
-  beforeMount() {}, //生命周期 - 挂载之前
-  beforeUpdate() {}, //生命周期 - 更新之前
-  updated() {}, //生命周期 - 更新之后
-  beforeDestroy() {}, //生命周期 - 销毁之前
-  destroyed() {}, //生命周期 - 销毁完成
-  activated() {} //如果页面有keep-alive缓存功能，这个函数会触发
+    if (this.$route.params.type === "YG") {
+      this.setPlatformType(2);
+      this.setTaskConfigCode("SharePoster_yg");
+    }
+    this.fnInfo();
+  }
 };
 </script>
 <style lang="less">
@@ -378,6 +496,9 @@ p {
     }
   }
   .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
     .g_flex;
     background: rgba(0, 0, 0, 0.6);
     height: 75px;
@@ -385,7 +506,8 @@ p {
     .submit_but {
       width: 210px;
       height: 45px;
-      background: rgba(160, 146, 252, 0.3);
+      border: 1px solid #fff;
+      // background: rgba(160, 146, 252, 0.3);
       border-radius: 6px;
       text-align: center;
       font-size: 16px;
@@ -393,6 +515,21 @@ p {
       color: #fff;
       line-height: 14px;
       line-height: 45px;
+    }
+    .submit_but_color {
+      background: linear-gradient(#a28bff 0%, #826cff 50%, #a28bff 100%);
+    }
+    .get_reward_but {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(#fce317 0%, #ffba0f 50%, #fce317 100%);
+      border: none;
+      img {
+        width: 19px;
+        height: 22px;
+        margin-right: 15px;
+      }
     }
   }
 }

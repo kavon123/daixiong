@@ -1,4 +1,5 @@
 export default {
+    taskConfigCode: 'SharePoster_58',
     Phone: '',
     contactsList: [],
     isIOS: false,

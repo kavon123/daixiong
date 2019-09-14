@@ -13,53 +13,159 @@
           <img class="icon" src="@/views/moments/image/success.png" alt />
           <div class="line active"></div>
           <img class="icon" src="@/views/moments/image/wait.png" alt />
-          <div class="line"></div>
-          <img class="icon" src="@/views/moments/image/credit.png" alt />
+          <div class="line" :class="{active:data.status >=1}"></div>
+          <img class="icon" src="@/views/moments/image/credit.png" alt v-if="data.status ==0" />
+          <img
+            class="icon"
+            src="@/views/moments/image/throughImg.png"
+            alt
+            v-if="data.status ==1||data.status ==3"
+          />
+          <img class="icon" src="@/views/moments/image/errImg.png" alt v-if="data.status ==2" />
         </div>
         <div class="steps_text">
           <div class="item">
             <p class="title active">提交审核成功</p>
-            <p class="time">2019.02.16 15:23:15</p>
+            <p class="time">{{data.time}}</p>
           </div>
-          <div class="item title">等待客服审核</div>
+          <div class="item title active">客服审核</div>
           <div class="item">
-            <p class="title">审核通过，发放奖励</p>
-            <p class="time">2019.02.16 15:23:15</p>
+            <p class="title" :class="{active:data.status>=1}">{{auditText}}</p>
+            <p class="time" v-if="data.status >=1">{{data.update}}</p>
           </div>
         </div>
       </div>
-
       <div class="instructions color">
-        <div class="failure">未通过原因</div>审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。
+        <div class="failure" v-if="data.status==2">未通过原因</div>
+        {{describe}}
       </div>
-      <div class="but">确认</div>
+      <div class="but" :class="{but_get:data.status==1}" @click="fnEnsure">{{butText}}</div>
     </div>
+    <transition>
+      <reward-pop v-if="rewardPop" :reward="reward"></reward-pop>
+    </transition>
   </div>
 </template>
 
 <script>
+import $api from "@/util/api.js";
+import { mapGetters } from "vuex";
+import { getDateAll } from "@/util/methods.js";
+import rewardPop from "@/views/moments/components/rewardPop.vue";
+
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: {
+    rewardPop
+  },
   data() {
     //这里存放数据
     return {
-      lists: [...Array(100)]
+      reward: "",
+      userId: "",
+      rewardPop: false,
+      butText: "确定",
+      auditText: "审核通过，发放奖励",
+      describe:
+        "审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。",
+      data: {
+        time: "",
+        update: ""
+      }
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    ...mapGetters(["taskConfigCode", "isIOS"])
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
   methods: {
+    fnEnsure() {
+      if (this.data.status != 1) {
+        this.$router.push("/moments");
+      } else {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { taskConfigCode: this.taskConfigCode },
+          data => {
+            $api
+              .postRequest("/user/task/v3/receivePosterAward", data)
+              .then(res => {
+                if (res.code == 0) {
+                  this.rewardPop = true;
+                  this.reward = `+${res.datas}红包券`;
+                  this.fuGetDetail();
+                  setTimeout(() => {
+                    this.rewardPop = false;
+                  }, 1000);
+                } else {
+                  this.$toast(res.msg);
+                }
+              })
+              .catch(err => {
+                this.$toast(err.message);
+              });
+          }
+        );
+        setTimeout(() => {
+          this.fuGetDetail();
+        }, 1000);
+      }
+    },
     fnGoBack() {
       this.$router.back(-1);
+    },
+    fuGetDetail() {
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        { id: this.userId },
+        data => {
+          $api
+            .postRequest("/poster/searchSharePosterDetail", data)
+            .then(res => {
+              if (res.code == 0 && res.datas) {
+                this.data = res.datas;
+                this.data.time = getDateAll(res.datas.createdDate);
+                this.data.update = getDateAll(res.datas.updateDate);
+                switch (res.datas.status) {
+                  case "1":
+                    this.butText = "领取";
+                    this.describe = "审核已通过，请领取奖励";
+                    this.auditText = "审核通过";
+                    break;
+                  case "2":
+                    this.auditText = "审核未通过";
+                    this.describe = res.datas.remark;
+                    break;
+                  case "3":
+                    this.auditText = "审核通过";
+                    this.describe = "奖励已发放至您的钱包余额";
+                    break;
+                  default:
+                    this.butText = "确定";
+                    this.auditText = "审核通过，发放奖励";
+                    this.describe =
+                      "审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。";
+                    break;
+                }
+              } else {
+                this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              this.$toast(err.message);
+            });
+        }
+      );
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
   created() {
-    console.log(this.$route.params.id);
+    this.userId = this.$route.params.id;
+    this.fuGetDetail();
+    // console.log(this.$route.params.id);
   },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
@@ -196,6 +302,9 @@ p {
       font-size: 16px;
       text-align: center;
       line-height: 45px;
+    }
+    .but_get {
+      background: linear-gradient(#fce317 0%, #ffba0f 50%, #fce317 100%);
     }
   }
 }

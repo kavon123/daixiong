@@ -8,33 +8,44 @@
       </div>
     </div>
     <div class="body">
-      <div class="item" v-for="item in lists" :key="item" @click="fnViewStatus(item)">
+      <div class="item" v-for="item in lists" :key="item.id" @click="fnViewStatus(item.id)">
         <div class="left">
-          <div>2019年6月25日</div>
-          <div class="time">12时23分40秒</div>
+          <div>{{item.dates[0]}}</div>
+          <div class="time">{{item.dates[1]}}</div>
         </div>
-        <div class="center">+3000红包券</div>
-        <div class="right">
-          正在审核
+        <div class="center">
+          <div v-if="item.status==1||item.status==3">{{item.attribute4}}</div>
+        </div>
+        <div class="right" :class="{error:item.status==2,through:item.status==1||item.status==3}">
+          {{statusList[item.status]}}
           <van-icon name="arrow" class="icon" />
         </div>
       </div>
+      <div v-if="lists.length" class="no_data">暂无更多数据！</div>
+      <div v-if="!lists.length" class="no_data">暂无数据！</div>
     </div>
   </div>
 </template>
 
 <script>
+import $api from "@/util/api.js";
+import { mapGetters } from "vuex";
+import { getDates } from "@/util/methods.js";
+
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {},
   data() {
     //这里存放数据
     return {
-      lists: [...Array(100)]
+      statusList: ["正在审核", "审核已通过", "审核失败", "审核已通过"],
+      lists: []
     };
   },
   //监听属性 类似于data概念
-  computed: {},
+  computed: {
+    ...mapGetters(["taskConfigCode"])
+  },
   //监控data中的数据变化
   watch: {},
   //方法集合
@@ -44,10 +55,38 @@ export default {
     },
     fnViewStatus(id) {
       this.$router.push({ name: "AuditStatus", params: { id } });
+    },
+    fnGetList(page) {
+      this.$bridge.callhandler(
+        "DX_encryptionRequest",
+        {
+          taskConfigCode: this.taskConfigCode,
+          imageList: [{ type: "WeChatMoments", page, size: 20 }]
+        },
+        data => {
+          $api
+            .postRequest("/poster/searchSharePosterHistoryTask", data)
+            .then(res => {
+              if (res.code == 0) {
+                this.lists = res.datas.infoList.map(item => {
+                  item.dates = getDates(item.createdDate);
+                  return item;
+                });
+              } else {
+                this.$toast(res.msg);
+              }
+            })
+            .catch(err => {
+              this.$toast(err.message);
+            });
+        }
+      );
     }
   },
   //生命周期 - 创建完成（可以访问当前this实例）
-  created() {},
+  created() {
+    this.fnGetList(1);
+  },
   //生命周期 - 挂载完成（可以访问DOM元素）
   mounted() {},
   beforeCreate() {}, //生命周期 - 创建之前
@@ -60,6 +99,13 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.no_data {
+  font-size: 12px;
+  height: 30px;
+  text-align: center;
+  color: #999;
+  line-height: 30px;
+}
 p {
   margin: 0;
 }
@@ -75,7 +121,7 @@ p {
 .main {
   width: 100vw;
   height: 100vh;
-  overflow: auto;
+  overflow: hidden;
   background-image: url("./image/bg.png");
   background-repeat: no-repeat;
   background-size: contain;
@@ -120,7 +166,7 @@ p {
       font-size: 14px;
       color: #443f6b;
       .left {
-        flex: 1;
+        width: 110px;
         .time {
           font-size: 12px;
           color: #999;
@@ -136,6 +182,12 @@ p {
         align-items: center;
         justify-content: space-around;
         flex: 1;
+      }
+      .error {
+        color: #ff4b4e;
+      }
+      .through {
+        color: #999;
       }
       .icon {
         font-size: 20px;
