@@ -650,6 +650,7 @@ img {
       }
       .arrow {
         width: 58px;
+        height: 50px;
         display: block;
       }
     }
