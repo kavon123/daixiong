@@ -284,7 +284,7 @@ export default {
               this.sucShow = true;
             }
           } else {
-            this.errShow = true;
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
@@ -664,9 +664,12 @@ img {
   }
 
   .g-best {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translate(-50%);
     width: 226px;
     height: 52px;
-    margin: 58px auto 18px;
     img {
       width: 100%;
       height: 100%;
@@ -678,6 +681,7 @@ img {
     line-height: 22px;
     text-align: center;
     margin-bottom: 15px;
+    margin-top: 20px;
   }
 }
 </style>

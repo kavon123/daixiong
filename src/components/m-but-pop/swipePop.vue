@@ -3,40 +3,46 @@
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
       <div class="title">选中海报前往分享</div>
-      <van-swipe @change="onChange" class="swipe" v-if="itemCode ==='YG_SHARE_URL'">
-        <van-swipe-item class="item">
+      <swiper
+        @slideChange="onChange"
+        :options="swipertop"
+        class="swipe"
+        ref="Swiper"
+        v-if="itemCode ==='YG_SHARE_URL'"
+      >
+        <swiper-slide class="item">
           <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode1" id="qrcode1"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_2" ref="capture2">
             <div class="qrcode2" id="qrcode2"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_3" ref="capture3">
             <div class="qrcode3" id="qrcode3"></div>
           </div>
-        </van-swipe-item>
-      </van-swipe>
-      <van-swipe @change="onChange" class="swipe" v-else indicator-color="#4c38d8">
-        <van-swipe-item class="item">
+        </swiper-slide>
+      </swiper>
+      <swiper @slideChange="onChange" :options="swipertop" class="swipe" ref="Swiper" v-else>
+        <swiper-slide class="item">
           <div class="swipe_img img_a" ref="capture1">
             <div class="qrcode_a" id="qrcode1"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_b" ref="capture2">
             <div class="qrcode_b" id="qrcode2"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_c" ref="capture3">
             <div class="qrcode_c" id="qrcode3"></div>
           </div>
-        </van-swipe-item>
-      </van-swipe>
+        </swiper-slide>
+      </swiper>
       <div class="copy_text">
         {{copyText}}
         <br />
@@ -69,6 +75,12 @@ export default {
   },
   data() {
     return {
+      swipertop: {
+        initialSlide: 0,
+        centeredSlides: true,
+        slidesPerView: 1.3,
+        spaceBetween: 20
+      },
       activeIndex: 0,
       height: 182
     };
@@ -92,7 +104,7 @@ export default {
   },
   methods: {
     onChange(index) {
-      this.activeIndex = index;
+      this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
     fnBook() {
       this.$emit("close", "butPopShow", false);
@@ -143,20 +155,6 @@ export default {
   }
 };
 </script>
-<style lang="less">
-.van-swipe {
-  overflow: visible;
-}
-.swipe {
-  .van-swipe__indicators {
-    bottom: -20px;
-  }
-  .van-swipe__indicator {
-    width: 12px;
-    height: 12px;
-  }
-}
-</style>
 <style lang='less' scoped>
 .but_pop {
   position: fixed;

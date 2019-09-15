@@ -2,46 +2,46 @@
 <template>
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
-      <van-swipe
-        @change="onChange"
+      <swiper
+        @slideChange="onChange"
+        :options="swipertop"
         class="swipe"
-        :show-indicators="false"
-        :width="375"
+        ref="Swiper"
         v-if="platformType ===2 "
       >
-        <van-swipe-item class="item">
+        <swiper-slide class="item">
           <div class="swipe_img img_1" ref="capture1">
             <div class="qrcode_1" id="qrcode1"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_2" ref="capture2">
             <div class="qrcode_2" id="qrcode2"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_3" ref="capture3">
             <div class="qrcode_3" id="qrcode3"></div>
           </div>
-        </van-swipe-item>
-      </van-swipe>
-      <van-swipe @change="onChange" class="swipe" :show-indicators="false" :width="375" v-else>
-        <van-swipe-item class="item">
+        </swiper-slide>
+      </swiper>
+      <swiper @slideChange="onChange" class="swipe" ref="Swiper" :options="swipertop" v-else>
+        <swiper-slide class="item">
           <div class="swipe_img img_a" ref="capture1">
             <div class="qrcode_a" id="qrcode1"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_b" ref="capture2">
             <div class="qrcode_b" id="qrcode2"></div>
           </div>
-        </van-swipe-item>
-        <van-swipe-item class="item">
+        </swiper-slide>
+        <swiper-slide class="item">
           <div class="swipe_img img_c" ref="capture3">
             <div class="qrcode_c" id="qrcode3"></div>
           </div>
-        </van-swipe-item>
-      </van-swipe>
+        </swiper-slide>
+      </swiper>
       <div class="choose" :style="'height:'+height+'px;'">
         <div class="title">分享至</div>
         <div class="items">
@@ -85,6 +85,12 @@ import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
+      swipertop: {
+        initialSlide: 0,
+        centeredSlides: true,
+        slidesPerView: 1.3,
+        spaceBetween: 20
+      },
       activeIndex: 0,
       height: 182
     };
@@ -107,8 +113,8 @@ export default {
     });
   },
   methods: {
-    onChange(index) {
-      this.activeIndex = index;
+    onChange() {
+      this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
     fnBook() {
       this.$emit("close", "butPopShow", false);

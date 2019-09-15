@@ -1,4 +1,7 @@
 import Vue from 'vue'
+
+import vueSwiper from 'vue-awesome-swiper'
+import 'swiper/dist/css/swiper.css'
 import { Button, NavBar, NoticeBar, Icon, Row, Col, Loading, Swipe, SwipeItem, Toast, Step, Steps, Uploader } from 'vant';
 
 Vue.use(Button)
@@ -13,4 +16,5 @@ Vue.use(Button)
     .use(Toast)
     .use(Step)
     .use(Uploader)
-    .use(Steps);
+    .use(Steps)
+    .use(vueSwiper);
