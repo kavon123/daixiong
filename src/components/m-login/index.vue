@@ -25,7 +25,7 @@
               @click="fnClearInput('sPassword')"
             />
           </div>
-          <div class="forgot_password">忘记密码</div>
+          <div class="forgot_password" @click="forgetPaw">忘记密码</div>
 
           <div class="but" @click="fnLogin">登录</div>
         </div>
@@ -55,6 +55,13 @@ export default {
     ...mapMutations({
       setUserInfo: "SET_USER_INFO_YG"
     }),
+    forgetPaw() {
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_gotoBrowser", this.ygUserinfo.loginUrl);
+      } else {
+        android.DX_gotoBrowser(this.ygUserinfo.loginUrl);
+      }
+    },
     fnClose() {
       this.$emit("close", "loginShow", false);
     },
