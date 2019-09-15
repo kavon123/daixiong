@@ -83,7 +83,7 @@ export default {
         duration: 0,
         forbidClick: true, // 禁用背景点击
         loadingType: "spinner",
-        message: "登录中..."
+        message: "正在登陆..."
       });
       if (this.isIOS) {
         this.$bridge.callhandler(
@@ -180,6 +180,7 @@ export default {
       .input {
         width: 90%;
         font-size: 14px;
+        border: none;
       }
       .clear {
         color: #ccc;
