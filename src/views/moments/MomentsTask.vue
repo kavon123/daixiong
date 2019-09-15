@@ -159,8 +159,8 @@ export default {
         return false;
       }
       if (
-        file.type != "image/jpeg" ||
-        file.type != "image/jpg" ||
+        file.type != "image/jpeg" &&
+        file.type != "image/jpg" &&
         file.type != "image/png"
       ) {
         this.$toast.fail("上传图片格式 jpg、jpeg、png");
@@ -274,7 +274,7 @@ export default {
               ]
             },
             data => {
-              this.fnSubmitReq(data, toast);
+              this.fnSubmitReq(data);
             }
           );
         } else {
