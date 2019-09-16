@@ -5,7 +5,7 @@
       <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
-          1.好友通过您分享的链接注册YG娱乐，进入游戏1分钟，您即可获得2元佣金。
+          1.好友通过您分享的链接注册YG电竞，进入游戏1分钟，您即可获得2元佣金。
           <br />邀请奖励在本页面提现
         </div>
         <div class="u-rules_text">
@@ -120,7 +120,7 @@
       <div class="g-best" :style="'padding-bottom:'+paddingB+'px'">
         <img src="@/assets/images/best.png" alt @click="fnShowButPop" />
       </div>
-      <footer class="footer">本页面由YG娱乐提供</footer>
+      <footer class="footer">本页面由YG电竞提供</footer>
     </div>
     <m-YG v-if="generateShow" :data="ygUserinfo" @close="fnPop" />
     <m-login v-if="loginShow" @fnInfoAll="fnInfoAll" @close="fnPop" />

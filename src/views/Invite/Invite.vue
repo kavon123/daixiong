@@ -49,7 +49,7 @@
             <van-icon name="warning" class="tips-icon" />
             <!-- <div class="tips-icon"></div> -->
             <div class="tips-text">
-              <p>选择通讯录好友发送短信给好友，好友通过短信中的链接注册YG娱乐账号</p>
+              <p>选择通讯录好友发送短信给好友，好友通过短信中的链接注册YG电竞账号</p>
               <p>好友进入游戏5分钟，您即可获得5元奖励</p>
             </div>
           </div>
