@@ -406,6 +406,10 @@ export default {
     }
     this.fnInfo();
     this.fnGetUrl();
+
+    if (!this.isIOS) {
+      android.DX_dismisLoading();
+    }
   }
 };
 </script>
