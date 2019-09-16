@@ -251,7 +251,9 @@ export default {
             });
             this.setUserInfo(oUserinfo);
           } else {
-            this.$toast(res.msg);
+            if (res.msg) {
+              this.$toast(res.msg);
+            }
           }
         })
         .catch(err => {
@@ -307,7 +309,9 @@ export default {
               this.sucShow = true;
             }
           } else {
-            this.$toast.fail(res.msg);
+            if (res.msg) {
+              this.$toast.fail(res.msg);
+            }
           }
         })
         .catch(err => {
@@ -340,7 +344,9 @@ export default {
             this.setBarString(text);
             this.setUserInfo(oUserinfo);
           } else {
-            this.$toast(res.msg);
+            if (res.msg) {
+              this.$toast(res.msg);
+            }
           }
         })
         .catch(err => {
@@ -390,7 +396,9 @@ export default {
             this.totalSize = res.datas.totalSize;
             this.lists = res.datas.infoList;
           } else {
-            this.$toast(res.msg);
+            if (res.msg) {
+              this.$toast(res.msg);
+            }
           }
         })
         .catch(err => {
