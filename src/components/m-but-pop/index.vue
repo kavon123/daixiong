@@ -10,35 +10,35 @@
         v-if="platformType ===2 "
       >
         <swiper-slide class="item">
-          <div class="swipe_img img_1" ref="capture1">
-            <div class="qrcode_1" id="qrcode1"></div>
+          <div class="swipe_img img_1" ref="capture1_YG">
+            <div class="qrcode_1" id="qrcode1_YG"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_2" ref="capture2">
-            <div class="qrcode_2" id="qrcode2"></div>
+          <div class="swipe_img img_2" ref="capture2_YG">
+            <div class="qrcode_2" id="qrcode2_YG"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_3" ref="capture3">
-            <div class="qrcode_3" id="qrcode3"></div>
+          <div class="swipe_img img_3" ref="capture3_YG">
+            <div class="qrcode_3" id="qrcode3_YG"></div>
           </div>
         </swiper-slide>
       </swiper>
       <swiper @slideChange="onChange" class="swipe" ref="Swiper" :options="swipertop" v-else>
         <swiper-slide class="item">
-          <div class="swipe_img img_a" ref="capture1">
-            <div class="qrcode_a" id="qrcode1"></div>
+          <div class="swipe_img img_a" ref="capture1_58">
+            <div class="qrcode_a" id="qrcode1_58"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_b" ref="capture2">
-            <div class="qrcode_b" id="qrcode2"></div>
+          <div class="swipe_img img_b" ref="capture2_58">
+            <div class="qrcode_b" id="qrcode2_58"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_c" ref="capture3">
-            <div class="qrcode_c" id="qrcode3"></div>
+          <div class="swipe_img img_c" ref="capture3_58">
+            <div class="qrcode_c" id="qrcode3_58"></div>
           </div>
         </swiper-slide>
       </swiper>
@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import domtoimage from "dom-to-image";
+import Html2canvas from "html2canvas";
 import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
 
@@ -104,12 +104,13 @@ export default {
       this.height = 217;
     }
     this.$nextTick(() => {
-      const div = document.getElementById("qrcode1");
-      const div1 = document.getElementById("qrcode2");
-      const div2 = document.getElementById("qrcode3");
-      this.qrcode(div, "qrcode1");
-      this.qrcode(div1, "qrcode2");
-      this.qrcode(div2, "qrcode3");
+      let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
+      if (this.itemCode === "YG_SHARE_URL") {
+        ids = ["qrcode1_YG", "qrcode2_YG", "qrcode3_YG"];
+      }
+      ids.forEach(item => {
+        this.qrcode(document.getElementById(item), item);
+      });
     });
   },
   methods: {
@@ -136,37 +137,48 @@ export default {
     },
     fnShare(shareType) {
       const _this = this;
-      const refs = ["capture1", "capture2", "capture3"];
-      domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl1 => {
-        domtoimage
-          .toJpeg(_this.$refs[refs[_this.activeIndex]])
-          .then(dataUrl2 => {
-            if (_this.isIOS) {
-              _this.$bridge.callhandler(
-                "DX_save_share_Image",
-                { type: "share", image: dataUrl2, shareType },
-                data => {
-                  if (data == 1) {
-                    this.$emit("close", "winShow", true);
-                    this.$emit("close", "butPopShow", false);
-                  }
+      let refs = ["capture1_58", "capture2_58", "capture3_58"];
+      if (this.platformType == 2) {
+        refs = ["capture1_YG", "capture2_YG", "capture2_YG"];
+      }
+      window.pageYOffset = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      const HTML = _this.$refs[refs[_this.activeIndex]];
+
+      Html2canvas(HTML, {
+        allowTaint: true
+      })
+        .then(canvas => {
+          let url = canvas.toDataURL("image/png");
+          if (_this.isIOS) {
+            _this.$bridge.callhandler(
+              "DX_save_share_Image",
+              { type: "share", image: url, shareType },
+              data => {
+                if (data == 1) {
+                  this.$emit("close", "winShow", true);
+                  this.$emit("close", "butPopShow", false);
                 }
-              );
-            } else {
-              const data = android.DX_save_share_Image(
-                JSON.stringify({
-                  type: "share",
-                  image: dataUrl2,
-                  shareType
-                })
-              );
-              if (data == 1) {
-                this.$emit("close", "winShow", true);
-                this.$emit("close", "butPopShow", false);
               }
+            );
+          } else {
+            const data = android.DX_save_share_Image(
+              JSON.stringify({
+                type: "share",
+                image: url,
+                shareType
+              })
+            );
+            if (data == 1) {
+              this.$emit("close", "winShow", true);
+              this.$emit("close", "butPopShow", false);
             }
-          });
-      });
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err);
+        });
     }
   }
 };

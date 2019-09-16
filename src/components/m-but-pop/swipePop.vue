@@ -2,7 +2,7 @@
 <template>
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
-      <div class="title">选中海报前往分享</div>
+      <div class="title" :style="'padding-top:'+height+'px'">选中海报前往分享</div>
       <swiper
         @slideChange="onChange"
         :options="swipertop"
@@ -11,35 +11,35 @@
         v-if="itemCode ==='YG_SHARE_URL'"
       >
         <swiper-slide class="item">
-          <div class="swipe_img img_1" ref="capture1">
-            <div class="qrcode1" id="qrcode1"></div>
+          <div class="swipe_img img_1" ref="capture1_YG">
+            <div class="qrcode1" id="qrcode1_YG"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_2" ref="capture2">
-            <div class="qrcode2" id="qrcode2"></div>
+          <div class="swipe_img img_2" ref="capture2_YG">
+            <div class="qrcode2" id="qrcode2_YG"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_3" ref="capture3">
-            <div class="qrcode3" id="qrcode3"></div>
+          <div class="swipe_img img_3" ref="capture3_YG">
+            <div class="qrcode3" id="qrcode3_YG"></div>
           </div>
         </swiper-slide>
       </swiper>
       <swiper @slideChange="onChange" :options="swipertop" class="swipe" ref="Swiper" v-else>
         <swiper-slide class="item">
-          <div class="swipe_img img_a" ref="capture1">
-            <div class="qrcode_a" id="qrcode1"></div>
+          <div class="swipe_img img_a" ref="capture1_58">
+            <div class="qrcode_a" id="qrcode1_58"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_b" ref="capture2">
-            <div class="qrcode_b" id="qrcode2"></div>
+          <div class="swipe_img img_b" ref="capture2_58">
+            <div class="qrcode_b" id="qrcode2_58"></div>
           </div>
         </swiper-slide>
         <swiper-slide class="item">
-          <div class="swipe_img img_c" ref="capture3">
-            <div class="qrcode_c" id="qrcode3"></div>
+          <div class="swipe_img img_c" ref="capture3_58">
+            <div class="qrcode_c" id="qrcode3_58"></div>
           </div>
         </swiper-slide>
       </swiper>
@@ -58,9 +58,10 @@
 </template>
 
 <script>
-import domtoimage from "dom-to-image";
+import Html2canvas from "html2canvas";
 import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
+import { setTimeout } from "timers";
 
 export default {
   props: {
@@ -82,7 +83,7 @@ export default {
         spaceBetween: 20
       },
       activeIndex: 0,
-      height: 182
+      height: 0
     };
   },
   computed: {
@@ -90,16 +91,15 @@ export default {
   },
   mounted() {
     const h = window.screen.height;
-    if (h >= 812) {
-      this.height = 217;
-    }
+    this.height = (h - 667) / 2;
     this.$nextTick(() => {
-      const div = document.getElementById("qrcode1");
-      const div1 = document.getElementById("qrcode2");
-      const div2 = document.getElementById("qrcode3");
-      this.qrcode(div, "qrcode1");
-      this.qrcode(div1, "qrcode2");
-      this.qrcode(div2, "qrcode3");
+      let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
+      if (this.itemCode === "YG_SHARE_URL") {
+        ids = ["qrcode1_YG", "qrcode2_YG", "qrcode3_YG"];
+      }
+      ids.forEach(item => {
+        this.qrcode(document.getElementById(item), item);
+      });
     });
   },
   methods: {
@@ -117,40 +117,51 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: this.momentsUrl
+        text: "http://www.baidu.com" //this.momentsUrl
       });
     },
     fnShare() {
       const _this = this;
-      const refs = ["capture1", "capture2", "capture3"];
-      domtoimage.toJpeg(_this.$refs[refs[_this.activeIndex]]).then(dataUrl1 => {
-        domtoimage
-          .toJpeg(_this.$refs[refs[_this.activeIndex]])
-          .then(dataUrl2 => {
-            if (_this.isIOS) {
-              _this.$bridge.callhandler(
-                "DX_save_share_Image",
-                { type: "share", image: dataUrl2, shareType: 2 },
-                data => {
-                  if (data == 1) {
-                    this.closeFn();
-                  }
+      let refs = ["capture1_58", "capture2_58", "capture3_58"];
+      if (this.itemCode === "YG_SHARE_URL") {
+        refs = ["capture1_YG", "capture2_YG", "capture2_YG"];
+      }
+      window.pageYOffset = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      const HTML = _this.$refs[refs[_this.activeIndex]];
+
+      Html2canvas(HTML, {
+        allowTaint: true
+      })
+        .then(canvas => {
+          let url = canvas.toDataURL("image/png");
+          if (_this.isIOS) {
+            _this.$bridge.callhandler(
+              "DX_save_share_Image",
+              { type: "share", image: url, shareType: 2 },
+              data => {
+                if (data == 1) {
+                  this.closeFn();
                 }
-              );
-            } else {
-              const data = android.DX_save_share_Image(
-                JSON.stringify({
-                  type: "share",
-                  image: dataUrl2,
-                  shareType: 2
-                })
-              );
-              if (data == 1) {
-                this.closeFn();
               }
+            );
+          } else {
+            const data = android.DX_save_share_Image(
+              JSON.stringify({
+                type: "share",
+                image: url,
+                shareType: 2
+              })
+            );
+            if (data == 1) {
+              this.closeFn();
             }
-          });
-      });
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err);
+        });
     }
   }
 };
@@ -171,7 +182,7 @@ export default {
     font-size: 20px;
     font-weight: 500;
     color: #fff;
-    // padding-top: 14px;
+    padding-bottom: 8px;
   }
   .swipe {
     width: 100%;
@@ -186,8 +197,8 @@ export default {
         background-size: cover;
         position: relative;
         .qrcode1 {
-          width: 105;
-          height: 105;
+          width: 105px;
+          height: 105px;
           position: absolute;
           left: 90px;
           top: 286px;
@@ -278,64 +289,6 @@ export default {
   .share_img {
     width: 218px;
     height: 52px;
-  }
-  // .choose {
-  //   display: flex;
-  //   flex-direction: column;
-  //   align-items: center;
-  //   width: 100%;
-  //   position: absolute;
-  //   height: 182px;
-  //   background: #fff;
-  //   bottom: 0;
-  //   animation: myfirst 0.4s;
-
-  //   .title {
-  //     height: 20px;
-  //     font-size: 14px;
-  //     font-weight: 400;
-  //     color: #000;
-  //     line-height: 20px;
-  //     margin: 16px 0 12px;
-  //   }
-  //   .items {
-  //     display: flex;
-  //     justify-content: space-around;
-  //     align-items: center;
-  //     margin-bottom: 10px;
-  //     .item {
-  //       width: 90px;
-  //       display: flex;
-  //       flex-direction: column;
-  //       justify-content: center;
-  //       align-items: center;
-  //       .img_ct {
-  //         width: 53px;
-  //         height: 47px;
-  //         display: flex;
-  //         justify-content: center;
-  //         align-items: flex-end;
-  //         margin-bottom: 6px;
-  //         img {
-  //           width: 45px;
-  //           height: 45px;
-  //         }
-  //         .last {
-  //           width: 53px;
-  //           height: 47px;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
-}
-
-@keyframes myfirst {
-  from {
-    bottom: -182px;
-  }
-  to {
-    bottom: 0;
   }
 }
 </style>
