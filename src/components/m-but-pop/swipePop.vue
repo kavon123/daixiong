@@ -177,7 +177,7 @@ export default {
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 99;
   display: flex;
   flex-direction: column;

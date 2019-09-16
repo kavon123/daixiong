@@ -103,7 +103,7 @@ img {
   right: 0;
   top: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 99;
   display: flex;
   justify-content: center;
@@ -111,7 +111,7 @@ img {
   align-items: center;
   .dialog_ct {
     width: 300px;
-    background: linear-gradient(#af5f43, #542818);
+    background: linear-gradient(#963304, #481401);
     box-shadow: inset 0px 0px 5px rgba(255, 255, 255, 0.5);
     display: flex;
     flex-direction: column;

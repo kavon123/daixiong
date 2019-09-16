@@ -5,7 +5,7 @@ import config from './config';
 
 const { baseURL } = config;
 axios.defaults.baseURL = baseURL;
-axios.defaults.timeout = 10000;
+axios.defaults.timeout = 60000;
 
 axios.interceptors.response.use(
     res => {

@@ -637,6 +637,7 @@ img {
 
   .g-tutorial-ct {
     position: relative;
+    margin-bottom: 115px;
     width: 375px;
     margin-top: 30px;
     height: 429px;
@@ -684,24 +685,30 @@ img {
   }
 
   .g-best {
-    width: 226px;
-    height: 52px;
     position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translate(-50%);
+    bottom: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 70px;
+    background: #19142b;
     img {
-      width: 100%;
-      height: 100%;
+      width: 226px;
+      height: 52px;
     }
   }
   .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
     font-size: 12px;
     color: #f7d99d;
-    line-height: 22px;
+    line-height: 35px;
     text-align: center;
-    margin-bottom: 15px;
-    margin-top: 20px;
+    height: 35px;
+    background: #19142b;
+    text-align: center;
   }
 }
 </style>

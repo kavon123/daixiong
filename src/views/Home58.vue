@@ -117,7 +117,7 @@
       <div class="g-best">
         <img src="@/assets/images/best.png" @click="fnShowButPop" />
       </div>
-      <footer class="footer">本页面由YG娱乐提供</footer>
+      <footer class="footer">本页面由58棋牌提供</footer>
     </div>
     <m-58 v-if="generateShow" :data="oUserinfo" @close="fnPop" />
     <m-rele-suc v-if="sucShow" :name="oUserinfo.userId" @close="fnPop" />
@@ -634,6 +634,7 @@ img {
     position: relative;
     width: 375px;
     margin-top: 30px;
+    margin-bottom: 115px;
     height: 400px;
     background-image: url("../assets/images/58bgct4.png");
     background-repeat: no-repeat;
@@ -679,23 +680,29 @@ img {
 
   .g-best {
     position: fixed;
-    bottom: 10px;
-    left: 50%;
-    transform: translate(-50%);
-    width: 226px;
-    height: 52px;
+    bottom: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 70px;
+    background: #1e0500;
     img {
-      width: 100%;
-      height: 100%;
+      width: 226px;
+      height: 52px;
     }
   }
   .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
     font-size: 12px;
     color: #f7d99d;
-    line-height: 22px;
+    line-height: 35px;
     text-align: center;
-    margin-bottom: 15px;
-    margin-top: 20px;
+    height: 35px;
+    background: #1e0500;
+    text-align: center;
   }
 }
 </style>
