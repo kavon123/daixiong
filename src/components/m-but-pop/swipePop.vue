@@ -52,7 +52,7 @@
       <div>
         <img class="share_img" src="./shareImg.png" alt @click="fnShare" />
       </div>
-      <div class="cancel" @click="closeFn">取消</div>
+      <div class="cancel" :style="'padding-bottom: '+BotHeight+'px;'" @click="closeFn">取消</div>
     </div>
   </transition>
 </template>
@@ -83,7 +83,8 @@ export default {
         spaceBetween: 20
       },
       activeIndex: 0,
-      height: 0
+      height: 0,
+      BotHeight: 0
     };
   },
   computed: {
@@ -92,6 +93,9 @@ export default {
   mounted() {
     const h = window.screen.height;
     this.height = (h - 667) / 2;
+    if (h >= 812) {
+      this.BotHeight = 35;
+    }
     this.$nextTick(() => {
       let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
       if (this.itemCode === "YG_SHARE_URL") {
