@@ -117,7 +117,7 @@
           <div class="steps_text">您获得返佣</div>
         </div>
       </div>
-      <div class="g-best">
+      <div class="g-best" :style="'padding-bottom:'+paddingB+'px'">
         <img src="@/assets/images/best.png" @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由58棋牌提供</footer>
@@ -176,7 +176,8 @@ export default {
       generateShow: false,
       errShow: false,
       bIsLogin: true,
-      lists: []
+      lists: [],
+      paddingB: 10
     };
   },
   computed: {
@@ -637,7 +638,7 @@ img {
     position: relative;
     width: 375px;
     margin-top: 30px;
-    margin-bottom: 115px;
+    margin-bottom: 20px;
     height: 400px;
     background-image: url("../assets/images/58bgct4.png");
     background-repeat: no-repeat;
@@ -683,12 +684,12 @@ img {
 
   .g-best {
     position: fixed;
-    bottom: 35px;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 70px;
+    padding: 10px;
     background: #1e0500;
     img {
       width: 226px;
@@ -696,8 +697,6 @@ img {
     }
   }
   .footer {
-    position: fixed;
-    bottom: 0;
     width: 100vw;
     font-size: 12px;
     color: #f7d99d;
@@ -706,6 +705,7 @@ img {
     height: 35px;
     background: #1e0500;
     text-align: center;
+    margin-bottom: 105px;
   }
 }
 </style>

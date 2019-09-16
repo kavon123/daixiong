@@ -9,10 +9,8 @@
           <br />邀请奖励在本页面提现
         </div>
         <div class="u-rules_text">
-          2.返佣奖励=直属下级返佣（流水每10万则返佣10000元）+非直属下级返佣（返给上级佣金*级数*30%），详见
-          <span
-            @click="fnJump(ygUserinfo.commissionUrl)"
-          >返佣说明</span>
+          2.邀请的好友投注您还可获得返佣奖励，每万元最高返佣70元，详见
+          <span @click="fnJump(ygUserinfo.commissionUrl)">返佣说明</span>
           <br />返佣奖励需在“YG电竞”中提现
         </div>
       </div>
@@ -119,7 +117,7 @@
           <div class="steps_text">您获得返佣</div>
         </div>
       </div>
-      <div class="g-best">
+      <div class="g-best" :style="'padding-bottom:'+paddingB+'px'">
         <img src="@/assets/images/best.png" alt @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由YG娱乐提供</footer>
@@ -184,13 +182,18 @@ export default {
       errShow: false,
       bIsLogin: true,
       totalSize: 0,
-      lists: []
+      lists: [],
+      paddingB: 10
     };
   },
   created() {
     this.fngetUserFriend();
     this.fnInfo();
     this.setPlatformType(2);
+    const h = window.screen.height;
+    if (h >= 812) {
+      this.paddingB = 45;
+    }
   },
   computed: {
     ...mapGetters(["ygUserinfo", "barString", "isIOS"]),
@@ -637,7 +640,7 @@ img {
 
   .g-tutorial-ct {
     position: relative;
-    margin-bottom: 115px;
+    margin-bottom: 20px;
     width: 375px;
     margin-top: 30px;
     height: 429px;
@@ -686,12 +689,12 @@ img {
 
   .g-best {
     position: fixed;
-    bottom: 35px;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 70px;
+    padding: 10px;
     background: #19142b;
     img {
       width: 226px;
@@ -699,8 +702,6 @@ img {
     }
   }
   .footer {
-    position: fixed;
-    bottom: 0;
     width: 100vw;
     font-size: 12px;
     color: #f7d99d;
@@ -709,6 +710,7 @@ img {
     height: 35px;
     background: #19142b;
     text-align: center;
+    margin-bottom: 105px;
   }
 }
 </style>

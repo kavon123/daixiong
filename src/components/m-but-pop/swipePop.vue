@@ -121,7 +121,7 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
-        text: "http://www.baidu.com" //this.momentsUrl
+        text: this.momentsUrl
       });
     },
     fnShare() {

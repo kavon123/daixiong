@@ -26,7 +26,7 @@
               <span class="tel-icon"></span>
               <input
                 type="text"
-                placeholder="请输入11位手机号码"
+                placeholder="请输入11位手机号"
                 @input="fnInput"
                 v-model="phone"
                 maxlength="11"

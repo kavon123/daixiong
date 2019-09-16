@@ -82,8 +82,9 @@ export default {
   //方法集合
   methods: {
     fnEnsure() {
+      const type = taskConfigCode == "SharePoster_58" ? "58 " : "YG";
       if (this.data.status != 1) {
-        this.$router.push({ name: "MomentsTask" });
+        this.$router.push(`/moments/${type}`);
       } else {
         if (this.isIOS) {
           this.$bridge.callhandler(

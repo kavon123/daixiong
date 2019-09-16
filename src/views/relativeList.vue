@@ -12,6 +12,7 @@
         <van-col span="8">{{item.phone}}</van-col>
         <van-col span="8" class="state" @click="fnChoose(item.phone)">选择TA</van-col>
       </van-row>
+      <img class="img_you" src="@/views/Invite/images/you.png" v-if="contactsList.length==0" />
     </div>
   </div>
 </template>
@@ -41,6 +42,13 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.img_you {
+  display: block;
+  width: 140px;
+  height: 120px;
+  margin: 20px auto;
+}
+
 .centent {
   height: 100vh;
   width: 100%;

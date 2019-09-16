@@ -185,6 +185,7 @@ export default {
         this.fallbackPop = true;
       } else {
         if (this.isIOS) {
+          console.log("object");
           this.$bridge.callhandler("DX_goBack");
         } else {
           android.DX_goBack({});
@@ -234,7 +235,7 @@ export default {
                 this.submitText = "审核中，请耐心等待";
                 break;
               case "1":
-                this.submitText = "审核完成,待领取";
+                this.submitText = "审核通过，领奖励";
                 break;
               default:
                 this.submitText = "提交审核";
@@ -338,7 +339,7 @@ export default {
             this.fnInfo();
             setTimeout(() => {
               this.rewardPop = false;
-            }, 1000);
+            }, 3000);
           } else {
             this.$toast(res.msg);
           }
