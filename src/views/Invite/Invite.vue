@@ -37,7 +37,7 @@
           </div>
           <div class="step step02">
             <div class="step-icon">第二步</div>
-            <div class="invite-btn" @click="fnSubmit" :class="phone?'':'gray'">
+            <div class="invite-btn" @click="fnSubmit">
               <div class="invite-btn_1">
                 <div class="xhb-icon"></div>
                 <div class="text">邀请亲友赚现金</div>
