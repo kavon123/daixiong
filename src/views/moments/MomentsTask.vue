@@ -143,8 +143,6 @@ export default {
   computed: {
     ...mapGetters(["taskConfigCode", "itemCode", "isIOS", "momentsUrl"])
   },
-  //监控data中的数据变化
-  watch: {},
   //方法集合
   methods: {
     ...mapMutations({
