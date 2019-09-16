@@ -261,6 +261,7 @@ export default {
           duration: 0,
           message: "提交中..."
         });
+        let base64 = this.fileList[1].content.split(",");
         if (this.isIOS) {
           this.$bridge.callhandler(
             "DX_encryptionRequest",
@@ -269,7 +270,7 @@ export default {
               imageList: [
                 {
                   type: "WeChatMoments",
-                  base64List: [this.fileList[1].content]
+                  base64List: [base64[1]]
                 }
               ]
             },
@@ -284,7 +285,7 @@ export default {
               imageList: [
                 {
                   type: "WeChatMoments",
-                  base64List: [this.fileList[1].content]
+                  base64List: [base64[1]]
                 }
               ]
             })
