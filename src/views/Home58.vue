@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="home" :class="{overflow:inviteShow}">
     <m-bar :text="barString" />
     <div class="g-ct">
       <div class="u-but" @click="fnJump">了解58棋牌</div>
@@ -416,6 +416,10 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.overflow {
+  height: 100vh;
+  overflow: hidden;
+}
 img {
   width: 100%;
   height: 100%;

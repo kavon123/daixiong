@@ -105,7 +105,7 @@ export default {
     }
     this.$nextTick(() => {
       let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
-      if (this.itemCode === "YG_SHARE_URL") {
+      if (this.platformType == 2) {
         ids = ["qrcode1_YG", "qrcode2_YG", "qrcode3_YG"];
       }
       ids.forEach(item => {

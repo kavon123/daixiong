@@ -1,5 +1,5 @@
 <template>
-  <div class="invite" @touchmove.prevent @click.prevent>
+  <div class="invite" @click.prevent>
     <div class="main-wrapper">
       <div class="title-wrapper">
         <div
@@ -33,7 +33,7 @@
                 ref="telphone"
               />
             </div>
-            <div class="txl-icon" @click="fnBest"></div>
+            <div class="txl-icon" @click="fnBest(true)"></div>
           </div>
           <div class="step step02">
             <div class="step-icon">第二步</div>
@@ -69,16 +69,18 @@
             </div>
             <div class="list_ct">
               <template v-if="lists.length===0">
-                <img src="./images/permissions.png" alt v-if="!permissions" @click="fnBest" />
+                <img src="./images/permissions.png" alt v-if="!permissions" @click="fnBest(false)" />
                 <img src="./images/noList.png" alt v-else />
               </template>
             </div>
-            <div class="invite-row invite-t-body" v-for="(item,i) in lists" :key="'row'+i">
-              <div>{{item.name}}</div>
-              <div>{{item.phone}}</div>
-              <div class="money">5元</div>
-              <div>
-                <span class="invite-btn" @click="fnInvitation(item.phone)">邀请加入</span>
+            <div class="invite_ov">
+              <div class="invite-row invite-t-body" v-for="(item,i) in lists" :key="'row'+i">
+                <div>{{item.name}}</div>
+                <div>{{item.phone}}</div>
+                <div class="money">5元</div>
+                <div>
+                  <span class="invite-btn" @click="fnInvitation(item.phone)">邀请加入</span>
+                </div>
               </div>
             </div>
           </div>
@@ -102,7 +104,7 @@ export default {
     ...mapGetters(["Phone", "contactsList", "ygUserinfo", "isIOS"])
   },
   created() {
-    this.lists = this.contactsList.slice(0, 4);
+    this.lists = this.contactsList;
     this.moneyAll = this.contactsList.length * 5;
   },
   data() {
@@ -127,26 +129,29 @@ export default {
     fnPop(key, val) {
       this[key] = val;
     },
-    fnBest() {
+    fnBest(state) {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_getContactsList", {}, data => {
           const obj = JSON.parse(data);
           if (obj.status == 1) {
-            this.lists = obj.list.slice(0, 4);
+            this.lists = obj.list;
             this.moneyAll = obj.list.length * 5;
             this.setContactsList(obj.list);
-            this.$router.push("/relative");
+            if (state) {
+              this.$router.push("/relative");
+            }
           }
         });
       } else {
         const data = android.DX_getContactsList({});
-        console.log(data);
         const obj = JSON.parse(data);
         if (obj.status == 1) {
-          this.lists = obj.list.slice(0, 4);
+          this.lists = obj.list;
           this.moneyAll = obj.list.length * 5;
           this.setContactsList(obj.list);
-          this.$router.push("/relative");
+          if (state) {
+            this.$router.push("/relative");
+          }
         }
       }
     },
@@ -217,7 +222,7 @@ export default {
       this.phone = val;
     },
     contactsList(val) {
-      this.lists = val.slice(0, 4);
+      this.lists = val;
       this.moneyAll = val.length * 5;
     }
   }
@@ -453,6 +458,10 @@ export default {
         line-height: 46px;
         text-align: center;
         font-size: 14px;
+      }
+      .invite_ov {
+        max-height: 260px;
+        overflow: auto;
       }
       .invite-table {
         margin: 30px 13px;
