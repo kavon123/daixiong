@@ -289,7 +289,7 @@ export default {
               ]
             })
           );
-          this.fnSubmitReq(data, toast);
+          this.fnSubmitReq(data);
         }
       }
     },
