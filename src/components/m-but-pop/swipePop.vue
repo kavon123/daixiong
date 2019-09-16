@@ -2,7 +2,7 @@
 <template>
   <transition>
     <div class="but_pop" @touchmove.prevent @click.prevent>
-      <div class="title" :style="'padding-top:'+height+'px'">选中海报前往分享</div>
+      <div class="title" :style="'height:'+height+'px'"></div>
       <swiper
         @slideChange="onChange"
         :options="swipertop"
@@ -92,7 +92,7 @@ export default {
   },
   mounted() {
     const h = window.screen.height;
-    this.height = (h - 667) / 2;
+    this.height = (h - 667) / 2 + 32;
     if (h >= 812) {
       this.BotHeight = 35 + 45;
     }
