@@ -157,7 +157,6 @@ export default {
               { type: "share", image: url, shareType },
               data => {
                 if (data == 1) {
-                  this.$emit("close", "winShow", true);
                   this.$emit("close", "butPopShow", false);
                 }
               }
@@ -171,7 +170,6 @@ export default {
               })
             );
             if (data == 1) {
-              this.$emit("close", "winShow", true);
               this.$emit("close", "butPopShow", false);
             }
           }

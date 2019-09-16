@@ -185,7 +185,8 @@ export default {
           },
           data => {
             if (data == 1) {
-              this.noticeShow = true;
+              this.$emit("close", "inviteShow", false);
+              this.$emit("close", "winShow", true);
             } else {
               this.$toast("邀请失败！请再次邀请");
             }
@@ -200,7 +201,8 @@ export default {
           })
         );
         if (data == 1) {
-          this.noticeShow = true;
+          this.$emit("close", "inviteShow", false);
+          this.$emit("close", "winShow", true);
         } else {
           this.$toast("邀请失败！请再次邀请");
         }
