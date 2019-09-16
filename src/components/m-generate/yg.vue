@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import domtoimage from "dom-to-image";
+import Html2canvas from "html2canvas";
 import { mapGetters } from "vuex";
 
 export default {
@@ -53,13 +53,19 @@ export default {
     ...mapGetters(["isIOS"])
   },
   methods: {
-    funSetOver() {
+    funSetOver(event) {
       const _this = this;
-      domtoimage.toJpeg(_this.$refs.capture).then(dataUrl => {
+      window.pageYOffset = 0;
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+      Html2canvas(_this.$refs.capture, {
+        allowTaint: true
+      }).then(canvas => {
+        let url = canvas.toDataURL("image/png");
         if (_this.isIOS) {
           _this.$bridge.callhandler(
             "DX_save_share_Image",
-            { type: "save", image: dataUrl },
+            { type: "save", image: url },
             data => {
               if (data == 1) {
                 _this.$toast.success(`保存图片成功`);
@@ -72,7 +78,7 @@ export default {
           const data = android.DX_save_share_Image(
             JSON.stringify({
               type: "save",
-              image: dataUrl
+              image: url
             })
           );
           if (data == 1) {
