@@ -59,6 +59,7 @@ export default {
     fnGetList() {
       this.$toast.loading({
         duration: 0,
+        forbidClick: true, // 禁用背景点击
         message: "加载中..."
       });
       if (this.isIOS) {

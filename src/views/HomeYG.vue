@@ -117,7 +117,7 @@
           <div class="steps_text">您获得返佣</div>
         </div>
       </div>
-      <div class="g-best" :style="'padding-bottom:'+paddingB+'px'">
+      <div class="g-best" :style="'height:'+paddingB+'px'">
         <img src="@/assets/images/best.png" alt @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由YG电竞提供</footer>
@@ -183,7 +183,7 @@ export default {
       bIsLogin: true,
       totalSize: 0,
       lists: [],
-      paddingB: 10
+      paddingB: 72
     };
   },
   created() {
@@ -192,7 +192,7 @@ export default {
     this.setPlatformType(2);
     const h = window.screen.height;
     if (h >= 812) {
-      this.paddingB = 45;
+      this.paddingB = 72 + 35;
     }
   },
   computed: {
@@ -694,7 +694,7 @@ img {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    padding: 10px;
+    height: 72px;
     background: #19142b;
     img {
       width: 226px;

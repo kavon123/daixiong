@@ -76,7 +76,7 @@
         </div>
       </div>
     </div>
-    <footer class="footer">
+    <footer class="footer" :style="'height:'+paddingB+'px'">
       <div
         v-if="resp.status !=1"
         @click="fnSubmit"
@@ -136,7 +136,8 @@ export default {
       printscreenPop: false,
       active: 0,
       submitText: "提交审核",
-      fileList: [{ url: "https://img.yzcdn.cn/vant/cat.jpeg" }]
+      fileList: [{ url: "https://img.yzcdn.cn/vant/cat.jpeg" }],
+      paddingB: 72
     };
   },
   //监听属性 类似于data概念
@@ -203,6 +204,7 @@ export default {
     fnInfo() {
       this.$toast.loading({
         duration: 0,
+        forbidClick: true, // 禁用背景点击
         message: "加载中..."
       });
       if (this.isIOS) {
@@ -258,6 +260,7 @@ export default {
         }
         this.$toast.loading({
           duration: 0,
+          forbidClick: true,
           message: "提交中..."
         });
         let base64 = this.fileList[1].content.split(",");
@@ -412,6 +415,10 @@ export default {
     }
     this.fnInfo();
     this.fnGetUrl();
+    const h = window.screen.height;
+    if (h >= 812) {
+      this.paddingB = 35 + 71;
+    }
   }
 };
 </script>
@@ -625,13 +632,15 @@ p {
     }
   }
   .footer {
+    display: flex;
+    justify-content: center;
     position: fixed;
     z-index: 98;
     bottom: 0;
     width: 100%;
-    .g_flex;
     background: #1e1656;
-    height: 75px;
+    height: 71px;
+    padding-top: 13px;
 
     .submit_but {
       width: 210px;

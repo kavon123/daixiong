@@ -117,7 +117,7 @@
           <div class="steps_text">您获得返佣</div>
         </div>
       </div>
-      <div class="g-best" :style="'padding-bottom:'+paddingB+'px'">
+      <div class="g-best" :style="'height:'+paddingB+'px'">
         <img src="@/assets/images/best.png" @click="fnShowButPop" />
       </div>
       <footer class="footer">本页面由58棋牌提供</footer>
@@ -181,7 +181,7 @@ export default {
       errShow: false,
       bIsLogin: true,
       lists: [],
-      paddingB: 10
+      paddingB: 72
     };
   },
   computed: {
@@ -192,6 +192,10 @@ export default {
     this.fnGetBar();
     this.fngetUserFriend();
     this.fnInfo();
+    const h = window.screen.height;
+    if (h >= 812) {
+      this.paddingB = 35 + 72;
+    }
   },
   methods: {
     ...mapMutations({
@@ -692,9 +696,9 @@ img {
     bottom: 0;
     display: flex;
     justify-content: center;
-    align-items: center;
+    padding-top: 10px;
     width: 100vw;
-    padding: 10px;
+    height: 72px;
     background: #1e0500;
     img {
       width: 226px;

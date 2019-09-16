@@ -52,7 +52,7 @@
       <div>
         <img class="share_img" src="./shareImg.png" alt @click="fnShare" />
       </div>
-      <div class="cancel" :style="'padding-bottom: '+BotHeight+'px;'" @click="closeFn">取消</div>
+      <div class="cancel" :style="'height: '+BotHeight+'px;'" @click="closeFn">取消</div>
     </div>
   </transition>
 </template>
@@ -84,7 +84,7 @@ export default {
       },
       activeIndex: 0,
       height: 0,
-      BotHeight: 0
+      BotHeight: 45
     };
   },
   computed: {
@@ -94,7 +94,7 @@ export default {
     const h = window.screen.height;
     this.height = (h - 667) / 2;
     if (h >= 812) {
-      this.BotHeight = 35;
+      this.BotHeight = 35 + 45;
     }
     this.$nextTick(() => {
       let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
