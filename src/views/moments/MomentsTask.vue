@@ -396,6 +396,11 @@ export default {
         });
     }
   },
+  mounted() {
+    if (!this.isIOS) {
+      android.DX_dismisLoading();
+    }
+  },
   created() {
     if (this.$route.params.type === "YG") {
       this.setPlatformType(2);
@@ -406,10 +411,6 @@ export default {
     }
     this.fnInfo();
     this.fnGetUrl();
-
-    if (!this.isIOS) {
-      android.DX_dismisLoading();
-    }
   }
 };
 </script>
