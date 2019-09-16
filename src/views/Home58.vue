@@ -131,6 +131,7 @@
     <m-win-pop v-if="winShow" type="58" @close="fnPop" />
     <m-qrcode type="58" v-if="qrcodeShow" @close="fnPop" />
     <m-invite v-if="inviteShow" @close="fnPop" />
+    <m-download v-if="mDownloadShow" :downloadUrl="oUserinfo.downloadUrl" @close="fnPop" />
   </div>
 </template>
 
@@ -148,6 +149,7 @@ import mButPop from "@/components/m-but-pop";
 import mWinPop from "@/components/m-win-pop";
 import mQrcode from "@/components/m-qrcode";
 import mInvite from "./Invite/Invite58";
+import mDownload from "@/components/m-download";
 
 export default {
   components: {
@@ -160,10 +162,12 @@ export default {
     mWithdrawal,
     mButPop,
     mWinPop,
-    mQrcode
+    mQrcode,
+    mDownload
   },
   data() {
     return {
+      mDownloadShow: false,
       inviteShow: false,
       totalSize: 0,
       qrcodeShow: false,
@@ -237,15 +241,16 @@ export default {
     fn58Withdrawal() {
       if (this.bIsLogin || !this.oUserinfo.balance) return;
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_openWX_QQ_58", { type: "58" }, data => {
-          if (data == 0) {
-            this.$toast(`未安装58棋牌!请安装`);
-          }
-        });
+        this.mDownloadShow = true;
+        // this.$bridge.callhandler("DX_openWX_QQ_58", { type: "58" }, data => {
+        //   if (data == 0) {
+        //     this.$toast(`未安装58棋牌!请安装`);
+        //   }
+        // });
       } else {
         const code = android.DX_openWX_QQ_58(JSON.stringify({ type: "58" }));
         if (code == 0) {
-          this.$toast(`未安装58棋牌!请安装`);
+          this.mDownloadShow = true;
         }
       }
     },
