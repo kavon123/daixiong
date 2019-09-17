@@ -55,11 +55,7 @@
               >累计已获得{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.sumCommision?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
             </div>
             <div class="sum_but">
-              <img
-                :class="{gray:YG_Draw_Money}"
-                src="@/assets/images/withdrawal.png"
-                @click="fnYGWithdrawal"
-              />
+              <img src="@/assets/images/withdrawal.png" @click="fnYGWithdrawal" />
             </div>
           </div>
         </div>
@@ -203,14 +199,6 @@ export default {
         !this.ygUserinfo.externalBalance ||
         this.ygUserinfo.externalBalance == 0
       );
-    },
-    YG_Draw_Money() {
-      return (
-        this.bIsLogin ||
-        (!this.ygUserinfo.dxUserBalance ||
-          !this.ygUserinfo.dxUserBalance.balance ||
-          this.ygUserinfo.dxUserBalance.balance == 0)
-      );
     }
   },
   methods: {
@@ -220,7 +208,6 @@ export default {
       setPlatformType: "SET_PLATFORM_TYPE"
     }),
     fnYGWithdrawal() {
-      if (this.YG_Draw_Money) return;
       this.fnJump(this.ygUserinfo.loginUrl);
     },
     fnPop(key, vla) {

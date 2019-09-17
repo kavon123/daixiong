@@ -152,15 +152,11 @@ export default {
         .then(canvas => {
           let url = canvas.toDataURL("image/png");
           if (_this.isIOS) {
-            _this.$bridge.callhandler(
-              "DX_save_share_Image",
-              { type: "share", image: url, shareType },
-              data => {
-                if (data == 1) {
-                  this.$emit("close", "butPopShow", false);
-                }
-              }
-            );
+            _this.$bridge.callhandler("DX_save_share_Image", {
+              type: "share",
+              image: url,
+              shareType
+            });
           } else {
             const data = android.DX_save_share_Image(
               JSON.stringify({
@@ -169,9 +165,6 @@ export default {
                 shareType
               })
             );
-            if (data == 1) {
-              this.$emit("close", "butPopShow", false);
-            }
           }
         })
         .catch(err => {

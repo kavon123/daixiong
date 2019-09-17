@@ -53,11 +53,7 @@
               <div class="sum_add">累计已获得{{oUserinfo.commision}}元</div>
             </div>
             <div class="sum_but">
-              <img
-                @click="fn58Withdrawal"
-                :class="bIsLogin || !oUserinfo.balance?'gray':''"
-                src="@/assets/images/withdrawal.png"
-              />
+              <img @click="fn58Withdrawal" src="@/assets/images/withdrawal.png" />
             </div>
           </div>
         </div>
@@ -243,7 +239,6 @@ export default {
         });
     },
     fn58Withdrawal() {
-      if (this.bIsLogin || !this.oUserinfo.balance) return;
       if (this.isIOS) {
         this.mDownloadShow = true;
         // this.$bridge.callhandler("DX_openWX_QQ_58", { type: "58" }, data => {
