@@ -286,7 +286,6 @@ export default {
       $api
         .postRequest("/user/v3/loginYg", data)
         .then(res => {
-          this.$toast.clear();
           this.fnInfoAll();
           if (res.code === 0) {
             const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
@@ -321,6 +320,7 @@ export default {
       $api
         .postRequest("/external/friend/getYgDatas", data)
         .then(res => {
+          this.$toast.clear();
           if (res.code === 0) {
             const oUserinfo = Object.assign(this.ygUserinfo, res.datas);
             let list = res.datas.dxRankingAHundred.map(item => {
