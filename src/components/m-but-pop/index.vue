@@ -132,6 +132,7 @@ export default {
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
+        correctLevel: QRCode.CorrectLevel.M,
         text: url
       });
     },
