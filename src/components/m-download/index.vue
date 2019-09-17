@@ -5,7 +5,7 @@
       <div class="dialog" @touchmove.prevent @click.prevent>
         <div class="dialog_ct dialog_ct_58">
           <img class="img" src="./icon.png" alt />
-          <div class="centent">返佣奖励需在58棋牌中体现</div>
+          <div class="centent">返佣奖励需在58棋牌中提现</div>
           <div class="but" @click="fnDownload"></div>
         </div>
         <van-icon name="close" class="close" @click="fnClose" />
