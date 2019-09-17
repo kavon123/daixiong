@@ -130,6 +130,7 @@ export default {
       this[key] = val;
     },
     fnBest(state) {
+      this.permissions = true;
       if (this.isIOS) {
         this.$bridge.callhandler("DX_getContactsList", {}, data => {
           const obj = JSON.parse(data);
