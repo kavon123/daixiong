@@ -68,7 +68,7 @@
             <span></span>朋友圈分享必须所有人可见
           </div>
           <div class="item_text">
-            <span></span>未P图、或者上传重复截图作弊
+            <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
           <div class="item_text">
             <span></span>本任务每天可参与一次，每天一0点刷新

@@ -4,18 +4,26 @@
       <div class="content">
         <div class="reward_sum">{{reward}}</div>
         <img class="reward_img" src="@/views/moments/image/reward.png" />
-        <p class="t1">恭喜您完成关注公众号任务</p>
+        <p class="t1">恭喜您完成{{pttext}}代理任务</p>
         <p class="t2">已放入钱包</p>
       </div>
     </div>
   </transition>
 </template>
 <script>
+import { mapGetters } from "vuex";
+
 export default {
   props: {
     reward: {
       type: String,
       default: ""
+    }
+  },
+  computed: {
+    ...mapGetters(["itemCode"]),
+    pttext() {
+      return this.itemCode == "58_SHARE_URL" ? "58棋牌" : "YG电竞";
     }
   },
   methods: {

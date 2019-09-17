@@ -605,7 +605,9 @@ img {
     .g-table {
       width: 85vw;
       margin-bottom: 8px;
-
+      display: flex;
+      justify-content: center;
+      align-items: center;
       .van-col {
         text-align: center;
         color: #e39500;
