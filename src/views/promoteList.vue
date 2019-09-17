@@ -55,13 +55,13 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {
-            this.$toast(`未安装微信!请安装`);
+            this.$toast.fail(`未安装微信!请安装`);
           }
         });
       } else {
         const data = android.DX_openWX_QQ_58(JSON.stringify({ type: "WX" }));
         if (data == 0) {
-          this.$toast(`未安装微信!请安装`);
+          this.$toast.fail(`未安装微信!请安装`);
         }
       }
     },
@@ -103,11 +103,11 @@ export default {
             }
             this.lists = this.lists.concat(res.datas.infoList);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     }
   }

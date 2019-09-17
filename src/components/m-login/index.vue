@@ -72,11 +72,11 @@ export default {
       const _this = this;
       const { sUserName, sPassword } = _this;
       if (!sUserName) {
-        this.$toast("请输入用户名");
+        this.$toast.fail("请输入用户名");
         return;
       }
       if (!sPassword) {
-        this.$toast("请输入密码");
+        this.$toast.fail("请输入密码");
         return;
       }
       _this.$toast.loading({
@@ -126,11 +126,11 @@ export default {
               this.fnClose();
             }, 500);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     }
   }

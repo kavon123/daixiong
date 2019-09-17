@@ -97,11 +97,11 @@ export default {
             });
             this.lists = this.lists.concat(lists);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     scroll(event) {

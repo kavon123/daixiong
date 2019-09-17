@@ -6,11 +6,11 @@
       <div class="g-rules-ct">
         <div class="u-title">代理规则</div>
         <div class="u-rules_text">
-          1. 无需您下载，好友通过您分享的链接下载并注册58棋牌，游戏1分钟，您即可获得2元奖励。
+          1. 无需您下载，好友通过您分享的链接下载并注册58棋牌，游戏5分钟，您即可获得5元奖励。
           <br />邀请奖励在本页面提现
         </div>
         <div class="u-rules_text">
-          2. 佣金模式是以一级返佣一级，每万元最高返佣70元。
+          2. 邀请的好友投注您还可获得返佣奖励，每万元最高返佣70元。
           <br />返佣奖励需在“58棋牌”中提现
         </div>
       </div>
@@ -230,12 +230,12 @@ export default {
             this.setUserInfo(oUserinfo);
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fn58Withdrawal() {
@@ -243,7 +243,7 @@ export default {
         this.mDownloadShow = true;
         // this.$bridge.callhandler("DX_openWX_QQ_58", { type: "58" }, data => {
         //   if (data == 0) {
-        //     this.$toast(`未安装58棋牌!请安装`);
+        //     this.$toast.fail(`未安装58棋牌!请安装`);
         //   }
         // });
       } else {
@@ -341,12 +341,12 @@ export default {
             this.lists = res.datas.infoList;
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
 
@@ -372,12 +372,12 @@ export default {
             this.setBarString(barString);
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnGetUrl() {
@@ -401,12 +401,12 @@ export default {
             this.setUserInfo(oUserinfo);
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnShowButPop() {
@@ -420,13 +420,13 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {
-            this.$toast(`未安装微信!请安装`);
+            this.$toast.fail(`未安装微信!请安装`);
           }
         });
       } else {
         const data = android.DX_openWX_QQ_58(JSON.stringify({ type: "WX" }));
         if (data == 0) {
-          this.$toast(`未安装微信!请安装`);
+          this.$toast.fail(`未安装微信!请安装`);
         }
       }
     }

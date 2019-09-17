@@ -48,7 +48,7 @@ export default {
           { type: platform },
           data => {
             if (data == 0) {
-              this.$toast(`未安装${name}!请安装`);
+              this.$toast.fail(`未安装${name}!请安装`);
             }
           }
         );
@@ -57,7 +57,7 @@ export default {
           JSON.stringify({ type: platform })
         );
         if (data == 0) {
-          this.$toast(`未安装${name}!请安装`);
+          this.$toast.fail(`未安装${name}!请安装`);
         }
       }
     }

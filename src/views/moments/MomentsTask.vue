@@ -110,7 +110,8 @@ import printscreenPop from "@/views/moments/components/printscreenPop.vue";
 import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 import rewardPop from "@/views/moments/components/rewardPop.vue";
-
+const _58IMG = require("./image/58.jpg");
+const _YGIMG = require("./image/yg.jpg");
 export default {
   //import引入的组件需要注入到对象中才能使用
   components: {
@@ -136,7 +137,7 @@ export default {
       printscreenPop: false,
       active: 0,
       submitText: "提交审核",
-      fileList: [{ url: "https://img.yzcdn.cn/vant/cat.jpeg" }],
+      fileList: [{ url: _58IMG }],
       paddingB: 72
     };
   },
@@ -244,18 +245,18 @@ export default {
                 break;
             }
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
 
     fnSubmit() {
       if (this.submitText == "提交审核") {
         if (this.fileList.length !== 2) {
-          this.$toast("请上传截图后提交审核");
+          this.$toast.fail("请上传截图后提交审核");
           return;
         }
         this.$toast.loading({
@@ -309,11 +310,11 @@ export default {
               params: { id: res.datas }
             });
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnGetReward() {
@@ -344,11 +345,11 @@ export default {
               this.rewardPop = false;
             }, 3000);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnCopyText(type) {
@@ -392,11 +393,11 @@ export default {
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     }
   },
@@ -406,15 +407,16 @@ export default {
     }
   },
   created() {
-    if (this.$route.params.type === "YG") {
+    if (this.$route.params.type === "yg") {
+      this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
       this.copyText =
         "YG电竞顶级代理招募中，长按图片识别图中二维码，即可加入YG电竞，领取188元新手红包！";
     }
-    this.fnInfo();
-    this.fnGetUrl();
+    // this.fnInfo();
+    // this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;

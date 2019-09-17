@@ -45,7 +45,7 @@ export default {
 .img_you {
   display: block;
   width: 140px;
-  height: 120px;
+  height: 153px;
   margin: 20px auto;
 }
 

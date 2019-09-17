@@ -169,11 +169,11 @@ export default {
     fnSubmit() {
       const { phone, oUserinfo } = this;
       if (!phone) {
-        this.$toast("请输入手机号!");
+        this.$toast.fail("请输入手机号!");
         return;
       }
       if (!/^1[3456789]\d{9}$/.test(phone)) {
-        this.$toast("手机号码有误，请重填!");
+        this.$toast.fail("手机号码有误，请重填!");
         return false;
       }
       if (this.isIOS) {
@@ -189,7 +189,7 @@ export default {
               this.$emit("close", "inviteShow", false);
               this.$emit("close", "winShow", true);
             } else {
-              this.$toast("邀请失败！请再次邀请");
+              this.$toast.fail("邀请失败！请再次邀请");
             }
           }
         );
@@ -205,7 +205,7 @@ export default {
           this.$emit("close", "inviteShow", false);
           this.$emit("close", "winShow", true);
         } else {
-          this.$toast("邀请失败！请再次邀请");
+          this.$toast.fail("邀请失败！请再次邀请");
         }
       }
     },

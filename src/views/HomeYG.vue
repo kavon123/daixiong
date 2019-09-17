@@ -5,7 +5,7 @@
       <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
-          1.好友通过您分享的链接注册YG电竞，进入游戏1分钟，您即可获得2元佣金。
+          1.好友通过您分享的链接注册YG电竞，进入游戏5分钟，您即可获得5元佣金。
           <br />邀请奖励在本页面提现
         </div>
         <div class="u-rules_text">
@@ -242,12 +242,12 @@ export default {
             this.setUserInfo(oUserinfo);
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
 
@@ -336,12 +336,12 @@ export default {
             }
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnJump(url) {
@@ -388,25 +388,25 @@ export default {
             this.lists = res.datas.infoList;
           } else {
             if (res.msg) {
-              this.$toast(res.msg);
+              this.$toast.fail(res.msg);
             }
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnOpen() {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {
-            this.$toast(`未安装微信!请安装`);
+            this.$toast.fail(`未安装微信!请安装`);
           }
         });
       } else {
         const data = android.DX_openWX_QQ_58(JSON.stringify({ type: "WX" }));
         if (data == 0) {
-          this.$toast(`未安装微信!请安装`);
+          this.$toast.fail(`未安装微信!请安装`);
         }
       }
     }

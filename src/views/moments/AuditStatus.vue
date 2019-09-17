@@ -114,11 +114,11 @@ export default {
               this.rewardPop = false;
             }, 1000);
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     },
     fnGoBack() {
@@ -178,11 +178,11 @@ export default {
                 break;
             }
           } else {
-            this.$toast(res.msg);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
-          this.$toast(err.message);
+          this.$toast.fail(err.message);
         });
     }
   },
