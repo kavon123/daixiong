@@ -293,9 +293,7 @@ export default {
             this.setUserInfo(oUserinfo);
             this.bIsLogin = false;
             // 1 新注册(新生成) , 2新绑定 3 老账户
-            if (res.datas.hasBind == 1) {
-              this.generateShow = true;
-            } else if (res.datas.hasBind == 2) {
+            if (res.datas.hasBind == 2) {
               this.sucShow = true;
             }
           } else {
@@ -333,6 +331,9 @@ export default {
             const text = list.join("");
             this.setBarString(text);
             this.setUserInfo(oUserinfo);
+            if (this.ygUserinfo.hasBind == 1) {
+              this.generateShow = true;
+            }
           } else {
             if (res.msg) {
               this.$toast(res.msg);
