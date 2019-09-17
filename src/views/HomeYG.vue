@@ -27,7 +27,7 @@
         </div>
         <div class="m-sum-ct">
           <div class="sum_item">
-            <div class="u-title">如何赚钱</div>
+            <div class="u-title">邀请奖励</div>
             <div class="sum_item_ct">
               <img class="sum_gold" src="@/assets/images/gold.png" alt />
               <div class="sum_num">
@@ -44,7 +44,7 @@
             </div>
           </div>
           <div class="sum_item">
-            <div class="u-title">如何赚钱</div>
+            <div class="u-title">返佣奖励</div>
             <div class="sum_item_ct">
               <img class="sum_golds" src="@/assets/images/golds.png" alt />
               <div class="sum_num">
