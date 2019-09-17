@@ -118,7 +118,7 @@
       </div>
       <footer class="footer">本页面由YG电竞提供</footer>
     </div>
-    <m-YG v-if="generateShow" :data="ygUserinfo" @close="fnPop" />
+    <m-YG v-if="generateShow" @close="fnPop" />
     <m-login v-if="loginShow" @fnInfoAll="fnInfoAll" @close="fnPop" />
     <m-rele-err v-if="errShow" @info="fnInfo" @close="fnPop" />
     <m-rele-suc v-if="sucShow" :name="ygUserinfo.userId" @close="fnPop" />

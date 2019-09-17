@@ -118,7 +118,7 @@
       </div>
       <footer class="footer">本页面由58棋牌提供</footer>
     </div>
-    <m-58 v-if="generateShow" :data="oUserinfo" @close="fnPop" />
+    <m-58 v-if="generateShow" @close="fnPop" />
     <m-rele-suc v-if="sucShow" :name="oUserinfo.userId" @close="fnPop" />
     <m-rele-err v-if="errShow" @info="fnInfo" @close="fnPop" />
     <m-best v-if="bestShow" @close="fnPop" />

@@ -8,11 +8,11 @@
           <div class="centent">
             <div class="item">
               <div class="item_text">下载地址</div>
-              <div class="item_input">{{data.url}}</div>
+              <div class="item_input">{{oUserinfo.url}}</div>
             </div>
             <div class="item">
               <div class="item_text">用户名称</div>
-              <div class="item_input">{{data.userId}}</div>
+              <div class="item_input">{{oUserinfo.userId}}</div>
             </div>
             <div class="item">
               <div class="item_text">初始密码</div>
@@ -34,19 +34,8 @@ import Html2canvas from "html2canvas";
 import { mapGetters } from "vuex";
 
 export default {
-  props: {
-    data: {
-      type: Object,
-      default: {}
-    }
-  },
-  data() {
-    return {
-      img: "./generate.png"
-    };
-  },
   computed: {
-    ...mapGetters(["isIOS"])
+    ...mapGetters(["isIOS", "oUserinfo"])
   },
   methods: {
     funSetOver(event) {
