@@ -104,8 +104,7 @@ export default {
     ...mapGetters(["Phone", "contactsList", "oUserinfo", "isIOS"])
   },
   created() {
-    this.lists = this.contactsList;
-    this.moneyAll = this.contactsList.length * 5;
+    this.fnBest(false);
   },
   data() {
     return {

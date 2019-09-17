@@ -121,7 +121,9 @@ export default {
       lists: []
     };
   },
-
+  created() {
+    this.fnBest(false);
+  },
   methods: {
     ...mapMutations({
       setContactsList: "SET_CONTACTS_LIST"
