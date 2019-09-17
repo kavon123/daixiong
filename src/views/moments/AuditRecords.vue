@@ -21,8 +21,8 @@
           <van-icon name="arrow" class="icon" />
         </div>
       </div>
-      <div v-if="lists.length" class="no_data">只保留三个月内的数据！</div>
-      <div v-if="!lists.length" class="no_data">暂无数据！</div>
+      <div v-if="lists.length" class="no_data">只保留三个月内的数据</div>
+      <div v-if="!lists.length" class="no_data">暂无数据</div>
     </div>
   </div>
 </template>

@@ -187,7 +187,6 @@ export default {
         this.fallbackPop = true;
       } else {
         if (this.isIOS) {
-          console.log("object");
           this.$bridge.callhandler("DX_goBack");
         } else {
           android.DX_goBack({});
@@ -415,8 +414,8 @@ export default {
       this.copyText =
         "YG电竞顶级代理招募中，长按图片识别图中二维码，即可加入YG电竞，领取188元新手红包！";
     }
-    // this.fnInfo();
-    // this.fnGetUrl();
+    this.fnInfo();
+    this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;

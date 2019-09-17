@@ -39,9 +39,6 @@ export default new Router({
     {
       path: '/moments/:type',
       name: 'MomentsTask',
-      meta: {
-        keepAlive: true
-      },
       component: () => import(/* webpackChunkName: "YG" */ './views/moments/MomentsTask.vue')
     },
     {
