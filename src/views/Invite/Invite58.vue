@@ -1,5 +1,5 @@
 <template>
-  <div class="invite" @click.prevent>
+  <div class="invite" @click.prevent @touchmove.prevent>
     <div class="main-wrapper">
       <div class="title-wrapper">
         <div
@@ -28,6 +28,7 @@
                 type="text"
                 placeholder="请输入11位手机号"
                 @input="fnInput"
+                @blur="fnBlur"
                 v-model="phone"
                 maxlength="11"
                 ref="telphone"
@@ -127,6 +128,10 @@ export default {
     }),
     fnPop(key, val) {
       this[key] = val;
+    },
+    fnBlur() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
     fnBest(state) {
       this.permissions = true;

@@ -7,7 +7,7 @@
           <div class="title">登录YG电竞</div>
           <div class="input_ct">
             <span class="input_prompt" v-show="sUserName">输入用户名</span>
-            <input type="text" placeholder="输入用户名" v-model="sUserName" class="input" />
+            <input type="text" placeholder="输入用户名" @blur="fnBlur" v-model="sUserName" class="input" />
             <van-icon
               name="clear"
               class="clear"
@@ -17,7 +17,13 @@
           </div>
           <div class="input_ct">
             <span class="input_prompt" v-show="sPassword">输入密码</span>
-            <input type="password" placeholder="输入密码" v-model="sPassword" class="input" />
+            <input
+              type="password"
+              placeholder="输入密码"
+              @blur="fnBlur"
+              v-model="sPassword"
+              class="input"
+            />
             <van-icon
               name="clear"
               class="clear"
@@ -61,6 +67,10 @@ export default {
       } else {
         android.DX_gotoBrowser(this.ygUserinfo.loginUrl);
       }
+    },
+    fnBlur() {
+      document.body.scrollTop = 0;
+      document.documentElement.scrollTop = 0;
     },
     fnClose() {
       this.$emit("close", "loginShow", false);
