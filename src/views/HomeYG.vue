@@ -2,7 +2,7 @@
   <div class="home" :class="{overflow:inviteShow}">
     <m-bar :text="barString" />
     <div class="g-ct">
-      <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG棋牌</div>
+      <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG电竞</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
           1.好友通过您分享的链接注册YG电竞，进入游戏5分钟，您即可获得5元佣金。
