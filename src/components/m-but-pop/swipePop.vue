@@ -122,7 +122,7 @@ export default {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
         correctLevel: QRCode.CorrectLevel.M,
-        text: "http://wwww.baidu.com"
+        text: this.momentsUrl
       });
     },
     fnShare() {
