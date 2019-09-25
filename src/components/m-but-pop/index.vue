@@ -239,14 +239,14 @@ img {
           height: 69px;
           position: absolute;
           left: 201px;
-          top: 317px;
+          top: 322px;
         }
         .qrcode_c {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 201px;
-          top: 322px;
+          top: 318px;
         }
       }
       .img_1 {
