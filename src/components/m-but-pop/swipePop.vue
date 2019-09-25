@@ -240,8 +240,8 @@ export default {
           width: 69px;
           height: 69px;
           position: absolute;
-          left: 201px;
-          top: 318px;
+          left: 200px;
+          top: 316px;
         }
       }
       .img_1 {
