@@ -213,14 +213,14 @@ export default {
           height: 69px;
           position: absolute;
           left: 201px;
-          top: 317px;
+          top: 316px;
         }
         .qrcode3 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 18px;
-          top: 322px;
+          top: 321px;
         }
         .qrcode_a {
           width: 65px;
@@ -234,14 +234,14 @@ export default {
           height: 69px;
           position: absolute;
           left: 201px;
-          top: 317px;
+          top: 319px;
         }
         .qrcode_c {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 201px;
-          top: 322px;
+          top: 320px;
         }
       }
       .img_1 {
