@@ -245,22 +245,22 @@ export default {
         }
       }
       .img_1 {
-        background-image: url("./swipe1.png");
+        background-image: url("./swipe1.jpg");
       }
       .img_2 {
-        background-image: url("./swipe2.png");
+        background-image: url("./swipe2.jpg");
       }
       .img_3 {
-        background-image: url("./swipe3.png");
+        background-image: url("./swipe3.jpg");
       }
       .img_a {
-        background-image: url("./swipeA.png");
+        background-image: url("./swipeA.jpg");
       }
       .img_b {
-        background-image: url("./swipeB.png");
+        background-image: url("./swipeB.jpg");
       }
       .img_c {
-        background-image: url("./swipeC.png");
+        background-image: url("./swipeC.jpg");
       }
     }
   }
