@@ -23,15 +23,15 @@
           </div>
         </swiper-slide>
       </swiper>
-      <div class="copy_text">
+      <!-- <div class="copy_text">
         {{copyText}}
         <br />
         {{momentsUrl}}
-      </div>
-      <div class="copy_but">文案已复制到剪切板，记得粘贴哦</div>
-      <div>
+      </div>-->
+      <div class="copy_but">截屏保存海报去分享</div>
+      <!-- <div>
         <img class="share_img" src="./shareImg.png" alt @click="fnShare" />
-      </div>
+      </div>-->
       <div class="cancel" :style="'height: '+BotHeight+'px;'" @click="closeFn">取消</div>
     </div>
   </transition>
@@ -76,7 +76,7 @@ export default {
   mounted() {
     this.getImg();
     const h = window.screen.height;
-    this.height = (h - 667) / 2 + 32;
+    this.height = (h - 600) / 2 + 32;
     if (h >= 812) {
       this.BotHeight = 35 + 45;
     }
@@ -155,60 +155,63 @@ export default {
       this.$emit("close", "butPopShow", false);
     },
     qrcode($div, key) {
-      console.log($div);
+      let urlArr = this.momentsUrl.split("?");
+      urlArr[1] = urlArr[1]
+        ? urlArr[1] + "&time=" + new Date().getTime()
+        : "time=" + new Date().getTime();
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
         correctLevel: QRCode.CorrectLevel.M,
-        text: this.momentsUrl
+        text: urlArr.join("?")
       });
       this.$toast.clear();
-    },
-    fnShare() {
-      const _this = this;
-      let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
-      if (this.itemCode === "YG_SHARE_URL") {
-        ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
-      }
-
-      window.pageYOffset = 0;
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-
-      const HTML = document.getElementById(ids[_this.activeIndex]);
-
-      Html2canvas(HTML, {
-        allowTaint: true
-      })
-        .then(canvas => {
-          let url = canvas.toDataURL("image/png");
-          if (_this.isIOS) {
-            _this.$bridge.callhandler(
-              "DX_save_share_Image",
-              { type: "share", image: url, shareType: 2 },
-              data => {
-                if (data == 1) {
-                  this.closeFn();
-                }
-              }
-            );
-          } else {
-            const data = android.DX_save_share_Image(
-              JSON.stringify({
-                type: "share",
-                image: url,
-                shareType: 2
-              })
-            );
-            if (data == 1) {
-              this.closeFn();
-            }
-          }
-        })
-        .catch(err => {
-          this.$toast.fail(err);
-        });
     }
+    // fnShare() {
+    //   const _this = this;
+    //   let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
+    //   if (this.itemCode === "YG_SHARE_URL") {
+    //     ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
+    //   }
+
+    //   window.pageYOffset = 0;
+    //   document.documentElement.scrollTop = 0;
+    //   document.body.scrollTop = 0;
+
+    //   const HTML = document.getElementById(ids[_this.activeIndex]);
+
+    //   Html2canvas(HTML, {
+    //     allowTaint: true
+    //   })
+    //     .then(canvas => {
+    //       let url = canvas.toDataURL("image/png");
+    //       if (_this.isIOS) {
+    //         _this.$bridge.callhandler(
+    //           "DX_save_share_Image",
+    //           { type: "share", image: url, shareType: 2 },
+    //           data => {
+    //             if (data == 1) {
+    //               this.closeFn();
+    //             }
+    //           }
+    //         );
+    //       } else {
+    //         const data = android.DX_save_share_Image(
+    //           JSON.stringify({
+    //             type: "share",
+    //             image: url,
+    //             shareType: 2
+    //           })
+    //         );
+    //         if (data == 1) {
+    //           this.closeFn();
+    //         }
+    //       }
+    //     })
+    //     .catch(err => {
+    //       this.$toast.fail(err);
+    //     });
+    // }
   }
 };
 </script>
@@ -297,14 +300,8 @@ export default {
     line-height: 45px;
     text-align: center;
   }
-  .copy_text {
-    width: 294px;
-    color: #eceaff;
-    font-size: 13px;
-    line-height: 18px;
-    padding: 22px 0 10px 0;
-  }
   .copy_but {
+    margin-top: 30px;
     width: 210px;
     height: 32px;
     background: rgba(230, 226, 255, 1);

@@ -22,9 +22,10 @@
           </div>
         </swiper-slide>
       </swiper>
+      <div class="tishi">截屏海报去分享</div>
       <div class="choose" :style="'height:'+height+'px;'">
-        <div class="title">分享至</div>
-        <div class="items">
+        <div class="title" @click="fnBook">分享至到通讯录</div>
+        <!-- <div class="items">
           <div class="item" @click="fnShare(1)">
             <div class="img_ct">
               <img src="@/assets/images/WX.png" alt />
@@ -50,7 +51,7 @@
             </div>
             <div>通讯录</div>
           </div>
-        </div>
+        </div>-->
         <div class="cancel" @click="fnClose">取消</div>
       </div>
     </div>
@@ -75,7 +76,7 @@ export default {
         spaceBetween: 20
       },
       activeIndex: 0,
-      height: 182
+      height: 100
     };
   },
   computed: {
@@ -85,7 +86,7 @@ export default {
     this.getImg();
     const h = window.screen.height;
     if (h >= 812) {
-      this.height = 217;
+      this.height = 135;
     }
   },
   methods: {
@@ -165,55 +166,69 @@ export default {
         this.platformType === 1
           ? this.oUserinfo.downloadUrl
           : this.ygUserinfo.ygSharedUrl;
+      let urlArr = url.split("?");
+      urlArr[1] = urlArr[1]
+        ? urlArr[1] + "&time=" + new Date().getTime()
+        : "time=" + new Date().getTime();
+
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
         correctLevel: QRCode.CorrectLevel.M,
-        text: url
+        text: urlArr.join("?")
       });
       this.$toast.clear();
-    },
-    fnShare(shareType) {
-      const _this = this;
-      let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
-      if (this.platformType === 2) {
-        ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
-      }
-      window.pageYOffset = 0;
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-
-      const HTML = document.getElementById(ids[_this.activeIndex]);
-
-      Html2canvas(HTML, {
-        allowTaint: true
-      })
-        .then(canvas => {
-          let url = canvas.toDataURL("image/png");
-          if (_this.isIOS) {
-            _this.$bridge.callhandler("DX_save_share_Image", {
-              type: "share",
-              image: url,
-              shareType
-            });
-          } else {
-            const data = android.DX_save_share_Image(
-              JSON.stringify({
-                type: "share",
-                image: url,
-                shareType
-              })
-            );
-          }
-        })
-        .catch(err => {
-          this.$toast.fail("分享失败");
-        });
     }
+    // fnShare(shareType) {
+    //   const _this = this;
+    //   let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
+    //   if (this.platformType === 2) {
+    //     ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
+    //   }
+    //   window.pageYOffset = 0;
+    //   document.documentElement.scrollTop = 0;
+    //   document.body.scrollTop = 0;
+
+    //   const HTML = document.getElementById(ids[_this.activeIndex]);
+
+    //   Html2canvas(HTML, {
+    //     allowTaint: true
+    //   })
+    //     .then(canvas => {
+    //       let url = canvas.toDataURL("image/png");
+    //       if (_this.isIOS) {
+    //         _this.$bridge.callhandler("DX_save_share_Image", {
+    //           type: "share",
+    //           image: url,
+    //           shareType
+    //         });
+    //       } else {
+    //         const data = android.DX_save_share_Image(
+    //           JSON.stringify({
+    //             type: "share",
+    //             image: url,
+    //             shareType
+    //           })
+    //         );
+    //       }
+    //     })
+    //     .catch(err => {
+    //       this.$toast.fail("分享失败");
+    //     });
+    // }
   }
 };
 </script>
 <style lang='less' scoped>
+.tishi {
+  color: #5e539d;
+  width: 200px;
+  height: 32px;
+  background: #e6e2ff;
+  border-radius: 8px;
+  text-align: center;
+  line-height: 32px;
+}
 img {
   width: 100%;
   height: 100%;
@@ -229,10 +244,11 @@ img {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   .swipe {
     width: 100%;
-    margin-top: -182px;
-    height: calc(100vh - 182px);
+    margin-top: -155px;
+    height: calc(100vh - 155px);
 
     .item {
       display: flex;
@@ -313,7 +329,7 @@ img {
     align-items: center;
     width: 100%;
     position: absolute;
-    height: 182px;
+    height: 100px;
     background: #fff;
     bottom: 0;
     animation: myfirst 0.4s;
@@ -324,37 +340,38 @@ img {
       font-weight: 400;
       color: #000;
       line-height: 20px;
-      margin: 16px 0 12px;
+      margin: 12px 0;
     }
-    .items {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      margin-bottom: 10px;
-      .item {
-        width: 90px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        .img_ct {
-          width: 53px;
-          height: 47px;
-          display: flex;
-          justify-content: center;
-          align-items: flex-end;
-          margin-bottom: 6px;
-          img {
-            width: 45px;
-            height: 45px;
-          }
-          .last {
-            width: 53px;
-            height: 47px;
-          }
-        }
-      }
-    }
+
+    // .items {
+    //   display: flex;
+    //   justify-content: space-around;
+    //   align-items: center;
+    //   margin-bottom: 10px;
+    //   .item {
+    //     width: 90px;
+    //     display: flex;
+    //     flex-direction: column;
+    //     justify-content: center;
+    //     align-items: center;
+    //     .img_ct {
+    //       width: 53px;
+    //       height: 47px;
+    //       display: flex;
+    //       justify-content: center;
+    //       align-items: flex-end;
+    //       margin-bottom: 6px;
+    //       img {
+    //         width: 45px;
+    //         height: 45px;
+    //       }
+    //       .last {
+    //         width: 53px;
+    //         height: 47px;
+    //       }
+    //     }
+    //   }
+    // }
     .cancel {
       color: #999;
       height: 55px;
@@ -368,7 +385,7 @@ img {
 
 @keyframes myfirst {
   from {
-    bottom: -182px;
+    bottom: -100px;
   }
   to {
     bottom: 0;
