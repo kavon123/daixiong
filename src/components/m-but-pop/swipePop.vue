@@ -10,36 +10,16 @@
         ref="Swiper"
         v-if="itemCode ==='YG_SHARE_URL'"
       >
-        <swiper-slide class="item">
-          <div class="swipe_img img_1" ref="capture1_YG">
-            <div class="qrcode1" id="qrcode1_YG"></div>
-          </div>
-        </swiper-slide>
-        <swiper-slide class="item">
-          <div class="swipe_img img_2" ref="capture2_YG">
-            <div class="qrcode2" id="qrcode2_YG"></div>
-          </div>
-        </swiper-slide>
-        <swiper-slide class="item">
-          <div class="swipe_img img_3" ref="capture3_YG">
-            <div class="qrcode3" id="qrcode3_YG"></div>
+        <swiper-slide class="item" v-for="(item,index) in listImg_yg" :key="item.itemId">
+          <div class="swipe_img" :style="'background-image: url('+item.attribute1+')'">
+            <div :class="'qrcode_'+index" :id="'qrcode'+index+'_YG'"></div>
           </div>
         </swiper-slide>
       </swiper>
       <swiper @slideChange="onChange" :options="swipertop" class="swipe" ref="Swiper" v-else>
-        <swiper-slide class="item">
-          <div class="swipe_img img_a" ref="capture1_58">
-            <div class="qrcode_a" id="qrcode1_58"></div>
-          </div>
-        </swiper-slide>
-        <swiper-slide class="item">
-          <div class="swipe_img img_b" ref="capture2_58">
-            <div class="qrcode_b" id="qrcode2_58"></div>
-          </div>
-        </swiper-slide>
-        <swiper-slide class="item">
-          <div class="swipe_img img_c" ref="capture3_58">
-            <div class="qrcode_c" id="qrcode3_58"></div>
+        <swiper-slide class="item" v-for="(item,index) in listImg_58" :key="item.itemId">
+          <div class="swipe_img" :style="'background-image: url('+item.attribute1+')'">
+            <div :class="'qrcode58_'+index" :id="'qrcode'+index+'_58'"></div>
           </div>
         </swiper-slide>
       </swiper>
@@ -58,6 +38,7 @@
 </template>
 
 <script>
+import $api from "@/util/api.js";
 import Html2canvas from "html2canvas";
 import { mapGetters } from "vuex";
 import QRCode from "qrcodejs2";
@@ -76,6 +57,8 @@ export default {
   },
   data() {
     return {
+      listImg_58: [],
+      listImg_yg: [],
       swipertop: {
         initialSlide: 0,
         centeredSlides: true,
@@ -91,22 +74,76 @@ export default {
     ...mapGetters(["momentsUrl", "isIOS", "itemCode"])
   },
   mounted() {
+    this.getImg();
     const h = window.screen.height;
     this.height = (h - 667) / 2 + 32;
     if (h >= 812) {
       this.BotHeight = 35 + 45;
     }
-    this.$nextTick(() => {
-      let ids = ["qrcode1_58", "qrcode2_58", "qrcode3_58"];
-      if (this.itemCode === "YG_SHARE_URL") {
-        ids = ["qrcode1_YG", "qrcode2_YG", "qrcode3_YG"];
-      }
-      ids.forEach(item => {
-        this.qrcode(document.getElementById(item), item);
-      });
-    });
   },
   methods: {
+    getImg() {
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        message: "加载中..."
+      });
+      const classCode =
+        this.itemCode === "YG_SHARE_URL"
+          ? "WECHAT_POSTER_YG"
+          : "WECHAT_POSTER_58";
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode },
+          data => {
+            this.getImgReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ classCode })
+        );
+        this.getImgReq(data);
+      }
+    },
+    getImgReq(data) {
+      $api
+        .postRequest("/lookup/searchLookupItem", data)
+        .then(res => {
+          if (res.code === 0) {
+            res.datas.sort((a, b) => a.order - b.order);
+            if (this.itemCode === "YG_SHARE_URL") {
+              this.listImg_yg = res.datas;
+            } else {
+              this.listImg_58 = res.datas;
+            }
+            this.GenerateQrCode();
+          } else {
+            if (res.msg) {
+              this.$toast.fail(res.msg);
+            }
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
+    },
+    GenerateQrCode() {
+      let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
+      if (this.itemCode === "YG_SHARE_URL") {
+        ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
+      }
+      if (!document.getElementById(ids[0])) {
+        setTimeout(() => {
+          this.GenerateQrCode();
+        }, 10);
+      } else {
+        ids.forEach(item => {
+          this.qrcode(document.getElementById(item), item);
+        });
+      }
+    },
     onChange(index) {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
@@ -124,17 +161,20 @@ export default {
         correctLevel: QRCode.CorrectLevel.M,
         text: this.momentsUrl
       });
+      this.$toast.clear();
     },
     fnShare() {
       const _this = this;
-      let refs = ["capture1_58", "capture2_58", "capture3_58"];
+      let ids = ["qrcode0_58", "qrcode1_58", "qrcode2_58"];
       if (this.itemCode === "YG_SHARE_URL") {
-        refs = ["capture1_YG", "capture2_YG", "capture2_YG"];
+        ids = ["qrcode0_YG", "qrcode1_YG", "qrcode2_YG"];
       }
+
       window.pageYOffset = 0;
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
-      const HTML = _this.$refs[refs[_this.activeIndex]];
+
+      const HTML = document.getElementById(ids[_this.activeIndex]);
 
       Html2canvas(HTML, {
         allowTaint: true
@@ -201,66 +241,48 @@ export default {
         background-repeat: no-repeat;
         background-size: cover;
         position: relative;
-        .qrcode1 {
+        .qrcode0 {
           width: 105px;
           height: 105px;
           position: absolute;
           left: 90px;
           top: 286px;
         }
-        .qrcode2 {
+        .qrcode1 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 201px;
           top: 316px;
         }
-        .qrcode3 {
+        .qrcode2 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 18px;
           top: 321px;
         }
-        .qrcode_a {
+        .qrcode58_0 {
           width: 65px;
           height: 65px;
           position: absolute;
           left: 111px;
           top: 318px;
         }
-        .qrcode_b {
+        .qrcode58_1 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 201px;
           top: 322px;
         }
-        .qrcode_c {
+        .qrcode58_2 {
           width: 69px;
           height: 69px;
           position: absolute;
           left: 200px;
           top: 316px;
         }
-      }
-      .img_1 {
-        background-image: url("./swipe1.jpg");
-      }
-      .img_2 {
-        background-image: url("./swipe2.jpg");
-      }
-      .img_3 {
-        background-image: url("./swipe3.jpg");
-      }
-      .img_a {
-        background-image: url("./swipeA.jpg");
-      }
-      .img_b {
-        background-image: url("./swipeB.jpg");
-      }
-      .img_c {
-        background-image: url("./swipeC.jpg");
       }
     }
   }

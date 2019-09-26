@@ -174,7 +174,7 @@ export default {
                 this.butText = "确定";
                 this.auditText = "审核通过，发放奖励";
                 this.describe =
-                  "审核时间不超过24小时，审核通过后，奖励将会发放至您的钱包余额。";
+                  "审核时间不超过48小时，审核通过后可在任务页面手动领取奖励。";
                 break;
             }
           } else {
