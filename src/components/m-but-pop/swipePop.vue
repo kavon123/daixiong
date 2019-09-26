@@ -12,7 +12,7 @@
       >
         <swiper-slide class="item" v-for="(item,index) in listImg_yg" :key="item.itemId">
           <div class="swipe_img" :style="'background-image: url('+item.attribute1+')'">
-            <div :class="'qrcode_'+index" :id="'qrcode'+index+'_YG'"></div>
+            <div :class="'qrcode'+index" :id="'qrcode'+index+'_YG'"></div>
           </div>
         </swiper-slide>
       </swiper>
@@ -155,6 +155,7 @@ export default {
       this.$emit("close", "butPopShow", false);
     },
     qrcode($div, key) {
+      console.log($div);
       let qrcode = new QRCode(key, {
         width: $div.clientWidth,
         height: $div.clientHeight, // 高度
