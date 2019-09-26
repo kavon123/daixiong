@@ -27,19 +27,19 @@
             </div>
             <div class="steps_right">
               <img class="steps_text1" src="./image/steps_text1.png" alt />
-              <div class="steps_prompt">点击分享按钮，分享文案与海报至朋友圈</div>
+              <div class="steps_prompt">点击复制，分享文案至朋友圈</div>
               <div class="copy_text">
                 {{copyText}}
                 <br />
                 {{momentsUrl}}
                 <div class="copy_but" @click="fnCopyText(true)">复制</div>
               </div>
-              <img
+              <!-- <img
                 class="share_but"
                 @click="()=>{swipePop=true ; fnCopyText()}"
                 src="@/views/moments/image/shareBut.png"
                 alt
-              />
+              />-->
             </div>
           </div>
           <div class="steps_group">
@@ -124,7 +124,7 @@ export default {
     //这里存放数据
     return {
       copyText:
-        "58棋牌顶级代理招募中，长按图片识别图中二维码，即可加入58棋牌，领取188元新手红包！",
+        "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
       reward: "",
       resp: {
         status: null,
@@ -412,7 +412,7 @@ export default {
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
       this.copyText =
-        "YG电竞顶级代理招募中，长按图片识别图中二维码，即可加入YG电竞，领取188元新手红包！";
+        "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
     }
     this.fnInfo();
     this.fnGetUrl();
