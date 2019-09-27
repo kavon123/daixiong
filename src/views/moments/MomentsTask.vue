@@ -72,7 +72,8 @@
             <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
           <div class="item_text">
-            <span></span>本任务每天可参与一次，每天0点刷新
+            <span></span>
+            {{itemText}}
           </div>
         </div>
       </div>
@@ -139,7 +140,8 @@ export default {
       active: 0,
       submitText: "提交审核",
       fileList: [{ url: _58IMG }],
-      paddingB: 72
+      paddingB: 72,
+      itemText: "本任务每天可参与一次，每天0点刷新"
     };
   },
   //监听属性 类似于data概念
@@ -414,6 +416,7 @@ export default {
       this.setItemCode("YG_SHARE_URL");
       this.copyText =
         "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+      this.itemText = "本任务每三天可参与一次";
     }
     // this.fnInfo();
     // this.fnGetUrl();
