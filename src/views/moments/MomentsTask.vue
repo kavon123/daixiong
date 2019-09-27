@@ -418,8 +418,8 @@ export default {
         "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
       this.itemText = "本任务每三天可参与一次";
     }
-    // this.fnInfo();
-    // this.fnGetUrl();
+    this.fnInfo();
+    this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
