@@ -10,7 +10,10 @@
     <div class="body">
       <div class="prompt_copy">
         <div class="prompt_content">
-          <p class="fixed_text">分享文案与海报到朋友圈，上传朋友圈截图给客服审核，通过后奖励将发放到账户余额</p>
+          <p class="fixed_text">
+            分享文案与海报到朋友圈，上传朋友圈截图给客服审核，通过后奖励将发放到账户余额
+            <br />分享文案到朋友圈可任意上传图片，广告图除外
+          </p>
           <p class="submit_text" v-if="resp.status==2">
             {{resp.remark}}
             <br />请重新上传截图并提交。
@@ -27,7 +30,7 @@
             </div>
             <div class="steps_right">
               <img class="steps_text1" src="./image/steps_text1.png" alt />
-              <div class="steps_prompt">点击复制，分享文案至朋友圈</div>
+              <div class="steps_prompt">复制后打开微信，分享文案到朋友圈（图片可任意上传）</div>
               <div class="copy_text">
                 {{copyText}}
                 <br />
