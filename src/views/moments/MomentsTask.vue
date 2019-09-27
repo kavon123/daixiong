@@ -11,7 +11,7 @@
       <div class="prompt_copy">
         <div class="prompt_content">
           <p class="fixed_text">分享文案到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励</p>
-          <p class="fixed_text">分享文案到朋友圈可任意上传图片，广告图除外</p>
+          <p class="fixed_text">分享文案到朋友圈可任意上传图片</p>
           <p class="submit_text" v-if="resp.status==2">
             {{resp.remark}}
             <br />请重新上传截图并提交。
@@ -415,8 +415,8 @@ export default {
       this.copyText =
         "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
     }
-    this.fnInfo();
-    this.fnGetUrl();
+    // this.fnInfo();
+    // this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -569,7 +569,7 @@ p {
           .steps_line {
             width: 1px;
             background: #6d5aff;
-            height: 280px;
+            height: 195px;
             margin-top: -2px;
           }
         }
