@@ -10,10 +10,8 @@
     <div class="body">
       <div class="prompt_copy">
         <div class="prompt_content">
-          <p class="fixed_text">
-            分享文案与海报到朋友圈，上传朋友圈截图给客服审核，通过后奖励将发放到账户余额
-            <br />分享文案到朋友圈可任意上传图片，广告图除外
-          </p>
+          <p class="fixed_text">分享文案到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励</p>
+          <p class="fixed_text">分享文案到朋友圈可任意上传图片，广告图除外</p>
           <p class="submit_text" v-if="resp.status==2">
             {{resp.remark}}
             <br />请重新上传截图并提交。
@@ -516,6 +514,10 @@ p {
         font-size: 14px;
         .fixed_text {
           color: #7b73ae;
+          padding-bottom: 15px;
+        }
+        .fixed_text:last-child {
+          padding-bottom: 0;
         }
         .submit_text {
           padding-top: 16px;
