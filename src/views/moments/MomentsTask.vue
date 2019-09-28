@@ -407,7 +407,7 @@ export default {
       android.DX_dismisLoading();
     }
   },
-  mounted() {
+  created() {
     if (this.$route.params.type === "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
