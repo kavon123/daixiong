@@ -210,7 +210,7 @@ p {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  background-image: url("./image/bg.png");
+  background-image: url("./image/58bg.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: top center;

@@ -480,9 +480,9 @@ p {
   background-position: top center;
   background-color: #4c38d8;
   .head {
-    // position: fixed;
-    // background: linear-gradient(to right, #27abf3, #3177f0);
-    // background-color: #4c38d8;
+    position: fixed;
+    background: linear-gradient(to right, #27abf3, #3177f0);
+    background-color: #4c38d8;
     .nav {
       .g_flex;
       width: 100vw;
@@ -574,7 +574,7 @@ p {
           .steps_line {
             width: 1px;
             background: #6d5aff;
-            height: 195px;
+            height: 208px;
             margin-top: -2px;
           }
         }
