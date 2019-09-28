@@ -403,9 +403,6 @@ export default {
     }
   },
   mounted() {
-    if (!this.isIOS) {
-      android.DX_dismisLoading();
-    }
     if (this.$route.params.type === "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
@@ -421,6 +418,9 @@ export default {
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
+    }
+    if (!this.isIOS) {
+      android.DX_dismisLoading();
     }
   }
 };
