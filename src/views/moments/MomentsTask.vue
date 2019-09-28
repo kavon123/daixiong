@@ -125,8 +125,7 @@ export default {
   data() {
     //这里存放数据
     return {
-      copyText:
-        "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！https://dwz.cn/gPgKeoTX",
+      copyText: "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！",
       reward: "",
       resp: {
         status: null,
@@ -416,7 +415,7 @@ export default {
       this.setItemCode("YG_SHARE_URL");
       this.$refs.main.className = "main main2";
       this.copyText =
-        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！https://dwz.cn/d7FPaj4m";
+        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包";
       this.itemText = "本任务每三天可参与一次";
     }
     this.fnInfo();
