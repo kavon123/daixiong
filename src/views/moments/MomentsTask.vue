@@ -1,5 +1,5 @@
 <template>
-  <div class="main" @click="()=>operationPop = false">
+  <div class="main" ref="main" @click="()=>operationPop = false">
     <div class="head">
       <div class="nav">
         <van-icon name="arrow-left" class="icon" @click="fnGoBack" />
@@ -126,7 +126,7 @@ export default {
     //这里存放数据
     return {
       copyText:
-        "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！",
+        "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！https://dwz.cn/gPgKeoTX",
       reward: "",
       resp: {
         status: null,
@@ -408,14 +408,15 @@ export default {
       android.DX_dismisLoading();
     }
   },
-  created() {
+  mounted() {
     if (this.$route.params.type === "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
+      this.$refs.main.className = 'main main2'
       this.copyText =
-        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！";
+        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！https://dwz.cn/d7FPaj4m" ;
       this.itemText = "本任务每三天可参与一次";
     }
     // this.fnInfo();
@@ -473,7 +474,7 @@ p {
 .main {
   width: 100vw;
   overflow: auto;
-  background-image: url("./image/bg.png");
+  background-image: url("./image/58bg.png");
   background-repeat: no-repeat;
   background-size: contain;
   background-position: top center;
@@ -682,6 +683,9 @@ p {
       }
     }
   }
+}
+.main2{
+  background-image: url("./image/ygbg.png");
 }
 .operation {
   .g_flex;
