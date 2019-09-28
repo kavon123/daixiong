@@ -99,7 +99,7 @@ export default {
               return item;
             });
             if (res.datas.totalPage > res.datas.currPage) {
-              this.fngetUserFriend(res.datas.currPage + 1);
+              this.fngetUserFriend(res.datas.currPage + 1, this.platformType);
             }
             this.lists = this.lists.concat(res.datas.infoList);
           } else {

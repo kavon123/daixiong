@@ -73,7 +73,7 @@
           </div>
           <div class="item_text">
             <span></span>
-            {{itemText}}
+            本任务每天可参与一次，每天0点刷新
           </div>
         </div>
       </div>
