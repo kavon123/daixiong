@@ -406,8 +406,6 @@ export default {
     if (!this.isIOS) {
       android.DX_dismisLoading();
     }
-  },
-  created() {
     if (this.$route.params.type === "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
