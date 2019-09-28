@@ -414,13 +414,13 @@ export default {
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
-      this.$refs.main.className = 'main main2'
+      this.$refs.main.className = "main main2";
       this.copyText =
-        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！https://dwz.cn/d7FPaj4m" ;
+        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！https://dwz.cn/d7FPaj4m";
       this.itemText = "本任务每三天可参与一次";
     }
-    // this.fnInfo();
-    // this.fnGetUrl();
+    this.fnInfo();
+    this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -684,7 +684,7 @@ p {
     }
   }
 }
-.main2{
+.main2 {
   background-image: url("./image/ygbg.png");
 }
 .operation {
