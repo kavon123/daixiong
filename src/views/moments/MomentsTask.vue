@@ -126,7 +126,7 @@ export default {
     //这里存放数据
     return {
       copyText:
-        "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
+        "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！",
       reward: "",
       resp: {
         status: null,
@@ -415,11 +415,11 @@ export default {
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
       this.copyText =
-        "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包！";
       this.itemText = "本任务每三天可参与一次";
     }
-    this.fnInfo();
-    this.fnGetUrl();
+    // this.fnInfo();
+    // this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -479,8 +479,9 @@ p {
   background-position: top center;
   background-color: #4c38d8;
   .head {
-    position: fixed;
-    background: linear-gradient(to right, #27abf3, #3177f0);
+    // position: fixed;
+    // background: linear-gradient(to right, #27abf3, #3177f0);
+    // background-color: #4c38d8;
     .nav {
       .g_flex;
       width: 100vw;
