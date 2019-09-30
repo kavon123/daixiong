@@ -35,12 +35,12 @@
                 {{momentsUrl}}
                 <div class="copy_but" @click="fnCopyText(true)">复制</div>
               </div>
-              <!-- <img
+              <img
                 class="share_but"
                 @click="()=>{swipePop=true ; fnCopyText()}"
                 src="@/views/moments/image/shareBut.png"
                 alt
-              />-->
+              />
             </div>
           </div>
           <div class="steps_group">
@@ -572,7 +572,7 @@ p {
           .steps_line {
             width: 1px;
             background: #6d5aff;
-            height: 208px;
+            height: 275px;
             margin-top: -2px;
           }
         }
