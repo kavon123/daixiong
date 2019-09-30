@@ -125,7 +125,8 @@ export default {
   data() {
     //这里存放数据
     return {
-      copyText: "竟然让我捕到金色的鲨鱼！我的天，运气好到爆！试问还有谁！",
+      copyText:
+        "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
       reward: "",
       resp: {
         status: null,
@@ -410,7 +411,7 @@ export default {
       this.setItemCode("YG_SHARE_URL");
       this.$refs.main.className = "main main2";
       this.copyText =
-        "英雄联盟S9全球总决赛【中国IG VS 西班牙G2】，戳开链接支持中国队，领取188元助力红包";
+        "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
       this.itemText = "本任务每三天可参与一次";
     }
     this.fnInfo();
