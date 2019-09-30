@@ -30,7 +30,7 @@
             </div>
             <div class="steps_right">
               <img class="steps_text1" src="./image/steps_text1.png" alt />
-              <div class="steps_prompt">点击分享按钮，截取海报图片分享至朋友圈</div>
+              <div class="steps_prompt">点击分享按钮，截取海报图片，分享文案及截图到朋友圈</div>
               <div class="copy_text">
                 {{copyText}}
                 <br />
