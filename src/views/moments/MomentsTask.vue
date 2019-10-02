@@ -59,7 +59,7 @@
             </div>
           </div>
           <div class="steps_group"
-               v-if="showImgOrVideo == 0">
+               v-if="showImgOrVideo == 1">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -71,14 +71,15 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存视频到相册</div>
-                <video-swiper></video-swiper>
-                <img class="share_but"
+              <video-swiper :videoList=videoList></video-swiper>
+              <img class="share_but"
+                   @click="saveVideo"
                    src="@/views/moments/image/shareBut.png"
                    alt />
             </div>
           </div>
           <div class="steps_group"
-               v-if="showImgOrVideo == 0">
+               v-if="showImgOrVideo == 1">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -90,8 +91,16 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存海报到相册</div>
-              <div class="img-box" @click="()=>{swipePop=true ; fnCopyText()}">
-                <div class="img-item" v-for="(v, k) in imgList" :key="k"></div>
+              <div class="img-box"
+                   @click="()=>{swipePop=true ; fnCopyText()}">
+                <div class="img-item"
+                     v-for="(v, k) in imgList"
+                     :key="k">
+                  <img :src="v.attribute1"
+                       alt="">
+                       <!-- <img src="https://img.niaobaike.com//Picture/2018-06-14/5b223a0354224.jpg"
+                       alt=""> -->
+                </div>
               </div>
               <img class="share_but"
                    src="@/views/moments/image/shareBut.png"
@@ -219,6 +228,7 @@ export default {
   data () {
     //这里存放数据
     return {
+      itemType: "",
       copyText:
         "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
       reward: "",
@@ -238,13 +248,8 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [{
-        url:''
-      },{
-        url:''
-      },{
-        url:''
-      }]
+      imgList: [1,1,1],
+      videoList: []
     };
   },
   //监听属性 类似于data概念
@@ -512,8 +517,8 @@ export default {
         .then(res => {
           if (res.code == 0) {
             let shareType = res.datas.attribute1;
-            alert(shareType)
-            this.showImgOrVideo = shareType;
+            this.showImgOrVideo = shareType;//classCode
+            this.queryImgOrVid(shareType)
           } else {
             this.$toast.fail(res.msg);
           }
@@ -526,7 +531,7 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemCode },
+          { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
           data => {
             this.searchWechatType(data);
           }
@@ -535,23 +540,90 @@ export default {
         const data = android.DX_encryptionRequest(
           JSON.stringify({
             classCode: "WECHAT_PYQ_TASK_TYPE",
-            itemCode: this.itemCode
+            itemCode: this.itemType
           })
         );
         // this.testMsg = data
         this.searchWechatType(data);
       }
+    },
+    queryImgOrVid (shareType) {
+      let classCode
+      if (shareType == "1") {
+        if (this.itemType == 'yg') {
+          classCode = "WECHAT_POSTER_YG"
+        } else if (this.itemType == '58') {
+          classCode = "WECHAT_POSTER_YG"
+        }
+      } else if (shareType == "2") {
+        if (this.itemType == 'yg') {
+          classCode = "WECHAT_PYQ_VIDEO_YG"
+        } else if (this.itemType == '58') {
+          classCode = "WECHAT_PYQ_VIDEO_58"
+        }
+      }
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode: classCode },
+          data => {
+            this.getImgOrVid(data, shareType);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ classCode: classCode })
+        );
+        this.getImgOrVid(data, shareType);
+      }
+    },
+    getImgOrVid (data, shareType) {
+      $api
+        .postRequest("/lookup/searchLookupItem", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.testMsg = res
+            if (shareType == "1") {
+              this.imgList = res.datas
+            }
+            else if (shareType == "2") {
+              this.videoList = res.datas
+            }
+
+          } else {
+            this.$toast.fail(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
+    },
+    saveVideo () {
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "downloadShortVideo",
+          "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4",
+          data => {
+          }
+        );
+      } else {
+        const data = android.downloadShortVideo(
+          "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4"
+
+        );
+      }
     }
   },
   mounted () {
+    this.itemType = this.$route.params.type
     if (this.$route.params.type === "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
+      this.itemType = "yg"
       this.$refs.main.className = "main main2";
-      this.copyText =
-        "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+      "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
       this.itemText = "本任务每三天可参与一次";
     }
     // this.fnInfo();
@@ -777,14 +849,19 @@ p {
             margin: 14px 16px;
           }
         }
-        .img-box{
+        .img-box {
           display: flex;
-          .img-item{
+          .img-item {
             width: 80px;
             height: 120px;
             background: #27abf3;
             margin-left: 15px;
-            &:first-child{
+            img {
+              display: inline-block;
+              width: 100%;
+              height: 100%;
+            }
+            &:first-child {
               margin-left: 0;
             }
           }

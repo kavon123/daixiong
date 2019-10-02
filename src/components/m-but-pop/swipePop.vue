@@ -28,7 +28,7 @@
         <br />
         {{momentsUrl}}
       </div>-->
-      <div class="copy_but">截屏保存海报去分享</div>
+      <div class="copy_but" @click="saveImg">截屏保存海报去分享</div>
       <!-- <div>
         <img class="share_img" src="./shareImg.png" alt @click="fnShare" />
       </div>-->
@@ -166,6 +166,19 @@ export default {
         text: urlArr.join("?")
       });
       this.$toast.clear();
+    },
+    saveImg(){
+      alert("sadasdas")
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "startScreenCapture",
+          "",
+          data => {
+          }
+        );
+      } else {
+        const data = android.startScreenCapture();
+      }
     }
     // fnShare() {
     //   const _this = this;
