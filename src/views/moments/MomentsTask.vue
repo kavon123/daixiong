@@ -413,7 +413,8 @@ export default {
       this.setItemCode("YG_SHARE_URL");
       this.$refs.main.className = "main main2";
       this.copyText =
-        "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+        // "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+        "怎么愉快过国庆长假？来YG电竞领188红包，还能日赚斗金，戳→";
       this.itemText = "本任务每三天可参与一次";
     }
     this.fnInfo();
