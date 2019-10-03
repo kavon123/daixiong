@@ -37,18 +37,19 @@
               <img class="steps_img"
                    src="./image/steps1.png"
                    alt />
-              <div class="steps_line"></div>
+              <div class="steps_line" :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
             </div>
             <div class="steps_right">
               <img class="steps_text1"
                    src="./image/steps_text1.png"
                    alt />
-              <div class="steps_prompt">点击分享按钮，截取海报图片，分享文案及截图到朋友圈</div>
+              <!-- <div class="steps_prompt">点击分享按钮，截取海报图片，分享文案及截图到朋友圈</div> -->
+              <div class="steps_prompt">复制文案，保存海报截图，分享文案及截图到朋友圈</div>
               <div class="copy_text">
                 <!-- {{copyText}} -->
                 <span v-html="copyText"></span>
                 <br />
-                <span>{{momentsUrl}}</span>
+                <span v-if="itemType=='yg'">{{momentsUrl}}</span>
                 <div class="copy_but"
                      @click="fnCopyText(true)">复制</div>
               </div>
@@ -144,17 +145,19 @@
       <div class="stop-act-modal">
         <div class="stop-act-body">
           <div class="body-head">
-            <img src="./image/sorry.png" alt="">
+            <img src="./image/sorry.png"
+                 alt="">
           </div>
           <div class="body-main">
-                          <div class="txt"><b>电竞分享朋友圈任务</b>优化中，</div>
-                            <div class="txt">暂停提交</div>
-                          <div class="txt">您可继续完成分享58棋牌任务</div>
-                        </div>
-            <div class="submit-btn" @click="goto58Task">去完成</div>
+            <div class="txt"><b>YG电竞分享朋友圈任务</b>优化中，暂停提交</div>
+            <div class="txt">您可继续完成分享58棋牌任务</div>
+          </div>
+          <!-- <div class="submit-btn"
+               @click="goto58Task">去完成</div> -->
         </div>
         <div class="stop-act-foot">
-          <div class="act-foot-close" @click="showStopAct=false"></div>
+          <div class="act-foot-close"
+               @click="showStopAct=false"></div>
         </div>
       </div>
     </van-popup>
@@ -181,9 +184,10 @@ export default {
   data () {
     //这里存放数据
     return {
+      itemType: "",
       copyText:
-        // "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
-        "[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【02】戳这里：url</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]",
+        // "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！"
+        "",
       reward: "",
       resp: {
         status: null,
@@ -199,7 +203,8 @@ export default {
       fileList: [{ url: _58IMG }],
       paddingB: 72,
       itemText: "本任务每天可参与一次，每天0点刷新",
-      showStopAct: false
+      showStopAct: false,
+      currentDay: ""
     };
   },
   //监听属性 类似于data概念
@@ -314,7 +319,7 @@ export default {
     },
 
     fnSubmit () {
-      if(this.itemCode == "YG_SHARE_URL"){
+      if (this.itemCode == "YG_SHARE_URL") {
         this.showStopAct = true;
         return
       }
@@ -417,7 +422,12 @@ export default {
         });
     },
     fnCopyText (type) {
-      const copy = this.copyText + this.momentsUrl;
+      var copy;
+      if (this.itemType == "58") {
+        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}\n✅开启你的富贵人生！\n✅加入58棋牌，领取188元新手红包！！\n✅VIP充值100%返利！！\n✅女神与你相约，送送送，每周都送688元！！\n✅实力平台&安全无忧！！\n[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+      } else if (this.itemType == "yg") {
+        copy = this.copyText + this.momentsUrl;
+      }
       if (this.isIOS) {
         this.$bridge.callhandler("DX_copy", copy, data => {
           if (data == 1 && type) {
@@ -456,6 +466,9 @@ export default {
         .then(res => {
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
+            if (this.itemType == "58") {
+              this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+            }
           } else {
             this.$toast.fail(res.msg);
           }
@@ -464,14 +477,15 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    goto58Task(){
-      location.href="http://ifsfg.ruilaisieducation.com/dist1/#/moments/58"
+    goto58Task () {
+      location.href = "http://ifsfg.ruilaisieducation.com/dist1/#/moments/58"
     }
   },
   mounted () {
     var myDate = new Date();
-    var currentDay = myDate.getDate(); 
-    if (this.$route.params.type === "yg") {
+    this.currentDay = myDate.getDate();
+    this.itemType = this.$route.params.type;
+    if (this.$route.params.type == "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
@@ -482,11 +496,11 @@ export default {
         "怎么愉快过国庆长假？来YG电竞领188红包，还能日赚斗金，戳→";
       this.itemText = "本任务每三天可参与一次";
       this.showStopAct = true
-    }else if(this.$route.params.type === "58"){
-      this.copyText =`[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${currentDay}】戳这里：${this.momentsUrl}</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+    } else if (this.$route.params.type == "58") {
+      this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
     }
-    // this.fnInfo();
-    // this.fnGetUrl();
+    this.fnInfo();
+    this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -498,64 +512,64 @@ export default {
 };
 </script>
 <style>
-.van-popup--center{
+.van-popup--center {
   background: rgba(0, 0, 0, 0);
 }
-  .stop-act-modal {
-    width: 265px;
-  }
-    .stop-act-body{
-      background: url('./image/stop_modal.png') no-repeat;
-      background-size: 100% auto;
-      height: 296px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .stop-act-body .body-head{
-      padding-top: 33px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .stop-act-body .body-head img{
-      width: 128px;
-      height: 28px;
-    }
-    .stop-act-body .body-main{
-      margin-top: 70px;
-      width: 190px;
-       height: 55px;
-       color: #443E61;
-       font-size: 13px;
-    }
-    .stop-act-body .body-main .txt{
-      padding-bottom: 3px;
-      letter-spacing: 1px;
-    }
-     .stop-act-body .submit-btn{
-       margin-top: 36px;
-       width: 190px;
-       height: 40px;
-       background: url('./image/btn-prup.png') no-repeat;
-       background-size: 100% 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: aliceblue;
-      font-size: 16px;
-     }
-    .stop-act-foot{
-      display: flex;
-      justify-content: center;
-    }
-    .act-foot-close{
-      width: 32px;
-      height: 32px;
-      background:url('./image/close.png') no-repeat;
-      background-size: 100% 100%;
-      margin-top: 20px;
-    }
+.stop-act-modal {
+  width: 265px;
+}
+.stop-act-body {
+  background: url("./image/stop_modal.png") no-repeat;
+  background-size: 100% auto;
+  height: 255px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stop-act-body .body-head {
+  padding-top: 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stop-act-body .body-head img {
+  width: 128px;
+  height: 28px;
+}
+.stop-act-body .body-main {
+  margin-top: 70px;
+  width: 190px;
+  height: 55px;
+  color: #443e61;
+  font-size: 13px;
+}
+.stop-act-body .body-main .txt {
+  padding-bottom: 3px;
+  letter-spacing: 1px;
+}
+.stop-act-body .submit-btn {
+  margin-top: 36px;
+  width: 190px;
+  height: 40px;
+  background: url("./image/btn-prup.png") no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: aliceblue;
+  font-size: 16px;
+}
+.stop-act-foot {
+  display: flex;
+  justify-content: center;
+}
+.act-foot-close {
+  width: 32px;
+  height: 32px;
+  background: url("./image/close.png") no-repeat;
+  background-size: 100% 100%;
+  margin-top: 20px;
+}
 </style>
 <style lang="less">
 .uploader_img {
@@ -586,7 +600,6 @@ export default {
     }
   }
 }
-
 </style>
 <style lang='less' scoped>
 p {
@@ -704,8 +717,13 @@ p {
           .steps_line {
             width: 1px;
             background: #6d5aff;
-            height: 275px;
             margin-top: -2px;
+            &.line_yg{
+            height: 288px;
+            }
+            &.line_58{
+              height: 390px;
+            }
           }
         }
         .steps_right {

@@ -82,7 +82,7 @@ export default {
   //方法集合
   methods: {
     fnEnsure() {
-      const type = this.taskConfigCode == "SharePoster_58" ? "58 " : "YG";
+      const type = this.taskConfigCode == "SharePoster_58" ? "58" : "yg";
       if (this.data.status != 1) {
         this.$router.push(`/moments/${type}`);
       } else {
