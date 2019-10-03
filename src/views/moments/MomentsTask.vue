@@ -37,7 +37,8 @@
               <img class="steps_img"
                    src="./image/steps1.png"
                    alt />
-              <div class="steps_line" :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
+              <div class="steps_line"
+                   :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
             </div>
             <div class="steps_right">
               <img class="steps_text1"
@@ -479,7 +480,41 @@ export default {
     },
     goto58Task () {
       location.href = "http://ifsfg.ruilaisieducation.com/dist1/#/moments/58"
-    }
+    },
+    preImgData () {
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode: "EXTERNAL_SHARE_URL", itemCode: this.itemCode },
+          data => {
+            this.fnGetUrlReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({
+            classCode: "EXTERNAL_SHARE_URL",
+            itemCode: this.itemCode
+          })
+        );
+        this.fnGetUrlReq(data);
+      }
+    },
+    getImgList (data) {
+      $api
+        .postRequest("/lookup/searchLookupItem", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.testMsg = res
+            this.imgList = res.datas
+          } else {
+            this.$toast.fail(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
+    },
   },
   mounted () {
     var myDate = new Date();
@@ -718,10 +753,10 @@ p {
             width: 1px;
             background: #6d5aff;
             margin-top: -2px;
-            &.line_yg{
-            height: 288px;
+            &.line_yg {
+              height: 288px;
             }
-            &.line_58{
+            &.line_58 {
               height: 390px;
             }
           }
