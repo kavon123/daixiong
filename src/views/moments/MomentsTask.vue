@@ -20,6 +20,7 @@
             分享
             <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励
           </p>
+          <!-- {{testMsg}} -->
           <p class="submit_text"
              v-if="resp.status==2">
             {{resp.remark}}
@@ -54,10 +55,34 @@
                 <div class="copy_but"
                      @click="fnCopyText(true)">复制</div>
               </div>
-              <img class="share_but"
+              <div class="img-tab">
+                <!-- <div class="img-tab-item"
+                :id="'imgBox'+0"
+                   >
+                   <img src="https://img-blog.csdnimg.cn/20190919120249357.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" srcset="">
+                </div> -->
+                <div class="img-tab-item"
+                     :id="'imgBox'+k"
+                     :ref="'imgBox'+k"
+                     v-for="(v,k) in imgList"
+                     :key="k">
+                  <img :src="v.attribute1"
+                       alt="">
+                </div>
+              </div>
+              <!-- <img class="share_but"
                    @click="()=>{swipePop=true ; fnCopyText()}"
                    src="@/views/moments/image/shareBut.png"
+                   alt /> -->
+              <!-- <img class="share_but"
+                   @click="saveImg"
+                   src="@/views/moments/image/shareBut.png"
+                   alt /> -->
+              <img class="share_but"
+                   @click="saveImg"
+                   src="@/views/moments/image/btn-bg1.png"
                    alt />
+
             </div>
           </div>
           <div class="steps_group">
@@ -99,6 +124,10 @@
           <div class="item_text">
             <span></span>
             本任务每天可参与一次，每天0点刷新
+          </div>
+          <div class="item_text">
+            <span></span>
+            仅限上传当日截图，非当日截图不予发放奖励
           </div>
         </div>
       </div>
@@ -172,6 +201,9 @@ import printscreenPop from "@/views/moments/components/printscreenPop.vue";
 import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 import rewardPop from "@/views/moments/components/rewardPop.vue";
+import { getBase64Image, creatImg, getBase64, getReImgBase64 } from "@/util/tools.js"
+import Html2canvas from "html2canvas";
+
 const _58IMG = require("./image/58.jpg");
 const _YGIMG = require("./image/yg.jpg");
 export default {
@@ -205,7 +237,12 @@ export default {
       paddingB: 72,
       itemText: "本任务每天可参与一次，每天0点刷新",
       showStopAct: false,
-      currentDay: ""
+      currentDay: "",
+      currentMon: "",
+      testMsg: "",
+      imgList: [],
+      saveClick: true,
+      cSaveImg: 0
     };
   },
   //监听属性 类似于data概念
@@ -295,7 +332,6 @@ export default {
       $api
         .postRequest("/poster/searchSharePosterTask", data)
         .then(res => {
-          this.$toast.clear();
           if (res.code == 0) {
             this.resp.status = res.datas.status;
             this.resp.remark = res.datas.remark;
@@ -320,10 +356,10 @@ export default {
     },
 
     fnSubmit () {
-      if (this.itemCode == "YG_SHARE_URL") {
-        this.showStopAct = true;
-        return
-      }
+      // if (this.itemCode == "YG_SHARE_URL") {
+      //   this.showStopAct = true;
+      //   return
+      // }
       if (this.submitText == "提交审核") {
         if (this.fileList.length !== 2) {
           this.$toast.fail("请上传截图后提交审核");
@@ -411,6 +447,7 @@ export default {
             this.rewardPop = true;
             this.reward = `+${res.datas}红包券`;
             this.fnInfo();
+            this.$toast.clear();
             setTimeout(() => {
               this.rewardPop = false;
             }, 3000);
@@ -425,7 +462,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}\n✅开启你的富贵人生！\n✅加入58棋牌，领取188元新手红包！！\n✅VIP充值100%返利！！\n✅女神与你相约，送送送，每周都送688元！！\n✅实力平台&安全无忧！！\n[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅加入58棋牌，领取188元新手红包！！`
       } else if (this.itemType == "yg") {
         copy = this.copyText + this.momentsUrl;
       }
@@ -468,7 +505,7 @@ export default {
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
             if (this.itemType == "58") {
-              this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+              this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
             }
           } else {
             this.$toast.fail(res.msg);
@@ -481,32 +518,44 @@ export default {
     goto58Task () {
       location.href = "http://ifsfg.ruilaisieducation.com/dist1/#/moments/58"
     },
-    preImgData () {
+    queryImg (shareType) {
+      let classCode
+      if (shareType == "1") {
+        if (this.itemType == 'yg') {
+          classCode = "WECHAT_POSTER_YG_2"
+        } else if (this.itemType == '58') {
+          classCode = "WECHAT_POSTER_58_2"
+        }
+      } else if (shareType == "2") {
+        if (this.itemType == 'yg') {
+          classCode = "WECHAT_PYQ_VIDEO_YG"
+        } else if (this.itemType == '58') {
+          classCode = "WECHAT_PYQ_VIDEO_58"
+        }
+      }
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode: "EXTERNAL_SHARE_URL", itemCode: this.itemCode },
+          { classCode: classCode },
           data => {
-            this.fnGetUrlReq(data);
+            this.getImgList(data);
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({
-            classCode: "EXTERNAL_SHARE_URL",
-            itemCode: this.itemCode
-          })
+          JSON.stringify({ classCode: classCode })
         );
-        this.fnGetUrlReq(data);
+        this.getImgList(data);
       }
     },
     getImgList (data) {
       $api
-        .postRequest("/lookup/searchLookupItem", data)
+        .postRequest("/external/friend/searchWeChatPoster", data)
         .then(res => {
           if (res.code == 0) {
             this.testMsg = res
             this.imgList = res.datas
+            this.$toast.clear();
           } else {
             this.$toast.fail(res.msg);
           }
@@ -515,10 +564,80 @@ export default {
           this.$toast.fail(err.message);
         });
     },
+    appSaveImg (imgData, k) {
+      // let length = imgList.length
+      // let imgData = imgList[k].attribute2
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_save_share_Image",
+          { type: "save", image: imgData },
+          data => {
+            if (data == 1) {
+              if (k == this.imgList.length - 1) {
+                this.$toast.success("保存成功");
+                this.saveClick = true;
+              }
+            }
+          }
+        );
+      } else {
+        const data = android.DX_save_share_Image(
+          JSON.stringify({
+            type: "save",
+            image: imgData
+          })
+        );
+        if (data == 1) {
+          // this.$toast.success("保存成功");
+          // if(k < length -1){
+          //    this.cSaveImg++
+          //    this.appSaveImg(this.imgList, this.cSaveImg)
+          // }
+          // else if (k == length - 1) {
+          //   this.$toast.success("保存成功");
+          // }
+          if (k == this.imgList.length - 1) {
+            this.$toast.success("保存成功");
+            // this.saveClick = true;
+          }
+        }
+      }
+    },
+    saveImg () {
+      // alert(this.saveClick)
+      // this.$toast.loading({
+      //   duration: 0,
+      //   forbidClick: true, // 禁用背景点击
+      //   message: "中..."
+      // });
+      console.log(this.saveClick)
+      if (!this.saveClick) {
+        this.$toast.success("保存成功！");
+        return
+      }
+      this.saveClick = false;
+      var newLisr = this.imgList.concat()
+      var androdiList = newLisr.reverse();
+      if (this.isIOS) {
+        newLisr.map((v, k) => {
+          this.appSaveImg(v.attribute2, k)
+        })
+      } else {
+        androdiList.map((v, k) => {
+          this.appSaveImg(v.attribute2, k)
+        })
+      }
+      // this.appSaveImg(this.imgList, this.cSaveImg)
+      //  alert(this.saveClick)
+
+    }
   },
   mounted () {
     var myDate = new Date();
+    this.currentMon = myDate.getMonth() + 1;
     this.currentDay = myDate.getDate();
+    this.currentMon = this.currentMon < 10 ? "0" + this.currentMon : this.currentMon
+    this.currentDay = this.currentDay < 10 ? "0" + this.currentDay : this.currentDay
     this.itemType = this.$route.params.type;
     if (this.$route.params.type == "yg") {
       this.fileList[0].url = _YGIMG;
@@ -530,12 +649,13 @@ export default {
         // "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
         "怎么愉快过国庆长假？来YG电竞领188红包，还能日赚斗金，戳→";
       this.itemText = "本任务每三天可参与一次";
-      this.showStopAct = true
+      // this.showStopAct = true
     } else if (this.$route.params.type == "58") {
-      this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentDay}】戳这里：${this.momentsUrl}</br>✅开启你的富贵人生！</br>✅加入58棋牌，领取188元新手红包！！</br>✅VIP充值100%返利！！</br>✅女神与你相约，送送送，每周都送688元！！</br>✅实力平台&安全无忧！！</br>[太阳] 富贵人生 58棋牌帮您来实现~[太阳]`
+      this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳]</br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
     }
     this.fnInfo();
     this.fnGetUrl();
+    this.queryImg(1);
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -754,10 +874,10 @@ p {
             background: #6d5aff;
             margin-top: -2px;
             &.line_yg {
-              height: 288px;
+              height: 480px;
             }
             &.line_58 {
-              height: 390px;
+              height: 480px;
             }
           }
         }
@@ -805,9 +925,25 @@ p {
             margin-top: 15px;
           }
           .share_but {
-            width: 220px;
+            width: 240px;
             height: 60px;
             margin: 14px auto;
+          }
+          .img-tab {
+            margin-left: -5px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 268px;
+            .img-tab-item {
+              width: 83px;
+              height: 83px;
+              margin-left: 5px;
+              margin-top: 5px;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
           }
         }
       }

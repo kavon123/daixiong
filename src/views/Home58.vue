@@ -116,7 +116,7 @@
       <div class="g-best" :style="'height:'+paddingB+'px'">
         <img src="@/assets/images/best.png" @click="fnShowButPop" />
       </div>
-      <footer class="footer">本页面由58棋牌提供</footer>
+      <footer class="footer">本页面由58棋牌提供ss</footer>
     </div>
     <m-58 v-if="generateShow" @close="fnPop" />
     <m-rele-suc v-if="sucShow" :name="oUserinfo.userId" @close="fnPop" />
@@ -184,6 +184,7 @@ export default {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {
+    console.log(this.$route)
     this.fnGetUrl();
     this.fnGetBar();
     this.fngetUserFriend();
