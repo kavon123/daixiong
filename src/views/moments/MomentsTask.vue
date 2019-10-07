@@ -768,28 +768,28 @@ export default {
       // this.appSaveImg(this.imgList, this.cSaveImg)
       //  alert(this.saveClick)
   },
-  mounted () {
+  getCurrentDate(){
     var myDate = new Date();
-    this.currentMon = myDate.getMonth() + 1;
-    this.currentDay = myDate.getDate();
-    this.currentMon = this.currentMon < 10 ? "0" + this.currentMon : this.currentMon
-    this.currentDay = this.currentDay < 10 ? "0" + this.currentDay : this.currentDay
+    var currentMon = myDate.getMonth() + 1;
+    var currentDay = myDate.getDate();
+    this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon
+    this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay
+  },
+  mounted () {
     this.itemType = this.$route.params.type;
-    if (this.$route.params.type == "yg") {
+    if (this.itemType == "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
-      this.itemType = "yg"
       this.$refs.main.className = "main main2";
       this.copyText = "";
-        // "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
-        // "怎么愉快过国庆长假？来YG电竞领188红包，还能日赚斗金，戳→";
       this.itemText = "本任务每三天可参与一次";
       // this.showStopAct = true
     } else if (this.$route.params.type == "58") {
       this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳]</br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
     }
+    this.getCurrentDate();
     this.fnShareType();
     this.fnInfo();
     this.fnGetUrl();

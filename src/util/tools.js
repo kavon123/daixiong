@@ -1,3 +1,5 @@
+import store from './../store/index.js'
+
 export function getBase64Image(img) {
     img.crossOrigin = "*";
     var canvas = document.createElement("canvas");
@@ -8,10 +10,10 @@ export function getBase64Image(img) {
     var dataURL = canvas.toDataURL("image/png"); // 可选其他值 image/jpeg
     return dataURL;
 }
-export function getBase64(url, callback,k) {
+export function getBase64(url, callback, k) {
     //通过构造函数来创建的 img 实例，在赋予 src 值后就会立刻下载图片，相比 createElement() 创建 <img> 省去了 append()，也就避免了文档冗余和污染
     var Img = new Image(),
-    dataURL = '';
+        dataURL = '';
     Img.src = url + '?v=' + Math.random();
     Img.setAttribute('crossorigin', 'anonymous');
     // Img.crossOrigin = '';
@@ -27,7 +29,7 @@ export function getBase64(url, callback,k) {
         dataURL = canvas.toDataURL('image/png'); //转换图片为dataURL
         console.log("转换王朝")
         console.log(dataURL)
-        callback ? callback(dataURL,k) : null; //调用回调函数
+        callback ? callback(dataURL, k) : null; //调用回调函数
     };
 }
 export function getReImgBase64(img) {
@@ -49,4 +51,18 @@ export function getReImgBase64(img) {
             resolve(getBase64Image(image)); //将base64传给done上传处理
         }
     });
+}
+export function callAppMethod(param, callback) {
+    if (store.getters.isIOS) {
+        this.$bridge.callhandler(param,
+            data => {
+                callback(data);
+            }
+        );
+    } else {
+        const data = android.DX_encryptionRequest(
+            JSON.stringify(param)
+        );
+        callback(data);
+    }
 }
