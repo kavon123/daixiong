@@ -124,6 +124,7 @@ export default {
   },
   created() {
     this.fnBest(false);
+    console.log(this.$route)
   },
   methods: {
     ...mapMutations({

@@ -11,6 +11,7 @@
       >
         <swiper-slide class="item" v-for="(item,index) in listImg_yg" :key="item.itemId">
           <div class="swipe_img" :style="'background-image: url('+item.attribute1+')'">
+            <img :src="item.attribute1" alt="">
             <div :class="'qrcode_'+index" :id="'qrcode'+index+'_YG'"></div>
           </div>
         </swiper-slide>
@@ -18,11 +19,12 @@
       <swiper @slideChange="onChange" class="swipe" ref="Swiper" :options="swipertop" v-else>
         <swiper-slide class="item" v-for="(item,index) in listImg_58" :key="item.itemId">
           <div class="swipe_img" :style="'background-image: url('+item.attribute1+')'">
+            <img :src="item.attribute1" alt="">
             <div :class="'qrcode58_'+index" :id="'qrcode'+index+'_58'"></div>
           </div>
         </swiper-slide>
       </swiper>
-      <div class="tishi">截屏海报去分享</div>
+      <div class="tishi">截屏海报去分享{{testData}}</div>
       <div class="choose" :style="'height:'+height+'px;'">
         <div class="title" @click="fnBook">分享至到通讯录</div>
         <!-- <div class="items">
@@ -67,6 +69,7 @@ import QRCode from "qrcodejs2";
 export default {
   data() {
     return {
+      testData:"",
       listImg_58: [],
       listImg_yg: [],
       swipertop: {
@@ -121,8 +124,12 @@ export default {
             res.datas.sort((a, b) => a.order - b.order);
             if (this.platformType === 2) {
               this.listImg_yg = res.datas;
+               console.log("this.listImg_yg")
+            console.log(this.listImg_yg)
             } else {
               this.listImg_58 = res.datas;
+              console.log("this.listImg_58")
+            console.log(this.listImg_58)
             }
             this.GenerateQrCode();
           } else {

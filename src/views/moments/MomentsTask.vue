@@ -20,7 +20,7 @@
             分享
             <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励
           </p>
-          <p>{{testMsg}}</p>
+          <!-- {{testMsg}} -->
           <p class="submit_text"
              v-if="resp.status==2">
             {{resp.remark}}
@@ -38,24 +38,54 @@
               <img class="steps_img"
                    src="./image/steps1.png"
                    alt />
-              <div class="steps_line line_1"></div>
+              <div class="steps_line"
+                   :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
             </div>
             <div class="steps_right">
               <img class="steps_text1"
                    src="./image/steps_text1.png"
                    alt />
               <!-- <div class="steps_prompt">点击分享按钮，截取海报图片，分享文案及截图到朋友圈</div> -->
-              <div class="steps_prompt">复制文案</div>
+              <div class="steps_prompt">复制文案，保存海报截图，分享文案及截图到朋友圈</div>
               <div class="copy_text">
-                {{copyText}}
-                <br />
-                {{momentsUrl}}
-                <!-- <div class="copy_but" @click="fnCopyText(true)">复制</div> -->
+                <!-- {{copyText}} -->
+                <span v-html="copyText"></span>
+                <!-- <span v-if="itemType=='yg'">{{momentsUrl}}</span> -->
+                <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
+                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
+                  ✅加入YG电竞，领取188元新手红包！！ <br>
+                </span>
+                <div class="copy_but"
+                     @click="fnCopyText(true)">复制</div>
               </div>
-              <img class="share_but"
+              <div class="img-tab">
+                <!-- <div class="img-tab-item"
+                :id="'imgBox'+0"
+                   >
+                   <img src="https://img-blog.csdnimg.cn/20190919120249357.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" srcset="">
+                </div> -->
+                <div class="img-tab-item"
+                     :id="'imgBox'+k"
+                     :ref="'imgBox'+k"
+                     v-for="(v,k) in imgList"
+                     :key="k">
+                  <img :src="v.attribute1"
+                       alt="">
+                </div>
+              </div>
+              <!-- <img class="share_but"
                    @click="()=>{swipePop=true ; fnCopyText()}"
                    src="@/views/moments/image/shareBut.png"
+                   alt /> -->
+              <!-- <img class="share_but"
+                   @click="saveImg"
+                   src="@/views/moments/image/shareBut.png"
+                   alt /> -->
+              <img class="share_but"
+                   @click="saveImg"
+                   src="@/views/moments/image/btn-bg1.png"
                    alt />
+
             </div>
           </div>
           <div class="steps_group"
@@ -163,6 +193,10 @@
             <span></span>
             本任务每天可参与一次，每天0点刷新
           </div>
+          <div class="item_text">
+            <span></span>
+            仅限上传当日截图，非当日截图不予发放奖励
+          </div>
         </div>
       </div>
     </div>
@@ -202,6 +236,29 @@
                   @determine="fnDetermine"></fallback-pop>
     <printscreenPop v-if="printscreenPop"
                     :closeFn="()=>{printscreenPop=false}"></printscreenPop>
+    <van-popup v-model="showStopAct"
+               overlay-class="modal-stop"
+               closeable
+               close-icon-position="top-left">
+      <div class="stop-act-modal">
+        <div class="stop-act-body">
+          <div class="body-head">
+            <img src="./image/sorry.png"
+                 alt="">
+          </div>
+          <div class="body-main">
+            <div class="txt"><b>YG电竞分享朋友圈任务</b>优化中，暂停提交</div>
+            <div class="txt">您可继续完成分享58棋牌任务</div>
+          </div>
+          <!-- <div class="submit-btn"
+               @click="goto58Task">去完成</div> -->
+        </div>
+        <div class="stop-act-foot">
+          <div class="act-foot-close"
+               @click="showStopAct=false"></div>
+        </div>
+      </div>
+    </van-popup>
   </div>
 </template>
 
@@ -213,6 +270,8 @@ import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 import rewardPop from "@/views/moments/components/rewardPop.vue";
 import videoSwiper from "@/views/moments/components/videoSwiper.vue";
+import { getBase64Image, creatImg, getBase64, getReImgBase64 } from "@/util/tools.js"
+import Html2canvas from "html2canvas";
 
 const _58IMG = require("./image/58.jpg");
 const _YGIMG = require("./image/yg.jpg");
@@ -230,7 +289,8 @@ export default {
     return {
       itemType: "",
       copyText:
-        "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！",
+        // "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！"
+        "",
       reward: "",
       resp: {
         status: null,
@@ -249,7 +309,13 @@ export default {
       showImgOrVideo: 0,
       testMsg: "",
       imgList: [1,1,1],
-      videoList: []
+      videoList: [],
+      showStopAct: false,
+      currentDay: "",
+      currentMon: "",
+      imgList: [],
+      saveClick: true,
+      cSaveImg: 0
     };
   },
   //监听属性 类似于data概念
@@ -339,7 +405,6 @@ export default {
       $api
         .postRequest("/poster/searchSharePosterTask", data)
         .then(res => {
-          this.$toast.clear();
           if (res.code == 0) {
             this.resp.status = res.datas.status;
             this.resp.remark = res.datas.remark;
@@ -364,6 +429,10 @@ export default {
     },
 
     fnSubmit () {
+      // if (this.itemCode == "YG_SHARE_URL") {
+      //   this.showStopAct = true;
+      //   return
+      // }
       if (this.submitText == "提交审核") {
         if (this.fileList.length !== 2) {
           this.$toast.fail("请上传截图后提交审核");
@@ -451,6 +520,7 @@ export default {
             this.rewardPop = true;
             this.reward = `+${res.datas}红包券`;
             this.fnInfo();
+            this.$toast.clear();
             setTimeout(() => {
               this.rewardPop = false;
             }, 3000);
@@ -463,7 +533,12 @@ export default {
         });
     },
     fnCopyText (type) {
-      const copy = this.copyText + this.momentsUrl;
+      var copy;
+      if (this.itemType == "58") {
+        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅加入58棋牌，领取188元新手红包！！`
+      } else if (this.itemType == "yg") {
+        copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
+      }
       if (this.isIOS) {
         this.$bridge.callhandler("DX_copy", copy, data => {
           if (data == 1 && type) {
@@ -503,6 +578,9 @@ export default {
         .then(res => {
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
+            if (this.itemType == "58") {
+              this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
+            }
           } else {
             this.$toast.fail(res.msg);
           }
@@ -589,7 +667,17 @@ export default {
             else if (shareType == "2") {
               this.videoList = res.datas
             }
-
+          }
+        })
+    },
+    getImgList (data) {
+      $api
+        .postRequest("/external/friend/searchWeChatPoster", data)
+        .then(res => {
+          if (res.code == 0) {
+            this.testMsg = res
+            this.imgList = res.datas
+            this.$toast.clear();
           } else {
             this.$toast.fail(res.msg);
           }
@@ -614,21 +702,98 @@ export default {
       }
     }
   },
+    appSaveImg (imgData, k) {
+      // let length = imgList.length
+      // let imgData = imgList[k].attribute2
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_save_share_Image",
+          { type: "save", image: imgData },
+          data => {
+            if (data == 1) {
+              if (k == this.imgList.length - 1) {
+                this.$toast.success("保存成功");
+                this.saveClick = true;
+              }
+            }
+          }
+        );
+      } else {
+        const data = android.DX_save_share_Image(
+          JSON.stringify({
+            type: "save",
+            image: imgData
+          })
+        );
+        if (data == 1) {
+          // this.$toast.success("保存成功");
+          // if(k < length -1){
+          //    this.cSaveImg++
+          //    this.appSaveImg(this.imgList, this.cSaveImg)
+          // }
+          // else if (k == length - 1) {
+          //   this.$toast.success("保存成功");
+          // }
+          if (k == this.imgList.length - 1) {
+            this.$toast.success("保存成功");
+            // this.saveClick = true;
+          }
+        }
+      }
+    },
+    saveImg () {
+      // alert(this.saveClick)
+      // this.$toast.loading({
+      //   duration: 0,
+      //   forbidClick: true, // 禁用背景点击
+      //   message: "中..."
+      // });
+      console.log(this.saveClick)
+      if (!this.saveClick) {
+        this.$toast.success("保存成功！");
+        return
+      }
+      this.saveClick = false;
+      var newLisr = this.imgList.concat()
+      var androdiList = newLisr.reverse();
+      if (this.isIOS) {
+        newLisr.map((v, k) => {
+          this.appSaveImg(v.attribute2, k)
+        })
+      } else {
+        androdiList.map((v, k) => {
+          this.appSaveImg(v.attribute2, k)
+        })
+      }
+      // this.appSaveImg(this.imgList, this.cSaveImg)
+      //  alert(this.saveClick)
+  },
   mounted () {
-    this.itemType = this.$route.params.type
-    if (this.$route.params.type === "yg") {
+    var myDate = new Date();
+    this.currentMon = myDate.getMonth() + 1;
+    this.currentDay = myDate.getDate();
+    this.currentMon = this.currentMon < 10 ? "0" + this.currentMon : this.currentMon
+    this.currentDay = this.currentDay < 10 ? "0" + this.currentDay : this.currentDay
+    this.itemType = this.$route.params.type;
+    if (this.$route.params.type == "yg") {
       this.fileList[0].url = _YGIMG;
       this.setPlatformType(2);
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
       this.itemType = "yg"
       this.$refs.main.className = "main main2";
-      "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+      this.copyText = "";
+        // "YG电竞顶级代理招募中，打开链接，即可加入YG电竞，领取188元新手红包！";
+        // "怎么愉快过国庆长假？来YG电竞领188红包，还能日赚斗金，戳→";
       this.itemText = "本任务每三天可参与一次";
+      // this.showStopAct = true
+    } else if (this.$route.params.type == "58") {
+      this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳]</br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
     }
-    // this.fnInfo();
-    // this.fnGetUrl();
     this.fnShareType();
+    this.fnInfo();
+    this.fnGetUrl();
+    this.queryImg(1);
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -639,6 +804,66 @@ export default {
   }
 };
 </script>
+<style>
+.van-popup--center {
+  background: rgba(0, 0, 0, 0);
+}
+.stop-act-modal {
+  width: 265px;
+}
+.stop-act-body {
+  background: url("./image/stop_modal.png") no-repeat;
+  background-size: 100% auto;
+  height: 255px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.stop-act-body .body-head {
+  padding-top: 33px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.stop-act-body .body-head img {
+  width: 128px;
+  height: 28px;
+}
+.stop-act-body .body-main {
+  margin-top: 70px;
+  width: 190px;
+  height: 55px;
+  color: #443e61;
+  font-size: 13px;
+}
+.stop-act-body .body-main .txt {
+  padding-bottom: 3px;
+  letter-spacing: 1px;
+}
+.stop-act-body .submit-btn {
+  margin-top: 36px;
+  width: 190px;
+  height: 40px;
+  background: url("./image/btn-prup.png") no-repeat;
+  background-size: 100% 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: aliceblue;
+  font-size: 16px;
+}
+.stop-act-foot {
+  display: flex;
+  justify-content: center;
+}
+.act-foot-close {
+  width: 32px;
+  height: 32px;
+  background: url("./image/close.png") no-repeat;
+  background-size: 100% 100%;
+  margin-top: 20px;
+}
+</style>
 <style lang="less">
 .uploader_img {
   position: relative;
@@ -798,6 +1023,12 @@ p {
             &.line_4 {
               height: 220px;
             }
+            &.line_yg {
+              height: 480px;
+            }
+            &.line_58 {
+              height: 480px;
+            }
           }
         }
         .steps_right {
@@ -844,9 +1075,25 @@ p {
             margin-top: 15px;
           }
           .share_but {
-            width: 220px;
+            width: 240px;
             height: 60px;
             margin: 14px 16px;
+          }
+          .img-tab {
+            margin-left: -5px;
+            display: flex;
+            flex-wrap: wrap;
+            width: 268px;
+            .img-tab-item {
+              width: 83px;
+              height: 83px;
+              margin-left: 5px;
+              margin-top: 5px;
+              img {
+                width: 100%;
+                height: 100%;
+              }
+            }
           }
         }
         .img-box {

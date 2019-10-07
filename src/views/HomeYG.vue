@@ -183,6 +183,7 @@ export default {
     };
   },
   created() {
+    console.log(this.$route)
     this.fngetUserFriend();
     this.fnInfo();
     this.setPlatformType(2);
@@ -268,10 +269,12 @@ export default {
         loadingType: "spinner"
       });
       if (this.isIOS) {
+        console.log("开始向苹果发送数据")
         this.$bridge.callhandler(
           "DX_encryptionRequest",
           { loginType: 2 },
           data => {
+            console.log("收到请求")
             this.fnInfoReq(data);
           }
         );
