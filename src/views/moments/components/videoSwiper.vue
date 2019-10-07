@@ -1,15 +1,11 @@
 <template>
   <div class="swpier-video">
     <swiper :options="swiperOpt">
-      <swiper-slide class="swiper-item"
+      <swiper-slide class="swp-item"
                     v-for="(item,index) in listVideo"
                     :key="index">
-        <!-- <div class="swipe_video" :style="'background-image: url('+item.attribute1+')'">
-            <div :class="'qrcode'+index" :id="'qrcode'+index+'_YG'"></div>
-          </div> -->
-        <video width="320"
-               height="240"
-               controls>
+        <video width="215"
+               height="114">
           <source src="http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4"
                   type="video/mp4">
         </video>
@@ -24,9 +20,16 @@ export default {
     return {
       swiperOpt: {
         initialSlide: 0,
-        spaceBetween: 16
+        // autoHeight: true,
+        roundLengths : true,
+        slidesPerView: 1.28,
+         spaceBetween: 10,
       },
       listVideo: [{
+        itemId: 1,
+        url: "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4"
+      },
+      {
         itemId: 1,
         url: "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4"
       },
@@ -47,10 +50,16 @@ export default {
 
 <style lang='less' scoped>
 .swpier-video {
-  .swiper-item {
-    // width: 200px;
-    // height: 100px;
+  width: 100%;
+  .swp-item {
+    height: 117px;
     background: red;
+    &:first-child{
+      background: blue;
+    }
+    &:last-child{
+      background: green;
+    }
   }
 }
 </style>

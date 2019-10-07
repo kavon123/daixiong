@@ -60,9 +60,11 @@ export function callAppMethod(param, callback) {
             }
         );
     } else {
-        const data = android.DX_encryptionRequest(
-            JSON.stringify(param)
-        );
-        callback(data);
+        if(window.android){
+            const data = android.DX_encryptionRequest(
+                JSON.stringify(param)
+            );
+            callback(data);
+        }
     }
 }

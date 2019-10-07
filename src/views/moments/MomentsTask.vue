@@ -33,7 +33,8 @@
              src="./image/stepsTitle.png"
              alt />
         <div class="steps_mian">
-          <div class="steps_group">
+          <div class="steps_group"
+               v-if="showImgOrVideo == 0">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps1.png"
@@ -88,8 +89,8 @@
 
             </div>
           </div>
-          <div class="steps_group"
-               v-if="showImgOrVideo == 1">
+          <div class="steps_group"  style="padding-right:0"
+               v-if="showImgOrVideo == 0">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -104,12 +105,12 @@
               <video-swiper :videoList=videoList></video-swiper>
               <img class="share_but"
                    @click="saveVideo"
-                   src="@/views/moments/image/shareBut.png"
+                   src="@/views/moments/image/btn-bg1.png"
                    alt />
             </div>
           </div>
           <div class="steps_group"
-               v-if="showImgOrVideo == 1">
+               v-if="showImgOrVideo == 0">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -126,14 +127,15 @@
                 <div class="img-item"
                      v-for="(v, k) in imgList"
                      :key="k">
-                  <img :src="v.attribute1"
-                       alt="">
-                       <!-- <img src="https://img.niaobaike.com//Picture/2018-06-14/5b223a0354224.jpg"
+                  <!-- <img :src="v.attribute1"
                        alt=""> -->
+                  <img src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
+                       alt="">
                 </div>
               </div>
               <img class="share_but"
-                   src="@/views/moments/image/shareBut.png"
+                   src="@/views/moments/image/btn-bg1.png"
+                   @click="saveImg"
                    alt />
             </div>
           </div>
@@ -270,7 +272,7 @@ import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 import rewardPop from "@/views/moments/components/rewardPop.vue";
 import videoSwiper from "@/views/moments/components/videoSwiper.vue";
-import { getBase64Image, creatImg, getBase64, getReImgBase64 } from "@/util/tools.js"
+import { getBase64Image, creatImg, getBase64, getReImgBase64, callAppMethod } from "@/util/tools.js"
 import Html2canvas from "html2canvas";
 
 const _58IMG = require("./image/58.jpg");
@@ -308,12 +310,11 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1,1,1],
+      imgList: [1, 1, 1,1,1,],
       videoList: [],
       showStopAct: false,
       currentDay: "",
       currentMon: "",
-      imgList: [],
       saveClick: true,
       cSaveImg: 0
     };
@@ -589,6 +590,29 @@ export default {
           this.$toast.fail(err.message);
         });
     },
+    getImgOrVid (data, shareType) {
+      let reqUrl;
+      if (shareType == "1") {
+        reqUrl = "/external/friend/searchWeChatPoster"
+      } else if (shareType == "2") {
+        reqUrl = "/lookup/searchLookupItem"
+      }
+      $api
+        .postRequest(reqUrl, data)
+        .then(res => {
+          if (res.code == 0) {
+            this.testMsg = res
+            this.videoList = res.datas
+            this.imgList = res.datas
+            this.$toast.clear();
+          } else {
+            this.$toast.fail(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
+    },
     searchWechatType (data) {
       $api
         .postRequest("/lookup/searchWechatPyqTaskType", data)
@@ -606,24 +630,26 @@ export default {
         });
     },
     fnShareType () {
-      if (this.isIOS) {
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
-          data => {
-            this.searchWechatType(data);
-          }
-        );
-      } else {
-        const data = android.DX_encryptionRequest(
-          JSON.stringify({
-            classCode: "WECHAT_PYQ_TASK_TYPE",
-            itemCode: this.itemType
-          })
-        );
-        // this.testMsg = data
-        this.searchWechatType(data);
-      }
+      let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
+      callAppMethod(appParam, this.searchWechatType)
+      // if (this.isIOS) {
+      //   this.$bridge.callhandler(
+      //     "DX_encryptionRequest",
+      //     { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
+      //     data => {
+      //       this.searchWechatType(data);
+      //     }
+      //   );
+      // } else {
+      //   const data = android.DX_encryptionRequest(
+      //     JSON.stringify({
+      //       classCode: "WECHAT_PYQ_TASK_TYPE",
+      //       itemCode: this.itemType
+      //     })
+      //   );
+      //   // this.testMsg = data
+      //   this.searchWechatType(data);
+      // }
     },
     queryImgOrVid (shareType) {
       let classCode
@@ -655,37 +681,6 @@ export default {
         this.getImgOrVid(data, shareType);
       }
     },
-    getImgOrVid (data, shareType) {
-      $api
-        .postRequest("/lookup/searchLookupItem", data)
-        .then(res => {
-          if (res.code == 0) {
-            this.testMsg = res
-            if (shareType == "1") {
-              this.imgList = res.datas
-            }
-            else if (shareType == "2") {
-              this.videoList = res.datas
-            }
-          }
-        })
-    },
-    getImgList (data) {
-      $api
-        .postRequest("/external/friend/searchWeChatPoster", data)
-        .then(res => {
-          if (res.code == 0) {
-            this.testMsg = res
-            this.imgList = res.datas
-            this.$toast.clear();
-          } else {
-            this.$toast.fail(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast.fail(err.message);
-        });
-    },
     saveVideo () {
       if (this.isIOS) {
         this.$bridge.callhandler(
@@ -700,8 +695,7 @@ export default {
 
         );
       }
-    }
-  },
+    },
     appSaveImg (imgData, k) {
       // let length = imgList.length
       // let imgData = imgList[k].attribute2
@@ -767,13 +761,14 @@ export default {
       }
       // this.appSaveImg(this.imgList, this.cSaveImg)
       //  alert(this.saveClick)
-  },
-  getCurrentDate(){
-    var myDate = new Date();
-    var currentMon = myDate.getMonth() + 1;
-    var currentDay = myDate.getDate();
-    this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon
-    this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay
+    },
+    getCurrentDate () {
+      var myDate = new Date();
+      var currentMon = myDate.getMonth() + 1;
+      var currentDay = myDate.getDate();
+      this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon
+      this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay
+    },
   },
   mounted () {
     this.itemType = this.$route.params.type;
@@ -791,9 +786,8 @@ export default {
     }
     this.getCurrentDate();
     this.fnShareType();
-    this.fnInfo();
-    this.fnGetUrl();
-    this.queryImg(1);
+    // this.fnInfo();
+    // this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -978,7 +972,7 @@ p {
         margin-top: -12px;
       }
       .steps_mian {
-        padding: 14px;
+        padding: 14px 0 14px 14px;
         width: 100%;
         .item_text {
           font-size: 14px;
@@ -997,6 +991,7 @@ p {
 
       .steps_group {
         width: 100%;
+        padding-right: 14px;
         .g_flex;
         .steps_left {
           width: 20px;
