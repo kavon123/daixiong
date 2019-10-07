@@ -50,7 +50,6 @@
               <div class="copy_text">
                 <!-- {{copyText}} -->
                 <span v-html="copyText"></span>
-                <br />
                 <!-- <span v-if="itemType=='yg'">{{momentsUrl}}</span> -->
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
