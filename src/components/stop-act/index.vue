@@ -7,8 +7,8 @@
                  alt="">
           </div>
           <div class="body-main">
-            <div class="txt"><b>YG电竞分享朋友圈任务</b>优化中，暂停提交</div>
-            <div class="txt">您可继续完成分享58棋牌任务</div>
+            <div class="txt"><b>YG电竞推广员招募任务</b>优化中，暂不开放，已完成任务的用户可在此页面正常提现</div>
+            <div class="txt">建议您前往完成<b> 58棋牌代理招募任务</b></div>
           </div>
           <!-- <div class="submit-btn"
                @click="goto58Task">去完成</div> -->
@@ -68,7 +68,7 @@ export default {
   height: 28px;
 }
 .stop-act-body .body-main {
-  margin-top: 70px;
+  margin-top: 60px;
   width: 190px;
   height: 55px;
   color: #443e61;
