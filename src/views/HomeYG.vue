@@ -182,7 +182,7 @@ export default {
       totalSize: 0,
       lists: [],
       paddingB: 72,
-      showStopAct:true
+      showStopAct:false
     };
   },
   created() {

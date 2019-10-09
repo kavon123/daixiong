@@ -31,7 +31,7 @@ export default {
   props:{
     showStopAct:{
       type:Boolean,
-      default:true
+      default:false
     }
   },
   methods:{
