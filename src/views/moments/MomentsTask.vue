@@ -18,7 +18,7 @@
         <div class="prompt_content">
           <p class="fixed_text">
             分享
-            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励
+             <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red" v-if="itemType=='58'">分享文案领3元，每三日可领取一次。</span> 
           </p>
           <!-- {{testMsg}} -->
           <p class="submit_text"
@@ -124,9 +124,12 @@
           <div class="item_text">
             <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
-          <div class="item_text">
-            <span></span>
-            本任务每天可参与一次，每天0点刷新
+          <div v-if="itemType=='yg'" class="item_text">
+            <span></span>本任务每天可参与一次，每天0点刷新
+          </div>
+          <div class="item_text" v-if="itemType=='58'">
+            <span></span>本任务每三日可领取一次，第四日零点刷新<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;如1月1日提交审核，需在1月4日做第二次提交
           </div>
           <div class="item_text">
             <span></span>
