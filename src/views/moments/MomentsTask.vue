@@ -18,9 +18,8 @@
         <div class="prompt_content">
           <p class="fixed_text">
             分享
-            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励
+            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red" v-if="itemType=='58'">分享文案领3元，每三日可领取一次。</span> 
           </p>
-          <!-- {{testMsg}} -->
           <p class="submit_text"
              v-if="resp.status==2">
             {{resp.remark}}
@@ -33,8 +32,7 @@
              src="./image/stepsTitle.png"
              alt />
         <div class="steps_mian">
-          <div class="steps_group"
-               v-if="showImgOrVideo == 0">
+          <div class="steps_group">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps1.png"
@@ -46,12 +44,12 @@
               <img class="steps_text1"
                    src="./image/steps_text1.png"
                    alt />
-              <!-- <div class="steps_prompt">点击分享按钮，截取海报图片，分享文案及截图到朋友圈</div> -->
-              <div class="steps_prompt">复制文案，保存海报截图，分享文案及截图到朋友圈</div>
+              <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <!-- {{copyText}} -->
-                <span v-html="copyText"></span>
-                <!-- <span v-if="itemType=='yg'">{{momentsUrl}}</span> -->
+                <span v-if="itemType=='58'">[太阳] 58棋牌顶级代理招募中[太阳] <br>
+                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
+                  ✅加入58棋牌，领取188元新手红包！！ <br>
+                </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
                   ✅加入YG电竞，领取188元新手红包！！ <br>
@@ -59,38 +57,15 @@
                 <div class="copy_but"
                      @click="fnCopyText(true)">复制</div>
               </div>
-              <div class="img-tab">
-                <!-- <div class="img-tab-item"
-                :id="'imgBox'+0"
-                   >
-                   <img src="https://img-blog.csdnimg.cn/20190919120249357.jpg?x-oss-process=image/resize,m_fixed,h_64,w_64" alt="" srcset="">
-                </div> -->
-                <div class="img-tab-item"
-                     :id="'imgBox'+k"
-                     :ref="'imgBox'+k"
-                     v-for="(v,k) in imgList"
-                     :key="k">
-                  <img :src="v.attribute1"
-                       alt="">
-                </div>
-              </div>
               <!-- <img class="share_but"
-                   @click="()=>{swipePop=true ; fnCopyText()}"
-                   src="@/views/moments/image/shareBut.png"
-                   alt /> -->
-              <!-- <img class="share_but"
-                   @click="saveImg"
-                   src="@/views/moments/image/shareBut.png"
-                   alt /> -->
-              <img class="share_but"
                    @click="saveImg"
                    src="@/views/moments/image/btn-bg1.png"
-                   alt />
-
+                   alt /> -->
             </div>
           </div>
-          <div class="steps_group"  style="padding-right:0"
-               v-if="showImgOrVideo == 0">
+          <div class="steps_group"
+               style="padding-right:0"
+               v-if="showImgOrVideo == 2">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -102,7 +77,9 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存视频到相册</div>
-              <video-swiper :videoList=videoList></video-swiper>
+              <video-swiper v-if="videoHasData" :videoList="videoList"
+              :videoHasData="videoHasData"
+                            @slideChangeEnd="slideChangeEnd"></video-swiper>
               <img class="share_but"
                    @click="saveVideo"
                    src="@/views/moments/image/btn-bg1.png"
@@ -110,7 +87,7 @@
             </div>
           </div>
           <div class="steps_group"
-               v-if="showImgOrVideo == 0">
+               v-if="showImgOrVideo == 1">
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -122,14 +99,24 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存海报到相册</div>
-              <div class="img-box"
+              <!-- <div class="img-box"
                    @click="()=>{swipePop=true ; fnCopyText()}">
                 <div class="img-item"
                      v-for="(v, k) in imgList"
                      :key="k">
-                  <!-- <img :src="v.attribute1"
-                       alt=""> -->
                   <img src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
+                       alt="">
+                </div>
+              </div> -->
+              <div class="img-tab">
+                <div class="img-tab-item"
+                     :id="'imgBox'+k"
+                     :ref="'imgBox'+k"
+                     v-for="(v,k) in imgList"
+                     :key="k">
+                  <img :ref="'imgItem'+k"
+                       crossorigin="anonymous"
+                       src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
                        alt="">
                 </div>
               </div>
@@ -142,14 +129,14 @@
           <div class="steps_group">
             <div class="steps_left">
               <img class="steps_img"
-                   src="./image/steps2.png"
+                   src="./image/steps3.png"
                    alt />
               <div class="steps_line line_3"></div>
             </div>
             <div class="steps_right"
                  style="">
-              <img class="steps_text2"
-                   src="./image/steps_text2.png"
+              <img class="steps_text3"
+                   src="./image/steps_text3.png"
                    alt />
               <div class="steps_prompt">前往微信，在朋友圈分享文案与视频，展示3小时</div>
             </div>
@@ -157,14 +144,14 @@
           <div class="steps_group">
             <div class="steps_left">
               <img class="steps_img"
-                   src="./image/steps2.png"
+                   src="./image/steps4.png"
                    alt />
               <div class="steps_line line_4"></div>
             </div>
             <div class="steps_right"
                  style="">
-              <img class="steps_text2"
-                   src="./image/steps_text2.png"
+              <img class="steps_text4"
+                   src="./image/steps_text4.png"
                    alt />
               <div class="steps_prompt">上传已分享的截图审核</div>
               <div class="uploader_img">
@@ -191,13 +178,15 @@
           <div class="item_text">
             <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
-          <div class="item_text">
-            <span></span>
-            本任务每天可参与一次，每天0点刷新
+          <div v-if="itemType=='yg'" class="item_text">
+            <span></span>本任务每天可参与一次，每天0点刷新
+          </div>
+          <div class="item_text" v-if="itemType=='58'">
+            <span></span>本任务每三日可领取一次，第四日零点刷新<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;如1月1日提交审核，需在1月4日做第二次提交
           </div>
           <div class="item_text">
-            <span></span>
-            仅限上传当日截图，非当日截图不予发放奖励
+            <span></span>仅限上传当日截图，非当日截图不予发放奖励
           </div>
         </div>
       </div>
@@ -310,13 +299,15 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1, 1, 1,1,1,],
+      imgList: [1, 1, 1, 1, 1,],
       videoList: [],
       showStopAct: false,
       currentDay: "",
       currentMon: "",
       saveClick: true,
-      cSaveImg: 0
+      cSaveImg: 0,
+      currtVideo: 0,
+      videoHasData: false
     };
   },
   //监听属性 类似于data概念
@@ -577,50 +568,9 @@ export default {
       $api
         .postRequest("/lookup/searchLookupItem", data)
         .then(res => {
+          console.log("setMomentsUrl",res.datas[0].attribute1)
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
-            if (this.itemType == "58") {
-              this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳] </br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
-            }
-          } else {
-            this.$toast.fail(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast.fail(err.message);
-        });
-    },
-    getImgOrVid (data, shareType) {
-      let reqUrl;
-      if (shareType == "1") {
-        reqUrl = "/external/friend/searchWeChatPoster"
-      } else if (shareType == "2") {
-        reqUrl = "/lookup/searchLookupItem"
-      }
-      $api
-        .postRequest(reqUrl, data)
-        .then(res => {
-          if (res.code == 0) {
-            this.testMsg = res
-            this.videoList = res.datas
-            this.imgList = res.datas
-            this.$toast.clear();
-          } else {
-            this.$toast.fail(res.msg);
-          }
-        })
-        .catch(err => {
-          this.$toast.fail(err.message);
-        });
-    },
-    searchWechatType (data) {
-      $api
-        .postRequest("/lookup/searchWechatPyqTaskType", data)
-        .then(res => {
-          if (res.code == 0) {
-            let shareType = res.datas.attribute1;
-            this.showImgOrVideo = shareType;//classCode
-            this.queryImgOrVid(shareType)
           } else {
             this.$toast.fail(res.msg);
           }
@@ -632,24 +582,22 @@ export default {
     fnShareType () {
       let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
       callAppMethod(appParam, this.searchWechatType)
-      // if (this.isIOS) {
-      //   this.$bridge.callhandler(
-      //     "DX_encryptionRequest",
-      //     { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
-      //     data => {
-      //       this.searchWechatType(data);
-      //     }
-      //   );
-      // } else {
-      //   const data = android.DX_encryptionRequest(
-      //     JSON.stringify({
-      //       classCode: "WECHAT_PYQ_TASK_TYPE",
-      //       itemCode: this.itemType
-      //     })
-      //   );
-      //   // this.testMsg = data
-      //   this.searchWechatType(data);
-      // }
+    },
+    searchWechatType (data) {
+      $api
+        .postRequest("/lookup/searchWechatPyqTaskType", data)
+        .then(res => {
+          if (res.code == 0) {
+            let shareType = res.datas.attribute1;
+            this.showImgOrVideo = shareType;//classCode
+            this.queryImgOrVid(this.showImgOrVideo)
+          } else {
+            this.$toast.fail(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
     },
     queryImgOrVid (shareType) {
       let classCode
@@ -681,8 +629,60 @@ export default {
         this.getImgOrVid(data, shareType);
       }
     },
+    getImgOrVid (data, shareType) {
+      let reqUrl;
+      if (shareType == "1") {
+        reqUrl = "/external/friend/searchWeChatPoster"
+      } else if (shareType == "2") {
+        reqUrl = "/lookup/searchLookupItem"
+      }
+      $api
+        .postRequest(reqUrl, data)
+        .then(res => {
+          if (res.code == 0) {
+            this.testMsg = res
+            let videoList = res.datas
+            videoList.pop()
+            this.videoList = videoList
+            console.log("videoList", this.videoList)
+            this.videoHasData=true;
+            this.imgList = res.datas
+            this.$toast.clear();
+          } else {
+            this.$toast.fail(res.msg);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail(err.message);
+        });
+    },
+    // fnShareType () {
+    //   let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
+    //   callAppMethod(appParam, this.searchWechatType)
+    // if (this.isIOS) {
+    //   this.$bridge.callhandler(
+    //     "DX_encryptionRequest",
+    //     { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
+    //     data => {
+    //       this.searchWechatType(data);
+    //     }
+    //   );
+    // } else {
+    //   const data = android.DX_encryptionRequest(
+    //     JSON.stringify({
+    //       classCode: "WECHAT_PYQ_TASK_TYPE",
+    //       itemCode: this.itemType
+    //     })
+    //   );
+    //   // this.testMsg = data
+    //   this.searchWechatType(data);
+    // }
+    // },
     saveVideo () {
+      let vid = this.videoList[this.currtVideo].attribute1
+      console.log(vid)
       if (this.isIOS) {
+      console.log("进入掉用")
         this.$bridge.callhandler(
           "downloadShortVideo",
           "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4",
@@ -691,8 +691,7 @@ export default {
         );
       } else {
         const data = android.downloadShortVideo(
-          "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4"
-
+         vid
         );
       }
     },
@@ -735,31 +734,37 @@ export default {
         }
       }
     },
+    createBase64List (imgList) {
+      imgList.map((v, k) => {
+        let Img = this.$refs['imgItem' + k][0]
+        v.base64 = getBase64Image(Img)
+      })
+    },
     saveImg () {
-      // alert(this.saveClick)
       // this.$toast.loading({
       //   duration: 0,
       //   forbidClick: true, // 禁用背景点击
       //   message: "中..."
       // });
-      console.log(this.saveClick)
       if (!this.saveClick) {
         this.$toast.success("保存成功！");
         return
       }
       this.saveClick = false;
-      var newLisr = this.imgList.concat()
-      var androdiList = newLisr.reverse();
+      var iosList = this.imgList.concat()
+      this.createBase64List(iosList)
+      var androdiList = iosList.concat().reverse();
+      this.createBase64List(androdiList)
       if (this.isIOS) {
-        newLisr.map((v, k) => {
-          this.appSaveImg(v.attribute2, k)
+        iosList.map(async (v, k) => {
+          getBase64(v.attribute1, this.appSaveImg)
+          // this.appSaveImg(v.attribute1, k)
         })
       } else {
         androdiList.map((v, k) => {
-          this.appSaveImg(v.attribute2, k)
+          this.appSaveImg(v.base64, k)
         })
       }
-      // this.appSaveImg(this.imgList, this.cSaveImg)
       //  alert(this.saveClick)
     },
     getCurrentDate () {
@@ -769,6 +774,10 @@ export default {
       this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon
       this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay
     },
+    slideChangeEnd (cIndex) {
+      console.log("cIndex", cIndex)
+      this.currtVideo = cIndex
+    }
   },
   mounted () {
     this.itemType = this.$route.params.type;
@@ -778,16 +787,18 @@ export default {
       this.setTaskConfigCode("SharePoster_yg");
       this.setItemCode("YG_SHARE_URL");
       this.$refs.main.className = "main main2";
-      this.copyText = "";
       this.itemText = "本任务每三天可参与一次";
       // this.showStopAct = true
     } else if (this.$route.params.type == "58") {
-      this.copyText = `[太阳] 58棋牌顶级代理招募中[太阳]</br>[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}</br>✅加入58棋牌，领取188元新手红包！！`
     }
+    /*获取当前时间 */
     this.getCurrentDate();
+    /*获取分享的是视频还是图片*/
     this.fnShareType();
-    // this.fnInfo();
-    // this.fnGetUrl();
+    /*获取用户当前任务状态*/
+    this.fnInfo();
+    /*获取用户的分享链接*/
+    this.fnGetUrl();
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
@@ -913,6 +924,7 @@ p {
     position: fixed;
     background: linear-gradient(to right, #27abf3, #3177f0);
     background-color: #4c38d8;
+    z-index: 999;
     .nav {
       .g_flex;
       width: 100vw;
@@ -992,9 +1004,13 @@ p {
       .steps_group {
         width: 100%;
         padding-right: 14px;
+        position: relative;
         .g_flex;
         .steps_left {
           width: 20px;
+          height: 100%;
+          position: absolute;
+          left: 0;
           .g_flex;
           flex-direction: column;
           .steps_img {
@@ -1006,18 +1022,7 @@ p {
             width: 1px;
             background: #6d5aff;
             margin-top: -2px;
-            &.line_1 {
-              height: 230px;
-            }
-            &.line_1 {
-              height: 230px;
-            }
-            &.line_3 {
-              height: 100px;
-            }
-            &.line_4 {
-              height: 220px;
-            }
+            height: 100%;
             &.line_yg {
               height: 480px;
             }
@@ -1032,11 +1037,13 @@ p {
           align-items: flex-start;
           justify-content: flex-start;
           flex-direction: column;
-          margin-left: 22px;
+          margin-left: 42px;
           margin-bottom: 20px;
           overflow: hidden;
           .steps_text1,
-          .steps_text2 {
+          .steps_text2,
+          .steps_text3,
+          .steps_text4 {
             height: 17px;
             display: block;
           }

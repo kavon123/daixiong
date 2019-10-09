@@ -1,13 +1,14 @@
 import store from './../store/index.js'
+import Bridge from '@/util/bridge'
 
 export function getBase64Image(img) {
-    img.crossOrigin = "*";
     var canvas = document.createElement("canvas");
     canvas.width = img.width;
     canvas.height = img.height;
     var ctx = canvas.getContext("2d");
     ctx.drawImage(img, 0, 0, img.width, img.height);
     var dataURL = canvas.toDataURL("image/png"); // 可选其他值 image/jpeg
+    // console.log("转换完成", dataURL)
     return dataURL;
 }
 export function getBase64(url, callback, k) {
@@ -37,10 +38,10 @@ export function getReImgBase64(img) {
         var canvas = document.createElement("canvas");
         canvas.width = width ? width : img.width;
         canvas.height = height ? height : img.height;
-
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         var dataURL = canvas.toDataURL();
+        console.log("结果或是",dataURL)
         return dataURL;
     }
     var image = new Image();
@@ -48,13 +49,16 @@ export function getReImgBase64(img) {
     image.src = img;
     return new Promise((resolve, reject) => {
         image.onload = function () {
+            console.log("图片加载完成")
             resolve(getBase64Image(image)); //将base64传给done上传处理
         }
     });
 }
 export function callAppMethod(param, callback) {
     if (store.getters.isIOS) {
-        this.$bridge.callhandler(param,
+        Bridge.callhandler(
+            "DX_encryptionRequest",
+            param,
             data => {
                 callback(data);
             }
