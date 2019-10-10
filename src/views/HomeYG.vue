@@ -128,6 +128,7 @@
     <m-win-pop v-if="winShow" type="YG" @close="fnPop" />
     <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
     <m-invite v-if="inviteShow" @close="fnPop" />
+    <stop-act :showStopAct="showStopAct" @closeDlog="showStopAct=false"></stop-act>
   </div>
 </template>
 
@@ -148,7 +149,7 @@ import mQrcode from "@/components/m-qrcode";
 import mInvite from "./Invite/Invite";
 import promoteList from "./promoteList";
 import relativeList from "./relativeList";
-
+import stopAct from "@/components/stop-act/index.vue";
 export default {
   components: {
     mInvite,
@@ -161,7 +162,8 @@ export default {
     mReleSuc,
     mReleErr,
     mBest,
-    mWithdrawal
+    mWithdrawal,
+    stopAct
   },
   data() {
     return {
@@ -179,7 +181,8 @@ export default {
       bIsLogin: true,
       totalSize: 0,
       lists: [],
-      paddingB: 72
+      paddingB: 72,
+      showStopAct:false
     };
   },
   created() {
@@ -256,6 +259,8 @@ export default {
       this.$router.push("/promote");
     },
     fnShowButPop() {
+      this.showStopAct=true;
+      return
       if (this.bIsLogin) {
         this.fnInfo();
       } else {
