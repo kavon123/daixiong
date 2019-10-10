@@ -18,7 +18,8 @@
         <div class="prompt_content">
           <p class="fixed_text">
             分享
-            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red" v-if="itemType=='58'">分享文案领3元，每三日可领取一次。</span> 
+            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red"
+                  v-if="itemType=='58'">分享文案领3元，每三日可领取一次。</span>
           </p>
           <p class="submit_text"
              v-if="resp.status==2">
@@ -66,6 +67,8 @@
           <div class="steps_group"
                style="padding-right:0"
                v-if="showImgOrVideo == 2">
+            <!-- <div class="steps_group"
+               style="padding-right:0"> -->
             <div class="steps_left">
               <img class="steps_img"
                    src="./image/steps2.png"
@@ -77,8 +80,11 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存视频到相册</div>
-              <video-swiper v-if="videoHasData" :videoList="videoList"
-              :videoHasData="videoHasData"
+              <!-- <video-swiper  :videoList="videoList"
+                            @slideChangeEnd="slideChangeEnd"></video-swiper> -->
+              <video-swiper v-if="videoHasData"
+                            :videoList="videoList"
+                            :videoHasData="videoHasData"
                             @slideChangeEnd="slideChangeEnd"></video-swiper>
               <img class="share_but"
                    @click="saveVideo"
@@ -178,10 +184,12 @@
           <div class="item_text">
             <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
-          <div v-if="itemType=='yg'" class="item_text">
+          <div v-if="itemType=='yg'"
+               class="item_text">
             <span></span>本任务每天可参与一次，每天0点刷新
           </div>
-          <div class="item_text" v-if="itemType=='58'">
+          <div class="item_text"
+               v-if="itemType=='58'">
             <span></span>本任务每三日可领取一次，第四日零点刷新<br>
             &nbsp;&nbsp;&nbsp;&nbsp;如1月1日提交审核，需在1月4日做第二次提交
           </div>
@@ -568,7 +576,6 @@ export default {
       $api
         .postRequest("/lookup/searchLookupItem", data)
         .then(res => {
-          console.log("setMomentsUrl",res.datas[0].attribute1)
           if (res.code == 0) {
             this.setMomentsUrl(res.datas[0].attribute1);
           } else {
@@ -642,10 +649,8 @@ export default {
           if (res.code == 0) {
             this.testMsg = res
             let videoList = res.datas
-            videoList.pop()
             this.videoList = videoList
-            console.log("videoList", this.videoList)
-            this.videoHasData=true;
+            this.videoHasData = true;
             this.imgList = res.datas
             this.$toast.clear();
           } else {
@@ -680,9 +685,7 @@ export default {
     // },
     saveVideo () {
       let vid = this.videoList[this.currtVideo].attribute1
-      console.log(vid)
       if (this.isIOS) {
-      console.log("进入掉用")
         this.$bridge.callhandler(
           "downloadShortVideo",
           "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4",
@@ -691,7 +694,7 @@ export default {
         );
       } else {
         const data = android.downloadShortVideo(
-         vid
+          vid
         );
       }
     },
@@ -751,21 +754,19 @@ export default {
         return
       }
       this.saveClick = false;
-      var iosList = this.imgList.concat()
-      this.createBase64List(iosList)
-      var androdiList = iosList.concat().reverse();
-      this.createBase64List(androdiList)
       if (this.isIOS) {
+        var iosList = this.imgList.concat()
+        this.createBase64List(iosList)
         iosList.map(async (v, k) => {
-          getBase64(v.attribute1, this.appSaveImg)
-          // this.appSaveImg(v.attribute1, k)
+          this.appSaveImg(v.base64, k)
         })
       } else {
+        var androdiList = this.imgList.concat().reverse();
+        this.createBase64List(androdiList)
         androdiList.map((v, k) => {
           this.appSaveImg(v.base64, k)
         })
       }
-      //  alert(this.saveClick)
     },
     getCurrentDate () {
       var myDate = new Date();
