@@ -20,6 +20,7 @@
       <video v-if="showFullVideo"
              autoplay="autoplay"
              muted
+             webkit-playsinline="true"
              :poster="videoList[currVideo].attribute2"
              controls
              style="width:100%; height:100%;object-fit: fill">

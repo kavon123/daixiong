@@ -17,9 +17,6 @@ export function getBase64(url, callback, k) {
         dataURL = '';
     Img.src = url + '?v=' + Math.random();
     Img.setAttribute('crossorigin', 'anonymous');
-    // Img.crossOrigin = '';
-    console.log(url)
-    console.log(Img.crossOrigin)
     Img.onload = function () { //要先确保图片完整获取到，这是个异步事件
         var canvas = document.createElement("canvas"), //创建canvas元素
             width = Img.width, //确保canvas的尺寸和图片一样
@@ -28,8 +25,6 @@ export function getBase64(url, callback, k) {
         canvas.height = height;
         canvas.getContext("2d").drawImage(Img, 0, 0, width, height); //将图片绘制到canvas中
         dataURL = canvas.toDataURL('image/png'); //转换图片为dataURL
-        console.log("转换王朝")
-        console.log(dataURL)
         callback ? callback(dataURL, k) : null; //调用回调函数
     };
 }
@@ -41,7 +36,6 @@ export function getReImgBase64(img) {
         var ctx = canvas.getContext("2d");
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         var dataURL = canvas.toDataURL();
-        console.log("结果或是",dataURL)
         return dataURL;
     }
     var image = new Image();
@@ -49,26 +43,45 @@ export function getReImgBase64(img) {
     image.src = img;
     return new Promise((resolve, reject) => {
         image.onload = function () {
-            console.log("图片加载完成")
             resolve(getBase64Image(image)); //将base64传给done上传处理
         }
     });
 }
-export function callAppMethod(param, callback) {
+export function callAppMethod(command, param, callback) {
     if (store.getters.isIOS) {
         Bridge.callhandler(
-            "DX_encryptionRequest",
+            command,
             param,
             data => {
-                callback(data);
+                callback ?callback(data):null;
             }
         );
-    } else {
-        if(window.android){
-            const data = android.DX_encryptionRequest(
-                JSON.stringify(param)
-            );
-            callback(data);
-        }
+    } else if (window.android) {
+        const data = android[command](
+            JSON.stringify(param)
+        );
+        callback ?callback(data):null;
     }
 }
+//將秒數格式化為時分秒
+export function formatSeconds(value) {
+	    var theTime = parseInt(value);// 秒
+	    var theTime1 = 0;// 分
+	    var theTime2 = 0;// 小时
+	    if(theTime > 60) {
+	        theTime1 = parseInt(theTime/60);
+	        theTime = parseInt(theTime%60);
+            if(theTime1 > 60) {
+	            theTime2 = parseInt(theTime1/60);
+	            theTime1 = parseInt(theTime1%60);
+            }
+	    }
+        var result = ""+parseInt(theTime);
+        if(theTime1 > 0) {
+       	 	result = ""+parseInt(theTime1)+":"+result;
+        }
+        if(theTime2 > 0) {
+        	result = ""+parseInt(theTime2)+":"+result;
+        }
+    	return result;
+	}

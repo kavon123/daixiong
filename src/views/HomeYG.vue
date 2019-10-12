@@ -1,8 +1,10 @@
 <template>
-  <div class="home" :class="{overflow:inviteShow}">
+  <div class="home"
+       :class="{overflow:inviteShow}">
     <m-bar :text="barString" />
     <div class="g-ct">
-      <div class="u-but" @click="fnJump(ygUserinfo.loginUrl)">了解YG电竞</div>
+      <div class="u-but"
+           @click="fnJump(ygUserinfo.loginUrl)">了解YG电竞</div>
       <div class="g-rules-ct">
         <div class="u-rules_text">
           1.好友通过您分享的链接注册YG电竞，进入游戏5分钟，您即可获得5元佣金。
@@ -16,86 +18,109 @@
       </div>
       <div class="g-sum-ct">
         <div class="m-user">
-          <van-icon name="user-o" color="#EBB84E" />
+          <van-icon name="user-o"
+                    color="#EBB84E" />
           <template v-if="!bIsLogin">
             <span class="u-user">{{ygUserinfo.userId}}</span>
-            <van-icon name="wap-nav" color="#ffee2e" @click="fnPop('generateShow',true)" />
+            <van-icon name="wap-nav"
+                      color="#ffee2e"
+                      @click="fnPop('generateShow',true)" />
           </template>
           <template v-else>
-            <span class="u-user" @click="fnPop('loginShow',true)">登录</span>
+            <span class="u-user"
+                  @click="fnPop('loginShow',true)">登录</span>
           </template>
         </div>
         <div class="m-sum-ct">
           <div class="sum_item">
             <div class="u-title">邀请奖励</div>
             <div class="sum_item_ct">
-              <img class="sum_gold" src="@/assets/images/gold.png" alt />
+              <img class="sum_gold"
+                   src="@/assets/images/gold.png"
+                   alt />
               <div class="sum_num">
                 <span>{{ygUserinfo.externalBalance}}</span>元
               </div>
               <div class="sum_add">累计已获得{{ygUserinfo.externalTotalAmount}}元</div>
             </div>
             <div class="sum_but">
-              <img
-                :class="{gray:DX_Draw_Money}"
-                src="@/assets/images/transfer.png"
-                @click="fnWithdrawal"
-              />
+              <img :class="{gray:DX_Draw_Money}"
+                   src="@/assets/images/transfer.png"
+                   @click="fnWithdrawal" />
             </div>
           </div>
           <div class="sum_item">
             <div class="u-title">返佣奖励</div>
             <div class="sum_item_ct">
-              <img class="sum_golds" src="@/assets/images/golds.png" alt />
+              <img class="sum_golds"
+                   src="@/assets/images/golds.png"
+                   alt />
               <div class="sum_num">
                 <span>{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.balance?ygUserinfo.dxUserBalance.balance:'0'}}</span>元
               </div>
-              <div
-                class="sum_add"
-              >累计已获得{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.sumCommision?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
+              <div class="sum_add">累计已获得{{ygUserinfo.dxUserBalance && ygUserinfo.dxUserBalance.sumCommision?ygUserinfo.dxUserBalance.sumCommision:'0'}}元</div>
             </div>
             <div class="sum_but">
-              <img src="@/assets/images/withdrawal.png" @click="fnYGWithdrawal" />
+              <img src="@/assets/images/withdrawal.png"
+                   @click="fnYGWithdrawal" />
             </div>
           </div>
         </div>
       </div>
-      <div class="g-user-list" v-if="totalSize">
-        <van-row type="flex" class="g-table_head">
+      <div class="g-user-list"
+           v-if="totalSize">
+        <van-row type="flex"
+                 class="g-table_head">
           <van-col span="6">用户名</van-col>
           <van-col span="6">收益</van-col>
           <van-col span="6">日期</van-col>
           <van-col span="5">状态</van-col>
         </van-row>
-        <van-row type="flex" class="g-table" v-for="(row,i) in lists" :key="i">
+        <van-row type="flex"
+                 class="g-table"
+                 v-for="(row,i) in lists"
+                 :key="i">
           <van-col span="6">
             <div class="table_name">{{row.name}}</div>
           </van-col>
-          <van-col span="6" class="u-num">{{row.amount}}元</van-col>
+          <van-col span="6"
+                   class="u-num">{{row.amount}}元</van-col>
           <van-col span="6">{{row.time}}</van-col>
-          <van-col span="5" class="u-state">
+          <van-col span="5"
+                   class="u-state">
             {{row.status==2?"已发放":"未游戏"}}
-            <span
-              class="u-alert"
-              v-if="row.status!=2"
-              @click="fnOpen"
-            >提醒</span>
+            <span class="u-alert"
+                  v-if="row.status!=2"
+                  @click="fnOpen">提醒</span>
           </van-col>
         </van-row>
-        <div class="user_but" @click="fnPromoteList" v-if="totalSize>6">
+        <div class="user_but"
+             @click="fnPromoteList"
+             v-if="totalSize>6">
           更多
           <van-icon name="arrow" />
         </div>
       </div>
       <div class="g-tutorial-ct">
-        <div class="small_coup" @click="fnPop('bestShow',true)">推广小妙招</div>
+        <div class="small_coup"
+             @click="fnPop('bestShow',true)">推广小妙招</div>
         <div class="tutorial_title">如何获得邀请奖励？</div>
         <div class="g_img_ct">
-          <img class="steps" src="@/assets/images/YGsteps1.png" alt />
-          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
-          <img class="steps" src="@/assets/images/YGsteps2.png" alt />
-          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
-          <img class="steps" src="@/assets/images/YGsteps3.png" alt />
+          <img class="steps"
+               src="@/assets/images/YGsteps1.png"
+               alt />
+          <img class="arrow"
+               src="@/assets/images/YGarrow.png"
+               alt />
+          <img class="steps"
+               src="@/assets/images/YGsteps2.png"
+               alt />
+          <img class="arrow"
+               src="@/assets/images/YGarrow.png"
+               alt />
+          <img class="steps"
+               src="@/assets/images/YGsteps3.png"
+               alt />
         </div>
         <div class="g_img_ct">
           <div class="steps_text">邀请好友</div>
@@ -104,31 +129,57 @@
         </div>
         <div class="tutorial_title">如何获得返佣奖励？</div>
         <div class="g_img_ct">
-          <img class="steps" src="@/assets/images/YGsteps1.png" alt />
-          <img class="arrow" src="@/assets/images/YGarrow.png" alt />
-          <img class="steps" src="@/assets/images/YGsteps2.png" alt />
+          <img class="steps"
+               src="@/assets/images/YGsteps1.png"
+               alt />
+          <img class="arrow"
+               src="@/assets/images/YGarrow.png"
+               alt />
+          <img class="steps"
+               src="@/assets/images/YGsteps2.png"
+               alt />
         </div>
         <div class="g_img_ct">
           <div class="steps_text">邀请的好友投注</div>
           <div class="steps_text">您获得返佣</div>
         </div>
       </div>
-      <div class="g-best" :style="'height:'+paddingB+'px'">
-        <img src="@/assets/images/best.png" alt @click="fnShowButPop" />
+      <div class="g-best"
+           :style="'height:'+paddingB+'px'">
+        <img src="@/assets/images/best.png"
+             alt
+             @click="fnShowButPop" />
+        <!-- <bottom-share></bottom-share> -->
       </div>
       <footer class="footer">本页面由YG电竞提供</footer>
     </div>
-    <m-YG v-if="generateShow" @close="fnPop" />
-    <m-login v-if="loginShow" @fnInfoAll="fnInfoAll" @close="fnPop" />
-    <m-rele-err v-if="errShow" @info="fnInfo" @close="fnPop" />
-    <m-rele-suc v-if="sucShow" :name="ygUserinfo.userId" @close="fnPop" />
-    <m-best v-if="bestShow" @close="fnPop" />
-    <m-withdrawal v-if="withdrawal" @close="fnPop" />
-    <m-but-pop v-if="butPopShow" @close="fnPop" />
-    <m-win-pop v-if="winShow" type="YG" @close="fnPop" />
-    <m-qrcode type="YG" v-if="qrcodeShow" @close="fnPop" />
-    <m-invite v-if="inviteShow" @close="fnPop" />
-    <stop-act :showStopAct="showStopAct" @closeDlog="showStopAct=false"></stop-act>
+    <m-YG v-if="generateShow"
+          @close="fnPop" />
+    <m-login v-if="loginShow"
+             @fnInfoAll="fnInfoAll"
+             @close="fnPop" />
+    <m-rele-err v-if="errShow"
+                @info="fnInfo"
+                @close="fnPop" />
+    <m-rele-suc v-if="sucShow"
+                :name="ygUserinfo.userId"
+                @close="fnPop" />
+    <m-best v-if="bestShow"
+            @close="fnPop" />
+    <m-withdrawal v-if="withdrawal"
+                  @close="fnPop" />
+    <m-but-pop v-if="butPopShow"
+               @close="fnPop" />
+    <m-win-pop v-if="winShow"
+               type="YG"
+               @close="fnPop" />
+    <m-qrcode type="YG"
+              v-if="qrcodeShow"
+              @close="fnPop" />
+    <m-invite v-if="inviteShow"
+              @close="fnPop" />
+    <stop-act :showStopAct="showStopAct"
+              @closeDlog="showStopAct=false"></stop-act>
   </div>
 </template>
 
@@ -150,6 +201,7 @@ import mInvite from "./Invite/Invite";
 import promoteList from "./promoteList";
 import relativeList from "./relativeList";
 import stopAct from "@/components/stop-act/index.vue";
+import bottomShare from "@/components/bottom-share/index.vue";
 export default {
   components: {
     mInvite,
@@ -163,9 +215,10 @@ export default {
     mReleErr,
     mBest,
     mWithdrawal,
-    stopAct
+    stopAct,
+    bottomShare
   },
-  data() {
+  data () {
     return {
       inviteShow: false,
       butPopShow: false,
@@ -182,10 +235,10 @@ export default {
       totalSize: 0,
       lists: [],
       paddingB: 72,
-      showStopAct:false
+      showStopAct: false
     };
   },
-  created() {
+  created () {
     console.log(this.$route)
     this.fngetUserFriend();
     this.fnInfo();
@@ -197,7 +250,7 @@ export default {
   },
   computed: {
     ...mapGetters(["ygUserinfo", "barString", "isIOS"]),
-    DX_Draw_Money() {
+    DX_Draw_Money () {
       return (
         this.bIsLogin ||
         !this.ygUserinfo.externalBalance ||
@@ -211,13 +264,13 @@ export default {
       setBarString: "SET_BAR_STRING",
       setPlatformType: "SET_PLATFORM_TYPE"
     }),
-    fnYGWithdrawal() {
+    fnYGWithdrawal () {
       this.fnJump(this.ygUserinfo.loginUrl);
     },
-    fnPop(key, vla) {
+    fnPop (key, vla) {
       this[key] = vla;
     },
-    fnWithdrawal() {
+    fnWithdrawal () {
       if (this.DX_Draw_Money) return;
       if (this.isIOS) {
         this.$bridge.callhandler(
@@ -234,7 +287,7 @@ export default {
         this.fnWithdrawalReq(data);
       }
     },
-    fnWithdrawalReq(data) {
+    fnWithdrawalReq (data) {
       $api
         .postRequest("/user/v3/userCashExternalRedPackage", data)
         .then(res => {
@@ -255,11 +308,11 @@ export default {
         });
     },
 
-    fnPromoteList() {
+    fnPromoteList () {
       this.$router.push("/promote");
     },
-    fnShowButPop() {
-      this.showStopAct=true;
+    fnShowButPop () {
+      this.showStopAct = true;
       return
       if (this.bIsLogin) {
         this.fnInfo();
@@ -267,7 +320,7 @@ export default {
         this.butPopShow = true;
       }
     },
-    fnInfo() {
+    fnInfo () {
       this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
@@ -290,7 +343,7 @@ export default {
         this.fnInfoReq(data);
       }
     },
-    fnInfoReq(data) {
+    fnInfoReq (data) {
       $api
         .postRequest("/user/v3/loginYg", data)
         .then(res => {
@@ -314,7 +367,7 @@ export default {
           this.errShow = true;
         });
     },
-    fnInfoAll() {
+    fnInfoAll () {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
           this.fnInfoAllReq(data);
@@ -324,7 +377,7 @@ export default {
         this.fnInfoAllReq(data);
       }
     },
-    fnInfoAllReq(data) {
+    fnInfoAllReq (data) {
       $api
         .postRequest("/external/friend/getYgDatas", data)
         .then(res => {
@@ -352,14 +405,14 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    fnJump(url) {
+    fnJump (url) {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_gotoBrowser", url);
       } else {
         android.DX_gotoBrowser(url);
       }
     },
-    fngetUserFriend() {
+    fngetUserFriend () {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
@@ -383,7 +436,7 @@ export default {
         this.fngetUserFriendReq(data);
       }
     },
-    fngetUserFriendReq(data) {
+    fngetUserFriendReq (data) {
       $api
         .postRequest("/user/v3/searchUserFriendPage", data)
         .then(res => {
@@ -404,7 +457,7 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    fnOpen() {
+    fnOpen () {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openWX_QQ_58", { type: "WX" }, data => {
           if (data == 0) {

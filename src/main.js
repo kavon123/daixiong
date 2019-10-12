@@ -6,7 +6,7 @@ import store from './store/index'
 import Bridge from '@/util/bridge'
 import './assets/style/base.less'
 import './vantconfig'
-
+import './assets/style/base.css'
 
 Vue.config.productionTip = false;
 

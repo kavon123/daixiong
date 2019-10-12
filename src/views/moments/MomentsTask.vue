@@ -122,7 +122,7 @@
                      :key="k">
                   <img :ref="'imgItem'+k"
                        crossorigin="anonymous"
-                       src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
+                       :src="v.attribute1"
                        alt="">
                 </div>
               </div>
@@ -307,7 +307,7 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1, 1, 1, 1, 1,],
+      imgList: [],
       videoList: [],
       showStopAct: false,
       currentDay: "",
@@ -588,13 +588,14 @@ export default {
     },
     fnShareType () {
       let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
-      callAppMethod(appParam, this.searchWechatType)
+      callAppMethod("DX_encryptionRequest",appParam, this.searchWechatType)
     },
     searchWechatType (data) {
       $api
         .postRequest("/lookup/searchWechatPyqTaskType", data)
         .then(res => {
           if (res.code == 0) {
+            console.log("成功收到searchWechatType",res.datas.attribute1)
             let shareType = res.datas.attribute1;
             this.showImgOrVideo = shareType;//classCode
             this.queryImgOrVid(this.showImgOrVideo)
@@ -610,9 +611,9 @@ export default {
       let classCode
       if (shareType == "1") {
         if (this.itemType == 'yg') {
-          classCode = "WECHAT_POSTER_YG"
+          classCode = "WECHAT_POSTER_YG_2"
         } else if (this.itemType == '58') {
-          classCode = "WECHAT_POSTER_YG"
+          classCode = "WECHAT_POSTER_58_2"
         }
       } else if (shareType == "2") {
         if (this.itemType == 'yg') {
@@ -652,6 +653,7 @@ export default {
             this.videoList = videoList
             this.videoHasData = true;
             this.imgList = res.datas
+            console.log("imgList",this.imgList)
             this.$toast.clear();
           } else {
             this.$toast.fail(res.msg);
@@ -688,7 +690,7 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "downloadShortVideo",
-          "http://jiasu-aliyun.heimaozicode.com/original/f57496ded6ba4a3d9022b4bb870dbfbe/552e5b8b-16d76ee0825.mp4",
+          vid,
           data => {
           }
         );
@@ -761,7 +763,8 @@ export default {
           this.appSaveImg(v.base64, k)
         })
       } else {
-        var androdiList = this.imgList.concat().reverse();
+        var androdiList = this.imgList.concat();
+        androdiList= androdiList.reverse()
         this.createBase64List(androdiList)
         androdiList.map((v, k) => {
           this.appSaveImg(v.base64, k)
