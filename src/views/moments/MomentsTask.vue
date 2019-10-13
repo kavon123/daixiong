@@ -144,7 +144,10 @@
               <img class="steps_text3"
                    src="./image/steps_text3.png"
                    alt />
-              <div class="steps_prompt">前往微信，在朋友圈分享文案与视频，展示3小时</div>
+              <div class="steps_prompt"
+                   v-if="showImgOrVideo == 1">前往微信，在朋友圈分享文案与图片，展示3小时</div>
+              <div class="steps_prompt"
+                   v-if="showImgOrVideo == 2">前往微信，在朋友圈分享文案与视频，展示3小时</div>
             </div>
           </div>
           <div class="steps_group">
@@ -588,14 +591,14 @@ export default {
     },
     fnShareType () {
       let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
-      callAppMethod("DX_encryptionRequest",appParam, this.searchWechatType)
+      callAppMethod("DX_encryptionRequest", appParam, this.searchWechatType)
     },
     searchWechatType (data) {
       $api
         .postRequest("/lookup/searchWechatPyqTaskType", data)
         .then(res => {
           if (res.code == 0) {
-            console.log("成功收到searchWechatType",res.datas.attribute1)
+            console.log("成功收到searchWechatType", res.datas.attribute1)
             let shareType = res.datas.attribute1;
             this.showImgOrVideo = shareType;//classCode
             this.queryImgOrVid(this.showImgOrVideo)
@@ -653,7 +656,7 @@ export default {
             this.videoList = videoList
             this.videoHasData = true;
             this.imgList = res.datas
-            console.log("imgList",this.imgList)
+            console.log("imgList", this.imgList)
             this.$toast.clear();
           } else {
             this.$toast.fail(res.msg);
@@ -701,8 +704,6 @@ export default {
       }
     },
     appSaveImg (imgData, k) {
-      // let length = imgList.length
-      // let imgData = imgList[k].attribute2
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_save_share_Image",
@@ -711,7 +712,7 @@ export default {
             if (data == 1) {
               if (k == this.imgList.length - 1) {
                 this.$toast.success("保存成功");
-                this.saveClick = true;
+                // this.saveClick = true;
               }
             }
           }
@@ -723,15 +724,8 @@ export default {
             image: imgData
           })
         );
+        console.log("data", data)
         if (data == 1) {
-          // this.$toast.success("保存成功");
-          // if(k < length -1){
-          //    this.cSaveImg++
-          //    this.appSaveImg(this.imgList, this.cSaveImg)
-          // }
-          // else if (k == length - 1) {
-          //   this.$toast.success("保存成功");
-          // }
           if (k == this.imgList.length - 1) {
             this.$toast.success("保存成功");
             // this.saveClick = true;
@@ -745,29 +739,42 @@ export default {
         v.base64 = getBase64Image(Img)
       })
     },
+    newAppsave (data, k) {
+      let appParam = { type: "save", image: data }
+      callAppMethod("DX_save_share_Image", appParam, this.successSave, k)
+    },
+    successSave (data, k) {
+      console.log("保存图片成功", data, k)
+      if (data == 1) {
+        this.$toast.success("保存成功！");
+      }
+      setTimeout(() => {
+        this.saveClick = true;
+      }, 3000)
+    },
     saveImg () {
       // this.$toast.loading({
       //   duration: 0,
       //   forbidClick: true, // 禁用背景点击
-      //   message: "中..."
+      //   message: "保存中..."
       // });
       if (!this.saveClick) {
-        this.$toast.success("保存成功！");
         return
       }
       this.saveClick = false;
       if (this.isIOS) {
         var iosList = this.imgList.concat()
-        this.createBase64List(iosList)
-        iosList.map(async (v, k) => {
-          this.appSaveImg(v.base64, k)
+        // this.createBase64List(iosList)
+        iosList.map((v, k) => {
+          this.newAppsave(v.attribute2, k)
+          // this.appSaveImg(v.attribute2, k)
         })
       } else {
         var androdiList = this.imgList.concat();
-        androdiList= androdiList.reverse()
-        this.createBase64List(androdiList)
+        androdiList = androdiList.reverse()
         androdiList.map((v, k) => {
-          this.appSaveImg(v.base64, k)
+          this.newAppsave(v.attribute2, k)
+          // this.appSaveImg(v.attribute2, k)
         })
       }
     },

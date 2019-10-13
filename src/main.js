@@ -12,13 +12,13 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$bridge = Bridge;
 
-const vConsole = new VConsole();
-console.log(vConsole.version)
-if (process.env.NODE_ENV == 'development') {
-  Vue.config.devtools = true
-} else {
-  Vue.config.devtools = false
-}
+// const vConsole = new VConsole();
+// console.log(vConsole.version)
+// if (process.env.NODE_ENV == 'development') {
+//   Vue.config.devtools = true
+// } else {
+//   Vue.config.devtools = false
+// }
 
 
 new Vue({

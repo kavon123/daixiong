@@ -27,21 +27,21 @@
           </div>
         </div>
       </div>
-      <div class="main-award display-flex flex-center">
+      <div class="main-award display-flex"><b>+&nbsp;</b>
         <span class="large-txt"
-              v-if="currentIndex===0">+{{ boxAmount }}</span>
+              v-if="currentIndex===0">{{ boxAmount }}</span>
         <span class="large-txt"
-              v-if="currentIndex>0">+ {{chestChildTask[currentIndex-1].amount}}</span> 红包券</div>
+              v-if="currentIndex>0">{{chestChildTask[currentIndex-1].amount}}</span>&nbsp;红包券</div>
       <div class="main-text">
         <div v-if="currentIndex>=chestChildTask.length-1"
              class="text-title">本轮奖励 100% 领取完成</div>
         <div v-else
              class="text-title">文案已自动复制</div>
         <div v-if="currentIndex>=chestChildTask.length-1"
-              class="text-img">
+             class="text-img">
         </div>
         <div v-else
-           class="text-body" >
+             class="text-body">
           {{ btShareOpt.shareTxt }}</div>
       </div>
       <div class="main-btn display-flex flex-center"
@@ -63,6 +63,7 @@
 
 <script>
 import { callAppMethod } from "@/util/tools.js"
+import { mapGetters } from "vuex";
 import $api from "@/util/api.js";
 export default {
   data () {
@@ -71,6 +72,9 @@ export default {
       canPostTask: true,
       lastGoUrl: ""
     }
+  },
+  computed: {
+    ...mapGetters(["isIOS"])
   },
   props: {
     chestChildTask: {
@@ -126,8 +130,11 @@ export default {
           let currentVal = this.chestChildTask[this.currentIndex]
           callAppMethod(currentVal.command, currentVal.comParam, this.goToCurrTask)
         } else if (this.currentIndex == this.chestChildTask.length - 1) {
-          // callAppMethod("DX_gotoBrowser", this.lastGoUrl)
-          android["DX_gotoBrowser"](this.lastGoUrl);
+          if (this.isIOS) {
+            callAppMethod("DX_gotoBrowser", this.lastGoUrl)
+          } else {
+            android["DX_gotoBrowser"](this.lastGoUrl);
+          }
           this.$emit("closeBoxDialog")
         }
       }
@@ -171,7 +178,7 @@ export default {
   width: 311px;
   .large-txt {
     font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
-    font-size: 38px;
+    font-size: 49px;
   }
   .main-body {
     width: 100%;
@@ -245,7 +252,10 @@ export default {
       background: url("./image/quan.png") no-repeat;
       background-size: 100% 100%;
       color: #ffffff;
-      font-size: 17px;
+      font-size: 22px;
+      justify-content: center;
+      align-items: baseline;
+      line-height: 80px;
     }
     .main-text {
       margin-top: 42px;

@@ -16,7 +16,8 @@ export function getBase64(url, callback, k) {
     var Img = new Image(),
         dataURL = '';
     Img.src = url + '?v=' + Math.random();
-    Img.setAttribute('crossorigin', 'anonymous');
+    Img.crossorigin = 'anonymous';
+    console.log("图片创建完成", Img.src)
     Img.onload = function () { //要先确保图片完整获取到，这是个异步事件
         var canvas = document.createElement("canvas"), //创建canvas元素
             width = Img.width, //确保canvas的尺寸和图片一样
@@ -25,6 +26,7 @@ export function getBase64(url, callback, k) {
         canvas.height = height;
         canvas.getContext("2d").drawImage(Img, 0, 0, width, height); //将图片绘制到canvas中
         dataURL = canvas.toDataURL('image/png'); //转换图片为dataURL
+        console.log("转换完成", dataURL)
         callback ? callback(dataURL, k) : null; //调用回调函数
     };
 }
@@ -47,20 +49,21 @@ export function getReImgBase64(img) {
         }
     });
 }
-export function callAppMethod(command, param, callback) {
+/*安卓的调用是同步的，如果安卓不给回应，那么后面js代码全被阻塞，就像alert */
+export function callAppMethod(command, param, callback, callParam) {
     if (store.getters.isIOS) {
         Bridge.callhandler(
             command,
             param,
             data => {
-                callback ?callback(data):null;
+                callback ?callback(data, callParam):null;
             }
         );
     } else if (window.android) {
         const data = android[command](
             JSON.stringify(param)
         );
-        callback ?callback(data):null;
+        callback ?callback(data, callParam):null;
     }
 }
 //將秒數格式化為時分秒
@@ -75,13 +78,22 @@ export function formatSeconds(value) {
 	            theTime2 = parseInt(theTime1/60);
 	            theTime1 = parseInt(theTime1%60);
             }
-	    }
-        var result = ""+parseInt(theTime);
+        }
+        // var result = ""+parseInt(theTime);
+        var result = theTime<10?("0"+theTime):theTime
         if(theTime1 > 0) {
-       	 	result = ""+parseInt(theTime1)+":"+result;
+                // result = ""+parseInt(theTime1)+":"+result;
+                let tim1 = theTime1<10?("0"+theTime1):theTime1
+                result =  tim1 +":"+result;
+        }else{
+            result = "00:"+result;
         }
         if(theTime2 > 0) {
-        	result = ""+parseInt(theTime2)+":"+result;
+            // result = ""+parseInt(theTime2)+":"+result;
+            let tim2 = theTime2<10?("0"+theTime2):theTime2
+            result = tim2 +":"+result;
+        }else{
+            result = "00:"+result;
         }
     	return result;
 	}

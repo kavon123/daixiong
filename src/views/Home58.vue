@@ -174,7 +174,7 @@
       </div>
     </div>
     <van-popup v-model="switchs.showPop">
-      <chest-modal v-if="hasGetShareOpt"
+      <chest-modal v-if="hasGetShareOpt" 
                    @closeBoxDialog="switchs.showPop=false"
                    :redPackageId="redPackageId"
                    :boxAmount="boxAmount"

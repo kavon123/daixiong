@@ -9,7 +9,7 @@
              alt="">
         <div class="play-btn"></div>
       </swiper-slide>
-      <swiper-slide  class="swp-item">
+      <swiper-slide class="swp-item">
         <img style="display:block;height:100%;width:70px;"
              src="./../image/video-back.png"
              alt="">
@@ -21,10 +21,12 @@
              autoplay="autoplay"
              muted
              webkit-playsinline="true"
+             playsinline="true"
              :poster="videoList[currVideo].attribute2"
              controls
+             controlsList='nofullscreen nodownload noremote footbar'
              style="width:100%; height:100%;object-fit: fill">
-             您的浏览器不支持 HTML5 video 标签。
+        您的浏览器不支持 HTML5 video 标签。
         <source :src="videoList[currVideo].attribute1"
                 type="video/mp4">
       </video>
