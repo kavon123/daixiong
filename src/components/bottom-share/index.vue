@@ -103,7 +103,7 @@ export default {
       this.$emit("finishShare")
     },
     testSaveImg(){
-       callAppMethod("DX_saveImages", ["http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg"], this.finishSave)
+       callAppMethod("DX_saveImages", ["http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg"], this.finishSave)
     },
     finishSave(){
       console.log("存储成功")
