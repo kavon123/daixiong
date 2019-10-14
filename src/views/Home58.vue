@@ -161,7 +161,7 @@
            v-if="switchs.showShareBox"
            src="@/assets/images/best.png"
            @click="fnShowButPop" />
-      <footer class="footer">本页面由58棋牌提供</footer>
+      <footer class="footer" :class="{ 'extra-padding': switchs.showShareBox }">本页面由58棋牌提供</footer>
     </div>
     <div class="chest-box"
          v-if="switchs.showChest">
@@ -955,13 +955,15 @@ img {
     bottom: 0;
     display: flex;
     justify-content: center;
-    padding-top: 10px;
+    // padding-top: 10px;
     width: 100vw;
+    z-index: 88;
     // height: 72px;
     background: #1e0500;
     img {
       width: 226px;
       height: 52px;
+      margin-top: 10px;
     }
   }
   .footer {
@@ -974,6 +976,9 @@ img {
     background: #1e0500;
     text-align: center;
     margin-bottom: 100px;
+    &.extra-padding{
+      margin-bottom: 120px;
+    }
   }
 }
 .chest-box {

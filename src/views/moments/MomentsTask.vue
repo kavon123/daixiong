@@ -19,7 +19,7 @@
           <p class="fixed_text">
             分享
             <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red"
-                  v-if="itemType=='58'">分享文案领3元，每三日可领取一次。</span>
+                  v-if="itemType=='58'">分享文案领5元，每三日可领取一次。</span>
           </p>
           <p class="submit_text"
              v-if="resp.status==2">
@@ -49,7 +49,7 @@
               <div class="copy_text">
                 <span v-if="itemType=='58'">[太阳] 58棋牌顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
-                  ✅加入58棋牌，领取188元新手红包！！ <br>
+                  ✅閗地主/炸琻花/百人汼汼，注册先领188元 <br>
                 </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
@@ -290,9 +290,7 @@ export default {
     //这里存放数据
     return {
       itemType: "",
-      copyText:
-        // "58棋牌顶级代理招募中，打开链接，即可加入58棋牌，领取188元新手红包！"
-        "",
+      copyText: "",
       reward: "",
       resp: {
         status: null,
@@ -538,7 +536,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅加入58棋牌，领取188元新手红包！！`
+        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅閗地主/炸琻花/百人汼汼，注册先领188元 `
       } else if (this.itemType == "yg") {
         copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
       }

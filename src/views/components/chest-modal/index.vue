@@ -41,8 +41,8 @@
              class="text-img">
         </div>
         <div v-else
-             class="text-body">
-          {{ btShareOpt.shareTxt }}</div>
+             class="text-body" v-html="btShareOpt.shareTxt">
+        </div>
       </div>
       <div class="main-btn display-flex flex-center"
            @click="shareToApp"
@@ -267,6 +267,7 @@ export default {
         height: 98px;
         padding: 0 20px;
         color: #999999;
+        white-space: pre-line;
       }
       .text-img {
         width: 184px;

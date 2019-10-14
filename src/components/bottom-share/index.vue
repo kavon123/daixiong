@@ -21,7 +21,7 @@
       <div class="modal-doc">
         <div class="doc-main">
           <div class="main-title">复制文案</div>
-          <div class="main-text">{{ btShareOpt.shareTxt }}</div>
+          <div class="main-text" v-html="btShareOpt.shareTxt"></div>
           <div class="main-btn" @click="showPop=false">确定</div>
         </div>
         <div class="close-box"
@@ -53,7 +53,6 @@ export default {
   },
   mounted () {
     this.init()
-    console.log("底部分享初始话", this.btShareOpt)
   },
   methods: {
     init () {
@@ -102,6 +101,12 @@ export default {
     finishShare(){
       this.$toast.clear();
       this.$emit("finishShare")
+    },
+    testSaveImg(){
+       callAppMethod("DX_saveImages", ["http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg","http://www.comwv.com/uploads/20191012/26cf634e264014dcd5562875171fbd5b.jpg"], this.finishSave)
+    },
+    finishSave(){
+      console.log("存储成功")
     }
   }
 }
@@ -173,6 +178,7 @@ export default {
         color: rgba(153, 153, 153, 1);
         line-height: 20px;
         padding: 12px 25px 2px 25px;
+        white-space: pre-line;
       }
       .main-btn {
         text-align: center;
