@@ -105,12 +105,15 @@
                    src="./image/steps_text2.png"
                    alt />
               <div class="steps_prompt">保存海报到相册</div>
-              <!-- <div class="img-box"
-                   @click="()=>{swipePop=true ; fnCopyText()}">
-                <div class="img-item"
-                     v-for="(v, k) in imgList"
+              <!-- <div class="img-tab">
+                <div class="img-tab-item"
+                     :id="'imgBox'+k"
+                     :ref="'imgBox'+k"
+                     v-for="(v,k) in imgList"
                      :key="k">
-                  <img src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
+                  <img :ref="'imgItem'+k"
+                       crossorigin="anonymous"
+                       src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
                        alt="">
                 </div>
               </div> -->
@@ -308,7 +311,7 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [],
+      imgList: [1,1,1,1,1,1,1,1,1],
       videoList: [],
       showStopAct: false,
       currentDay: "",
