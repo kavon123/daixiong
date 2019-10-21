@@ -47,9 +47,8 @@
                    alt />
               <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <span v-if="itemType=='58'">[太阳] 58棋牌顶级代理招募中[太阳] <br>
-                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
-                  ✅閗地主/炸琻花/百人汼汼，注册先领188元 <br>
+                <span v-if="itemType=='58'">[太阳]免费閗地主！打牌就有钱！[太阳]【{{currentMon}}{{currentDay}}】点我领取：{{momentsUrl}} <br>
+                  ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 <br>
                 </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
