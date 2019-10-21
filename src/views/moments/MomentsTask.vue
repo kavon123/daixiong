@@ -311,7 +311,8 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1,1,1,1,1,1,1,1,1],
+      imgList: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      imgListBase64: [],
       videoList: [],
       showStopAct: false,
       currentDay: "",
@@ -658,6 +659,7 @@ export default {
             this.videoHasData = true;
             this.imgList = res.datas
             console.log("imgList", this.imgList)
+            // this.createBase64List(this.imgList)
             this.$toast.clear();
           } else {
             this.$toast.fail(res.msg);
@@ -667,28 +669,6 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    // fnShareType () {
-    //   let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
-    //   callAppMethod(appParam, this.searchWechatType)
-    // if (this.isIOS) {
-    //   this.$bridge.callhandler(
-    //     "DX_encryptionRequest",
-    //     { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType },
-    //     data => {
-    //       this.searchWechatType(data);
-    //     }
-    //   );
-    // } else {
-    //   const data = android.DX_encryptionRequest(
-    //     JSON.stringify({
-    //       classCode: "WECHAT_PYQ_TASK_TYPE",
-    //       itemCode: this.itemType
-    //     })
-    //   );
-    //   // this.testMsg = data
-    //   this.searchWechatType(data);
-    // }
-    // },
     saveVideo () {
       let vid = this.videoList[this.currtVideo].attribute1
       if (this.isIOS) {
@@ -704,47 +684,29 @@ export default {
         );
       }
     },
-    appSaveImg (imgData, k) {
-      if (this.isIOS) {
-        this.$bridge.callhandler(
-          "DX_save_share_Image",
-          { type: "save", image: imgData },
-          data => {
-            if (data == 1) {
-              if (k == this.imgList.length - 1) {
-                this.$toast.success("保存成功");
-                // this.saveClick = true;
-              }
-            }
-          }
-        );
-      } else {
-        const data = android.DX_save_share_Image(
-          JSON.stringify({
-            type: "save",
-            image: imgData
-          })
-        );
-        console.log("data", data)
-        if (data == 1) {
-          if (k == this.imgList.length - 1) {
-            this.$toast.success("保存成功");
-            // this.saveClick = true;
-          }
+    async createBase64List (imgList) {
+      console.log("进入方法")
+      let newList = []
+      for (let index in imgList) {
+        var res
+        try {
+          res = await getReImgBase64(v.attribute1)
+        } catch (error) {
+          console.log("图片保存失败！")
         }
+        newList.push(res)
+      }
+      if (newList[0]) {
+        this.imgListBase64 = newList;
+        console.log("内部方法执行完毕，成功转化")
+        // this.saveClick = true;
       }
     },
-    createBase64List (imgList) {
-      imgList.map((v, k) => {
-        let Img = this.$refs['imgItem' + k][0]
-        v.base64 = getBase64Image(Img)
-      })
-    },
-    newAppsave (data, k) {
+    newAppsave (data) {
       let appParam = { type: "save", image: data }
-      callAppMethod("DX_save_share_Image", appParam, this.successSave, k)
+      callAppMethod("DX_save_share_Image", appParam, this.successSave)
     },
-    successSave (data, k) {
+    successSave (data) {
       console.log("保存图片成功", data, k)
       if (data == 1) {
         this.$toast.success("保存成功！");
@@ -753,7 +715,7 @@ export default {
         this.saveClick = true;
       }, 3000)
     },
-    saveImg () {
+    async saveImg () {
       // this.$toast.loading({
       //   duration: 0,
       //   forbidClick: true, // 禁用背景点击
@@ -763,19 +725,21 @@ export default {
         return
       }
       this.saveClick = false;
+      console.log("开始批量转换")
+      await this.createBase64List(this.imgList)
+      console.log("出了内部，转换完成", this.imgListBase64)
       if (this.isIOS) {
-        var iosList = this.imgList.concat()
-        // this.createBase64List(iosList)
+        // var iosList = this.imgList.concat()
+        var iosList = this.imgListBase64.concat()
         iosList.map((v, k) => {
-          this.newAppsave(v.attribute2, k)
-          // this.appSaveImg(v.attribute2, k)
+          this.newAppsave(v);
         })
       } else {
-        var androdiList = this.imgList.concat();
+        // var androdiList = this.imgList.concat();
+        var androdiList = this.imgListBase64.concat()
         androdiList = androdiList.reverse()
         androdiList.map((v, k) => {
-          this.newAppsave(v.attribute2, k)
-          // this.appSaveImg(v.attribute2, k)
+          this.newAppsave(v);
         })
       }
     },

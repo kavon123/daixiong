@@ -50,7 +50,11 @@ export default new Router({
       path: '/status',
       name: 'AuditStatus',
       component: () => import(/* webpackChunkName: "YG" */ './views/moments/AuditStatus.vue')
-
     },
+    {
+      path: '/testPage',
+      name: 'testPage',
+      component: () => import(/* webpackChunkName: "relativeList" */ './views/testPage/index.vue')
+    }
   ]
 })
