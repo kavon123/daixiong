@@ -311,7 +311,7 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1,1,1,1,1,1,1,1,1],
+      imgList: [],
       videoList: [],
       showStopAct: false,
       currentDay: "",
