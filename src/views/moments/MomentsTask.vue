@@ -538,7 +538,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅閗地主/炸琻花/百人汼汼，注册先领188元 `
+        copy = `[太阳] 免费閗地主！打牌就有钱！[太阳]\n 【${this.currentMon}${this.currentDay}】点我领取：${this.momentsUrl}\n ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 `
       } else if (this.itemType == "yg") {
         copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
       }
