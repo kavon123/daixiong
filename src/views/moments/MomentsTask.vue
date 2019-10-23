@@ -47,9 +47,8 @@
                    alt />
               <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <span v-if="itemType=='58'">[太阳] 58棋牌顶级代理招募中[太阳] <br>
-                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
-                  ✅閗地主/炸琻花/百人汼汼，注册先领188元 <br>
+                <span v-if="itemType=='58'">[太阳]免费閗地主！打牌就有钱！[太阳]【{{currentMon}}{{currentDay}}】点我领取：{{momentsUrl}} <br>
+                  ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 <br>
                 </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
@@ -311,7 +310,7 @@ export default {
       itemText: "本任务每天可参与一次，每天0点刷新",
       showImgOrVideo: 0,
       testMsg: "",
-      imgList: [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      imgList: [],
       imgListBase64: [],
       videoList: [],
       showStopAct: false,
@@ -540,7 +539,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = `[太阳] 58棋牌顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl}\n✅閗地主/炸琻花/百人汼汼，注册先领188元 `
+        copy = `[太阳] 免费閗地主！打牌就有钱！[太阳]\n 【${this.currentMon}${this.currentDay}】点我领取：${this.momentsUrl}\n ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 `
       } else if (this.itemType == "yg") {
         copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
       }
@@ -685,61 +684,59 @@ export default {
       }
     },
     async createBase64List (imgList) {
-      console.log("进入方法")
       let newList = []
-      for (let index in imgList) {
+      for (var index in imgList) {
         var res
         try {
-          res = await getReImgBase64(v.attribute1)
+          res = await getReImgBase64(imgList[index].attribute1)
         } catch (error) {
-          console.log("图片保存失败！")
+          this.$toast.fail("图片保存失败！");
         }
         newList.push(res)
       }
       if (newList[0]) {
         this.imgListBase64 = newList;
-        console.log("内部方法执行完毕，成功转化")
         // this.saveClick = true;
       }
     },
-    newAppsave (data) {
+    newAppsave (data, index) {
       let appParam = { type: "save", image: data }
-      callAppMethod("DX_save_share_Image", appParam, this.successSave)
+      callAppMethod("DX_save_share_Image", appParam, this.successSave, index)
     },
-    successSave (data) {
-      console.log("保存图片成功", data, k)
-      if (data == 1) {
-        this.$toast.success("保存成功！");
+    successSave (data, index) {
+      var len = this.imgListBase64.length - 1
+      if (index == len) {
+        if (data == 1) {
+          this.$toast.success("保存成功！");
+        }
       }
       setTimeout(() => {
         this.saveClick = true;
       }, 3000)
     },
     async saveImg () {
-      // this.$toast.loading({
-      //   duration: 0,
-      //   forbidClick: true, // 禁用背景点击
-      //   message: "保存中..."
-      // });
       if (!this.saveClick) {
         return
       }
+      this.$toast.loading({
+        duration: 0,
+        forbidClick: true, // 禁用背景点击
+        message: "保存中..."
+      });
       this.saveClick = false;
-      console.log("开始批量转换")
       await this.createBase64List(this.imgList)
-      console.log("出了内部，转换完成", this.imgListBase64)
       if (this.isIOS) {
         // var iosList = this.imgList.concat()
         var iosList = this.imgListBase64.concat()
         iosList.map((v, k) => {
-          this.newAppsave(v);
+          this.newAppsave(v, k);
         })
       } else {
         // var androdiList = this.imgList.concat();
         var androdiList = this.imgListBase64.concat()
         androdiList = androdiList.reverse()
         androdiList.map((v, k) => {
-          this.newAppsave(v);
+          this.newAppsave(v, k);
         })
       }
     },
