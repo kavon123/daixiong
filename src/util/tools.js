@@ -40,12 +40,13 @@ export function getReImgBase64(imgSrc, width, height) {
         var ctx = canvas.getContext("2d");
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         var dataURL = canvas.toDataURL();
-        console.log("函数内部转换完成", dataURL)
+        console.log("核心转换完成")
         return dataURL;
     }
     var image = new Image();
     image.crossOrigin = '';
     image.src = imgSrc;
+    console.log("图片地址", imgSrc)
     return new Promise((resolve, reject) => {
         image.onload = function () {
             console.log("图片加载完成")
