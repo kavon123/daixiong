@@ -47,8 +47,9 @@
                    alt />
               <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <span v-if="itemType=='58'">[太阳]免费閗地主！打牌就有钱！[太阳]【{{currentMon}}{{currentDay}}】点我领取：{{momentsUrl}} <br>
-                  ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 <br>
+                <span v-if="itemType=='58'">[太阳]閗地主不充值！每天玩月入5000！[太阳]
+                  <br>【{{currentMon}}{{currentDay}}】速抢红包：{{momentsUrl}} <br>
+                  ✅閗地主/炸琻花/百人汼汼，限时送188元红包，提现1秒到账。 <br>
                 </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
@@ -539,7 +540,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = `[太阳] 免费閗地主！打牌就有钱！[太阳]\n 【${this.currentMon}${this.currentDay}】点我领取：${this.momentsUrl}\n ✅閗地主/炸琻花/百人汼汼，送188元红包，提现1秒到账。 `
+        copy = ` [太阳]閗地主不充值！每天玩月入5000！[太阳]\n 【${this.currentMon}${this.currentDay}】速抢红包：${this.momentsUrl}\n ✅閗地主/炸琻花/百人汼汼，限时送188元红包，提现1秒到账。 `
       } else if (this.itemType == "yg") {
         copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
       }
