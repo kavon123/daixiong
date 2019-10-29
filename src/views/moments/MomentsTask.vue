@@ -19,7 +19,7 @@
           <p class="fixed_text">
             分享
             <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red"
-                  v-if="itemType=='58'">分享文案领5元，每三日可领取一次。</span>
+                  v-if="itemType=='58'">分享文案领2元，每天可领取一次。</span>
           </p>
           <p class="submit_text"
              v-if="resp.status==2">
@@ -47,9 +47,10 @@
                    alt />
               <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <span v-if="itemType=='58'">[太阳]閗地主不充值！每天玩月入5000！[太阳]
-                  <br>【{{currentMon}}{{currentDay}}】速抢红包：{{momentsUrl}} <br>
-                  ✅閗地主/炸琻花/百人汼汼，限时送188元红包，提现1秒到账。 <br>
+                <span v-if="itemType=='58'">
+                    [太阳]188元现金等你来领！[太阳]<br>
+                  【{{currentMon}}{{currentDay}}】{{momentsUrl}} <br>
+                  ✅下载注册送9999金币，每天登录抽iphone11，轻松赚钱，提现秒到！
                 </span>
                 <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
                   [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
@@ -196,8 +197,8 @@
           </div>
           <div class="item_text"
                v-if="itemType=='58'">
-            <span></span>本任务每三日可领取一次，第四日零点刷新<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;如1月1日提交审核，需在1月4日做第二次提交
+            <span></span>本任务每天可领取一次，领取上次任务奖励后，<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;次日即可再次提交
           </div>
           <div class="item_text">
             <span></span>仅限上传当日截图，非当日截图不予发放奖励
