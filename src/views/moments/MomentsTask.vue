@@ -1,16 +1,10 @@
 <template>
-  <div class="main"
-       ref="main"
-       @click="()=>operationPop = false">
+  <div class="main" ref="main" @click="()=>operationPop = false">
     <div class="head">
       <div class="nav">
-        <van-icon name="arrow-left"
-                  class="icon"
-                  @click="fnGoBack" />
+        <van-icon name="arrow-left" class="icon" @click="fnGoBack" />
         <div class="title">分享朋友圈领红包券</div>
-        <van-icon name="ellipsis"
-                  @click.stop="fnSetOperationPop"
-                  class="icon ellipsis" />
+        <van-icon name="ellipsis" @click.stop="fnSetOperationPop" class="icon ellipsis" />
       </div>
     </div>
     <div class="body">
@@ -18,93 +12,85 @@
         <div class="prompt_content">
           <p class="fixed_text">
             分享
-            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。<span style="color:red"
-                  v-if="itemType=='58'">分享文案领2元，每天可领取一次。</span>
+            <span style="color:red">文案及海报</span> 到朋友圈，上传朋友圈截图给客服审核。审核通过后可在当前页面领取奖励。
+            <span
+              style="color:red"
+              v-if="itemType=='58'"
+            >分享文案领2元，每天可领取一次。</span>
           </p>
-          <p class="submit_text"
-             v-if="resp.status==2">
+          <p class="submit_text" v-if="resp.status==2">
             {{resp.remark}}
             <br />请重新上传截图并提交。
           </p>
         </div>
       </div>
       <div class="steps_content">
-        <img class="title"
-             src="./image/stepsTitle.png"
-             alt />
+        <img class="title" src="./image/stepsTitle.png" alt />
         <div class="steps_mian">
           <div class="steps_group">
             <div class="steps_left">
-              <img class="steps_img"
-                   src="./image/steps1.png"
-                   alt />
-              <div class="steps_line"
-                   :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
+              <img class="steps_img" src="./image/steps1.png" alt />
+              <div class="steps_line" :class="{'line_yg':itemType=='yg','line_58':itemType=='58'}"></div>
             </div>
             <div class="steps_right">
-              <img class="steps_text1"
-                   src="./image/steps_text1.png"
-                   alt />
+              <img class="steps_text1" src="./image/steps_text1.png" alt />
               <div class="steps_prompt">复制文案</div>
               <div class="copy_text">
-                <span v-if="itemType=='58'">
-                    [太阳]188元现金等你来领！[太阳]<br>
-                  【{{currentMon}}{{currentDay}}】{{momentsUrl}} <br>
-                  ✅下载注册送9999金币，每天登录抽iphone11，轻松赚钱，提现秒到！
-                </span>
-                <span v-if="itemType=='yg'">[太阳] YG电竞顶级代理招募中[太阳] <br>
-                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：{{momentsUrl}} <br>
-                  ✅加入YG电竞，领取188元新手红包！！ <br>
-                </span>
-                <div class="copy_but"
-                     @click="fnCopyText(true)">复制</div>
+                <p class="text" v-if="itemType=='58'" v-html="copyData"></p>
+                <p class="text" v-if="itemType=='yg'" v-html="copyData"></p>
+                <!-- <p v-if="itemType=='58'">
+                  s[太阳]188元现金等你来领！[太阳]
+                  <br />
+                  【{{currentMon}}{{currentDay}}】
+                  {{momentsUrl}}
+                  <br />✅
+                  下载注册送9999金币，每天登录抽iphone11，轻松赚钱，提现秒到！
+                </p>
+                <p v-if="itemType=='yg'">
+                  [太阳] YG电竞顶级代理招募中[太阳]
+                  <br />
+                  [太阳] 【{{currentMon}}{{currentDay}}】戳这里：
+                  {{momentsUrl}}
+                  <br />✅
+                  加入YG电竞，领取188元新手红包！！
+                  <br />
+                </p>-->
+                <div class="copy_but" @click="fnCopyText(true)">复制</div>
               </div>
               <!-- <img class="share_but"
                    @click="saveImg"
                    src="@/views/moments/image/btn-bg1.png"
-                   alt /> -->
+              alt />-->
             </div>
           </div>
-          <div class="steps_group"
-               style="padding-right:0"
-               v-if="showImgOrVideo == 2">
+          <div class="steps_group" style="padding-right:0" v-if="showImgOrVideo == 2">
             <!-- <div class="steps_group"
-               style="padding-right:0"> -->
+            style="padding-right:0">-->
             <div class="steps_left">
-              <img class="steps_img"
-                   src="./image/steps2.png"
-                   alt />
+              <img class="steps_img" src="./image/steps2.png" alt />
               <div class="steps_line line_2"></div>
             </div>
             <div class="steps_right">
-              <img class="steps_text2"
-                   src="./image/steps_text2.png"
-                   alt />
+              <img class="steps_text2" src="./image/steps_text2.png" alt />
               <div class="steps_prompt">保存视频到相册</div>
               <!-- <video-swiper  :videoList="videoList"
-                            @slideChangeEnd="slideChangeEnd"></video-swiper> -->
-              <video-swiper v-if="videoHasData"
-                            :videoList="videoList"
-                            :videoHasData="videoHasData"
-                            @slideChangeEnd="slideChangeEnd"></video-swiper>
-              <img class="share_but"
-                   @click="saveVideo"
-                   src="@/views/moments/image/btn-bg1.png"
-                   alt />
+              @slideChangeEnd="slideChangeEnd"></video-swiper>-->
+              <video-swiper
+                v-if="videoHasData"
+                :videoList="videoList"
+                :videoHasData="videoHasData"
+                @slideChangeEnd="slideChangeEnd"
+              ></video-swiper>
+              <img class="share_but" @click="saveVideo" src="@/views/moments/image/btn-bg1.png" alt />
             </div>
           </div>
-          <div class="steps_group"
-               v-if="showImgOrVideo == 1">
+          <div class="steps_group" v-if="showImgOrVideo == 1">
             <div class="steps_left">
-              <img class="steps_img"
-                   src="./image/steps2.png"
-                   alt />
+              <img class="steps_img" src="./image/steps2.png" alt />
               <div class="steps_line line_2"></div>
             </div>
             <div class="steps_right">
-              <img class="steps_text2"
-                   src="./image/steps_text2.png"
-                   alt />
+              <img class="steps_text2" src="./image/steps_text2.png" alt />
               <div class="steps_prompt">保存海报到相册</div>
               <!-- <div class="img-tab">
                 <div class="img-tab-item"
@@ -117,70 +103,50 @@
                        src="http://image.heimaozicode.com/video/M00/02/7D/mtcfk12XI0uAM9dlAAB61JGwxF4401.png"
                        alt="">
                 </div>
-              </div> -->
+              </div>-->
               <div class="img-tab">
-                <div class="img-tab-item"
-                     :id="'imgBox'+k"
-                     :ref="'imgBox'+k"
-                     v-for="(v,k) in imgList"
-                     :key="k">
-                  <img :ref="'imgItem'+k"
-                       crossorigin="anonymous"
-                       :src="v.attribute1"
-                       alt="">
+                <div
+                  class="img-tab-item"
+                  :id="'imgBox'+k"
+                  :ref="'imgBox'+k"
+                  v-for="(v,k) in imgList"
+                  :key="k"
+                >
+                  <img :ref="'imgItem'+k" crossorigin="anonymous" :src="v.attribute1" alt />
                 </div>
               </div>
-              <img class="share_but"
-                   src="@/views/moments/image/btn-bg1.png"
-                   @click="saveImg"
-                   alt />
+              <img class="share_but" src="@/views/moments/image/btn-bg1.png" @click="saveImg" alt />
             </div>
           </div>
           <div class="steps_group">
             <div class="steps_left">
-              <img class="steps_img"
-                   src="./image/steps3.png"
-                   alt />
+              <img class="steps_img" src="./image/steps3.png" alt />
               <div class="steps_line line_3"></div>
             </div>
-            <div class="steps_right"
-                 style="">
-              <img class="steps_text3"
-                   src="./image/steps_text3.png"
-                   alt />
-              <div class="steps_prompt"
-                   v-if="showImgOrVideo == 1">前往微信，在朋友圈分享文案与图片，展示3小时</div>
-              <div class="steps_prompt"
-                   v-if="showImgOrVideo == 2">前往微信，在朋友圈分享文案与视频，展示3小时</div>
+            <div class="steps_right" style>
+              <img class="steps_text3" src="./image/steps_text3.png" alt />
+              <div class="steps_prompt" v-if="showImgOrVideo == 1">前往微信，在朋友圈分享文案与图片，展示3小时</div>
+              <div class="steps_prompt" v-if="showImgOrVideo == 2">前往微信，在朋友圈分享文案与视频，展示3小时</div>
             </div>
           </div>
           <div class="steps_group">
             <div class="steps_left">
-              <img class="steps_img"
-                   src="./image/steps4.png"
-                   alt />
+              <img class="steps_img" src="./image/steps4.png" alt />
               <div class="steps_line line_4"></div>
             </div>
-            <div class="steps_right"
-                 style="">
-              <img class="steps_text4"
-                   src="./image/steps_text4.png"
-                   alt />
+            <div class="steps_right" style>
+              <img class="steps_text4" src="./image/steps_text4.png" alt />
               <div class="steps_prompt">上传已分享的截图审核</div>
               <div class="uploader_img">
                 <div class="prompt">示例图</div>
-                <van-uploader v-model="fileList"
-                              :max-count="2"
-                              :before-read="beforeRead" />
+                <van-uploader v-model="fileList" :max-count="2" :before-read="beforeRead" />
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="steps_content mb30">
-        <img class="title"
-             src="./image/auditTitle.png"
-             alt />
+        <img class="title" src="./image/auditTitle.png" alt />
         <div class="steps_mian">
           <div class="item_text">
             <span></span>分享3小时后截图提交审核才有效
@@ -191,14 +157,12 @@
           <div class="item_text">
             <span></span>P图或上传重复截图作弊者审核将会被拒绝
           </div>
-          <div v-if="itemType=='yg'"
-               class="item_text">
+          <div v-if="itemType=='yg'" class="item_text">
             <span></span>本任务每天可参与一次，每天0点刷新
           </div>
-          <div class="item_text"
-               v-if="itemType=='58'">
-            <span></span>本任务每天可领取一次，领取上次任务奖励后，<br>
-            &nbsp;&nbsp;&nbsp;&nbsp;次日即可再次提交
+          <div class="item_text" v-if="itemType=='58'">
+            <span></span>本任务每天可领取一次，领取上次任务奖励后，
+            <br />&nbsp;&nbsp;&nbsp;&nbsp;次日即可再次提交
           </div>
           <div class="item_text">
             <span></span>仅限上传当日截图，非当日截图不予发放奖励
@@ -206,62 +170,52 @@
         </div>
       </div>
     </div>
-    <footer class="footer"
-            :style="'height:'+paddingB+'px'">
-      <div v-if="resp.status !=1"
-           @click="fnSubmit"
-           class="submit_but"
-           :class="{submit_but_color:submitText=='提交审核'&&fileList.length==2}">{{submitText}}</div>
-      <div v-else
-           @click="fnGetReward"
-           class="submit_but get_reward_but">
-        <img src="@/views/moments/image/redIcon.png"
-             alt />
+    <footer class="footer" :style="'height:'+paddingB+'px'">
+      <div
+        v-if="resp.status !=1"
+        @click="fnSubmit"
+        class="submit_but"
+        :class="{submit_but_color:submitText=='提交审核'&&fileList.length==2}"
+      >{{submitText}}</div>
+      <div v-else @click="fnGetReward" class="submit_but get_reward_but">
+        <img src="@/views/moments/image/redIcon.png" alt />
         {{submitText}}
       </div>
     </footer>
     <transition>
-      <div class="operation"
-           v-if="operationPop">
+      <div class="operation" v-if="operationPop">
         <span class="triangle-up"></span>
-        <div class="item item-border"
-             @click="fnJump">联系客服</div>
-        <div class="item item-border"
-             @click="()=>printscreenPop=true">如何截图</div>
-        <div class="item"
-             @click="()=>this.$router.push('/records')">审核记录</div>
+        <div class="item item-border" @click="fnJump">联系客服</div>
+        <div class="item item-border" @click="()=>printscreenPop=true">如何截图</div>
+        <div class="item" @click="()=>this.$router.push('/records')">审核记录</div>
       </div>
     </transition>
-    <reward-pop v-if="rewardPop"
-                :reward="reward"></reward-pop>
-    <swipe-pop v-if="swipePop"
-               :closeFn="()=>{swipePop=false}"
-               :copyText="copyText"></swipe-pop>
-    <fallback-pop v-if="fallbackPop"
-                  :closeFn="()=>{fallbackPop=false}"
-                  @determine="fnDetermine"></fallback-pop>
-    <printscreenPop v-if="printscreenPop"
-                    :closeFn="()=>{printscreenPop=false}"></printscreenPop>
-    <van-popup v-model="showStopAct"
-               overlay-class="modal-stop"
-               closeable
-               close-icon-position="top-left">
+    <reward-pop v-if="rewardPop" :reward="reward"></reward-pop>
+    <swipe-pop v-if="swipePop" :closeFn="()=>{swipePop=false}" :copyText="copyText"></swipe-pop>
+    <fallback-pop v-if="fallbackPop" :closeFn="()=>{fallbackPop=false}" @determine="fnDetermine"></fallback-pop>
+    <printscreenPop v-if="printscreenPop" :closeFn="()=>{printscreenPop=false}"></printscreenPop>
+    <van-popup
+      v-model="showStopAct"
+      overlay-class="modal-stop"
+      closeable
+      close-icon-position="top-left"
+    >
       <div class="stop-act-modal">
         <div class="stop-act-body">
           <div class="body-head">
-            <img src="./image/sorry.png"
-                 alt="">
+            <img src="./image/sorry.png" alt />
           </div>
           <div class="body-main">
-            <div class="txt"><b>YG电竞分享朋友圈任务</b>优化中，暂停提交</div>
+            <div class="txt">
+              <b>YG电竞分享朋友圈任务</b>优化中，暂停提交
+            </div>
             <div class="txt">您可继续完成分享58棋牌任务</div>
           </div>
           <!-- <div class="submit-btn"
-               @click="goto58Task">去完成</div> -->
+          @click="goto58Task">去完成</div>-->
         </div>
         <div class="stop-act-foot">
-          <div class="act-foot-close"
-               @click="showStopAct=false"></div>
+          <div class="act-foot-close" @click="showStopAct=false"></div>
         </div>
       </div>
     </van-popup>
@@ -276,7 +230,13 @@ import swipePop from "@/components/m-but-pop/swipePop.vue";
 import fallbackPop from "@/views/moments/components/fallbackPop.vue";
 import rewardPop from "@/views/moments/components/rewardPop.vue";
 import videoSwiper from "@/views/moments/components/videoSwiper.vue";
-import { getBase64Image, creatImg, getBase64, getReImgBase64, callAppMethod } from "@/util/tools.js"
+import {
+  getBase64Image,
+  creatImg,
+  getBase64,
+  getReImgBase64,
+  callAppMethod
+} from "@/util/tools.js";
 import Html2canvas from "html2canvas";
 
 const _58IMG = require("./image/58.jpg");
@@ -290,7 +250,7 @@ export default {
     rewardPop,
     videoSwiper
   },
-  data () {
+  data() {
     //这里存放数据
     return {
       itemType: "",
@@ -321,9 +281,11 @@ export default {
       saveClick: true,
       cSaveImg: 0,
       currtVideo: 0,
-      videoHasData: false
+      videoHasData: false,
+      copyData: ""
     };
   },
+  created() {},
   //监听属性 类似于data概念
   computed: {
     ...mapGetters(["taskConfigCode", "itemCode", "isIOS", "momentsUrl"])
@@ -336,7 +298,8 @@ export default {
       setItemCode: "SET_ITEM_CODE",
       setMomentsUrl: "SET_MOMENTS_URL"
     }),
-    beforeRead (file) {
+
+    beforeRead(file) {
       if (file.size > 10 * 1024 * 1024) {
         this.$toast.fail("请上传不超过10M的图片!");
         return false;
@@ -352,7 +315,7 @@ export default {
 
       return true;
     },
-    fnJump () {
+    fnJump() {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_gotoBrowser",
@@ -362,10 +325,10 @@ export default {
         android.DX_gotoBrowser("https://jq.qq.com/?_wv=1027&k=5ooi2Pw");
       }
     },
-    fnSetOperationPop () {
+    fnSetOperationPop() {
       this.operationPop = !this.operationPop;
     },
-    fnGoBack () {
+    fnGoBack() {
       if (this.fileList.length == 2) {
         this.fallbackPop = true;
       } else {
@@ -376,7 +339,7 @@ export default {
         }
       }
     },
-    fnDetermine () {
+    fnDetermine() {
       this.fallbackPop = false;
       if (this.isIOS) {
         this.$bridge.callhandler("DX_goBack");
@@ -384,7 +347,7 @@ export default {
         android.DX_goBack({});
       }
     },
-    fnInfo () {
+    fnInfo() {
       this.$toast.loading({
         duration: 0,
         forbidClick: true, // 禁用背景点击
@@ -407,7 +370,7 @@ export default {
         this.fnInfoReq(data);
       }
     },
-    fnInfoReq (data) {
+    fnInfoReq(data) {
       $api
         .postRequest("/poster/searchSharePosterTask", data)
         .then(res => {
@@ -434,7 +397,7 @@ export default {
         });
     },
 
-    fnSubmit () {
+    fnSubmit() {
       // if (this.itemCode == "YG_SHARE_URL") {
       //   this.showStopAct = true;
       //   return
@@ -482,7 +445,7 @@ export default {
         }
       }
     },
-    fnSubmitReq (data) {
+    fnSubmitReq(data) {
       $api
         .postRequest("/user/task/v3/sharePoster", data)
         .then(res => {
@@ -502,7 +465,7 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    fnGetReward () {
+    fnGetReward() {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
@@ -518,7 +481,7 @@ export default {
         this.fnGetRewardReq(data);
       }
     },
-    fnGetRewardReq (data) {
+    fnGetRewardReq(data) {
       $api
         .postRequest("/user/task/v3/receivePosterAward", data)
         .then(res => {
@@ -538,13 +501,11 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    fnCopyText (type) {
+
+    fnCopyText(type) {
       var copy;
-      if (this.itemType == "58") {
-        copy = `  [太阳]188元现金等你来领！[太阳]\n 【${this.currentMon}${this.currentDay}】${this.momentsUrl}\n ✅下载注册送9999金币，每天登录抽iphone11，轻松赚钱，提现秒到！ `
-      } else if (this.itemType == "yg") {
-        copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
-      }
+      let str = this.momentsUrl.replace(/1br1/g, "\n");
+      copy = str;
       if (this.isIOS) {
         this.$bridge.callhandler("DX_copy", copy, data => {
           if (data == 1 && type) {
@@ -558,7 +519,7 @@ export default {
         }
       }
     },
-    fnGetUrl () {
+    fnGetUrl() {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
@@ -578,12 +539,18 @@ export default {
         this.fnGetUrlReq(data);
       }
     },
-    fnGetUrlReq (data) {
+  
+    fnGetUrlReq(data) {
       $api
         .postRequest("/lookup/searchLookupItem", data)
         .then(res => {
           if (res.code == 0) {
-            this.setMomentsUrl(res.datas[0].attribute1);
+            let str = res.datas[0].attribute1;
+
+            let dataStr = `${this.currentMon}${this.currentDay}`;
+            let newstr = str.replace(/\DATE/g, dataStr);
+            this.copyData = newstr.replace(/1br1/g, "</br>");
+            this.setMomentsUrl(newstr);
           } else {
             this.$toast.fail(res.msg);
           }
@@ -592,19 +559,22 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    fnShareType () {
-      let appParam = { classCode: "WECHAT_PYQ_TASK_TYPE", itemCode: this.itemType }
-      callAppMethod("DX_encryptionRequest", appParam, this.searchWechatType)
+    fnShareType() {
+      let appParam = {
+        classCode: "WECHAT_PYQ_TASK_TYPE",
+        itemCode: this.itemType
+      };
+      callAppMethod("DX_encryptionRequest", appParam, this.searchWechatType);
     },
-    searchWechatType (data) {
+    searchWechatType(data) {
       $api
         .postRequest("/lookup/searchWechatPyqTaskType", data)
         .then(res => {
           if (res.code == 0) {
-            console.log("成功收到searchWechatType", res.datas.attribute1)
+            console.log("成功收到searchWechatType", res.datas.attribute1);
             let shareType = res.datas.attribute1;
-            this.showImgOrVideo = shareType;//classCode
-            this.queryImgOrVid(this.showImgOrVideo)
+            this.showImgOrVideo = shareType; //classCode
+            this.queryImgOrVid(this.showImgOrVideo);
           } else {
             this.$toast.fail(res.msg);
           }
@@ -613,19 +583,19 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    queryImgOrVid (shareType) {
-      let classCode
+    queryImgOrVid(shareType) {
+      let classCode;
       if (shareType == "1") {
-        if (this.itemType == 'yg') {
-          classCode = "WECHAT_POSTER_YG_2"
-        } else if (this.itemType == '58') {
-          classCode = "WECHAT_POSTER_58_2"
+        if (this.itemType == "yg") {
+          classCode = "WECHAT_POSTER_YG_2";
+        } else if (this.itemType == "58") {
+          classCode = "WECHAT_POSTER_58_2";
         }
       } else if (shareType == "2") {
-        if (this.itemType == 'yg') {
-          classCode = "WECHAT_PYQ_VIDEO_YG"
-        } else if (this.itemType == '58') {
-          classCode = "WECHAT_PYQ_VIDEO_58"
+        if (this.itemType == "yg") {
+          classCode = "WECHAT_PYQ_VIDEO_YG";
+        } else if (this.itemType == "58") {
+          classCode = "WECHAT_PYQ_VIDEO_58";
         }
       }
       if (this.isIOS) {
@@ -643,23 +613,23 @@ export default {
         this.getImgOrVid(data, shareType);
       }
     },
-    getImgOrVid (data, shareType) {
+    getImgOrVid(data, shareType) {
       let reqUrl;
       if (shareType == "1") {
-        reqUrl = "/external/friend/searchWeChatPoster"
+        reqUrl = "/external/friend/searchWeChatPoster";
       } else if (shareType == "2") {
-        reqUrl = "/lookup/searchLookupItem"
+        reqUrl = "/lookup/searchLookupItem";
       }
       $api
         .postRequest(reqUrl, data)
         .then(res => {
           if (res.code == 0) {
-            this.testMsg = res
-            let videoList = res.datas
-            this.videoList = videoList
+            this.testMsg = res;
+            let videoList = res.datas;
+            this.videoList = videoList;
             this.videoHasData = true;
-            this.imgList = res.datas
-            console.log("imgList", this.imgList)
+            this.imgList = res.datas;
+            console.log("imgList", this.imgList);
             // this.createBase64List(this.imgList)
             this.$toast.clear();
           } else {
@@ -670,43 +640,36 @@ export default {
           this.$toast.fail(err.message);
         });
     },
-    saveVideo () {
-      let vid = this.videoList[this.currtVideo].attribute1
+    saveVideo() {
+      let vid = this.videoList[this.currtVideo].attribute1;
       if (this.isIOS) {
-        this.$bridge.callhandler(
-          "downloadShortVideo",
-          vid,
-          data => {
-          }
-        );
+        this.$bridge.callhandler("downloadShortVideo", vid, data => {});
       } else {
-        const data = android.downloadShortVideo(
-          vid
-        );
+        const data = android.downloadShortVideo(vid);
       }
     },
-    async createBase64List (imgList) {
-      let newList = []
+    async createBase64List(imgList) {
+      let newList = [];
       for (var index in imgList) {
-        var res
+        var res;
         try {
-          res = await getReImgBase64(imgList[index].attribute1)
+          res = await getReImgBase64(imgList[index].attribute1);
         } catch (error) {
           this.$toast.fail("图片保存失败！");
         }
-        newList.push(res)
+        newList.push(res);
       }
       if (newList[0]) {
         this.imgListBase64 = newList;
         // this.saveClick = true;
       }
     },
-    newAppsave (data, index) {
-      let appParam = { type: "save", image: data }
-      callAppMethod("DX_save_share_Image", appParam, this.successSave, index)
+    newAppsave(data, index) {
+      let appParam = { type: "save", image: data };
+      callAppMethod("DX_save_share_Image", appParam, this.successSave, index);
     },
-    successSave (data, index) {
-      var len = this.imgListBase64.length - 1
+    successSave(data, index) {
+      var len = this.imgListBase64.length - 1;
       if (index == len) {
         if (data == 1) {
           this.$toast.success("保存成功！");
@@ -714,11 +677,11 @@ export default {
       }
       setTimeout(() => {
         this.saveClick = true;
-      }, 3000)
+      }, 3000);
     },
-    async saveImg () {
+    async saveImg() {
       if (!this.saveClick) {
-        return
+        return;
       }
       this.$toast.loading({
         duration: 0,
@@ -726,35 +689,35 @@ export default {
         message: "保存中..."
       });
       this.saveClick = false;
-      await this.createBase64List(this.imgList)
+      await this.createBase64List(this.imgList);
       if (this.isIOS) {
         // var iosList = this.imgList.concat()
-        var iosList = this.imgListBase64.concat()
+        var iosList = this.imgListBase64.concat();
         iosList.map((v, k) => {
           this.newAppsave(v, k);
-        })
+        });
       } else {
         // var androdiList = this.imgList.concat();
-        var androdiList = this.imgListBase64.concat()
-        androdiList = androdiList.reverse()
+        var androdiList = this.imgListBase64.concat();
+        androdiList = androdiList.reverse();
         androdiList.map((v, k) => {
           this.newAppsave(v, k);
-        })
+        });
       }
     },
-    getCurrentDate () {
+    getCurrentDate() {
       var myDate = new Date();
       var currentMon = myDate.getMonth() + 1;
       var currentDay = myDate.getDate();
-      this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon
-      this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay
+      this.currentMon = currentMon < 10 ? "0" + currentMon : currentMon;
+      this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay;
     },
-    slideChangeEnd (cIndex) {
-      console.log("cIndex", cIndex)
-      this.currtVideo = cIndex
+    slideChangeEnd(cIndex) {
+      console.log("cIndex", cIndex);
+      this.currtVideo = cIndex;
     }
   },
-  mounted () {
+  mounted() {
     this.itemType = this.$route.params.type;
     if (this.itemType == "yg") {
       this.fileList[0].url = _YGIMG;
@@ -1039,6 +1002,9 @@ p {
             width: 259px;
             background-color: #f7f6ff;
             padding: 15px 20px;
+            .text {
+              white-space: pre-line;
+            }
           }
           .copy_but {
             width: 50px;
