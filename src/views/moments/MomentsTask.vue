@@ -541,7 +541,7 @@ export default {
     fnCopyText (type) {
       var copy;
       if (this.itemType == "58") {
-        copy = ` [太阳]閗地主不充值！每天玩月入5000！[太阳]\n 【${this.currentMon}${this.currentDay}】速抢红包：${this.momentsUrl}\n ✅閗地主/炸琻花/百人汼汼，限时送188元红包，提现1秒到账。 `
+        copy = `  [太阳]188元现金等你来领！[太阳]\n 【${this.currentMon}${this.currentDay}】${this.momentsUrl}\n ✅下载注册送9999金币，每天登录抽iphone11，轻松赚钱，提现秒到！ `
       } else if (this.itemType == "yg") {
         copy = `[太阳] YG电竞顶级代理招募中[太阳] \n[太阳] 【${this.currentMon}${this.currentDay}】戳这里：${this.momentsUrl} \n✅加入YG电竞，领取188元新手红包！！`
       }
