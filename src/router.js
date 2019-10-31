@@ -9,7 +9,16 @@ Vue.use(Router)
 export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
-  routes: [         
+  routes: [  
+     
+    {
+      path: '/groupTask',
+      name: 'groupTask',// 拼团任务
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "groupTask" */ './views/groupTask.vue')
+    },     
     {
       path: '/58',
       name: '58',
