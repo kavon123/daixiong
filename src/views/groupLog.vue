@@ -7,7 +7,7 @@
   <div class="groupLog_page">
     <div class="scroll_view">
       <div class="header">
-        <div class="back" @click="groupTask(true)">  
+        <div class="back" @click="groupTask(true)">
           <img class="sum_gold" src="@/assets/images/back.png" alt />
         </div>
         <div class="title">组队记录</div>
@@ -19,10 +19,10 @@
           <li>我的队伍</li>
           <li>我的奖励</li>
         </ul>
-        <ul class="list">
+        <ul class="list" v-for="(item,index) in  teamList" :key="index">
           <li class="date">
-            <div>2019-11-20</div>
-            <div>15:28:24</div>
+            <div>{{item.Ytd}}</div>
+            <div>{{item.Time}}</div>
           </li>
           <li class="memberImg">
             <img src="@/assets/images/member.png" alt />
@@ -34,7 +34,7 @@
           <li class="redPack">
             <img src="@/assets/images/redpackcup.png" alt />
             <span>X</span>
-            <span>1.2</span>
+            <span>{{item.multiple}}</span>
             <img src="@/assets/images/go.png" alt />
           </li>
         </ul>
@@ -63,7 +63,7 @@ export default {
   },
   components: {},
   created() {
-    // this.getImg();
+    this.getImg();
   },
   mounted() {},
   computed: {},
@@ -104,11 +104,35 @@ export default {
         this.getImgReq(data);
       }
     },
+    timerToStr(time) {
+      if (time < 10) {
+        return `0${time}`;
+      } else {
+        return time;
+      }
+    },
     getImgReq(data) {
       $api
-        .postRequest("/user/task/v6/searchMy58TaskTeam", data)
+        .postRequest("/user/task/v6/searchMy58TaskTeamHisPage", data)
         .then(res => {
           if (res.code == 0) {
+            let list = res.datas.infoList;
+            for (let i = 0; i < list.length; i++) {
+              let item = list[i];
+              let date = new Date(item.overDate);
+              let Y = date.getFullYear();
+              let M = date.getMinutes() + 1;
+              let D = date.getDate();
+              let H = date.getHours();
+              let F = date.getMinutes();
+              let S = date.getSeconds();
+              let ytd = `${Y}-${this.timerToStr(M)}-${this.timerToStr(D)}`;
+              let time = `${this.timerToStr(H)}-${this.timerToStr(F)}-${this.timerToStr(S)}`;
+              list[i].Ytd = ytd;
+              list[i].Time = time;
+            }
+            this.teamList = list;
+            console.log(this.teamList);
           } else {
             this.temashow = true;
             this.$toast.fail(code.message);
