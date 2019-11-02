@@ -38,11 +38,11 @@
                   <span>创建队伍</span>
                 </div>
                 <div class="date">
-                  <span class="dateNum">23</span>
+                  <span class="dateNum">24</span>
                   <span class="dateIcon">:</span>
-                  <span class="dateNum">53</span>
+                  <span class="dateNum">00</span>
                   <span class="dateIcon">:</span>
-                  <span class="dateNum">53</span>
+                  <span class="dateNum">00</span>
                 </div>
                 <div class="userInfo">
                   <ul class="user">
@@ -50,7 +50,7 @@
                       <img src="@/assets/images/user.png" alt />
                     </li>
                     <li class="userName">dsfjdfskfd</li>
-                    <li class="usersType">审核中</li>
+                    <!-- <li class="usersType">审核中</li> -->
                   </ul>
                   <ul class="userpize">
                     <li class="pizeSum">
@@ -60,97 +60,136 @@
                     <li class="pizeTitle">我的奖励</li>
                   </ul>
                 </div>
-                <div class="teamList">
-                  <ul class="team">
-                    <li class="teamUser">
-                      <img src="@/assets/images/user.png" alt />
-                    </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
-                  </ul>
-                  <ul class="team">
-                    <li class="teamUser">
-                      <img src="@/assets/images/add.png" alt />
-                    </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
-                  </ul>
-                  <ul class="team">
-                    <li class="teamUser">
-                      <img src="@/assets/images/add.png" alt />
-                    </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
-                  </ul>
-                  <ul class="team">
-                    <li class="teamUser">
-                      <img src="@/assets/images/add.png" alt />
-                    </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
-                  </ul>
+                <div class="operation">
+                  <div class="script">
+                    好朋友多做任务，多领
+                    <span>20倍</span>奖励
+                  </div>
+                  <div class="creatBtn">
+                    <img src="@/assets/images/creact.png" alt />
+                  </div>
                 </div>
               </div>
             </swiper-slide>
-            <swiper-slide class="afterBox">
+            <swiper-slide class="afterBox" v-for="(item,index) in teamList" :key="index">
+              <!--  v-if="temashow" -->
               <div class="basicInfo">
                 <div class="infoTitle">
                   <img src="@/assets/images/formteam.png" alt />
                   <span>队伍</span>
-                  <span>1</span>
-                  <span>/2</span>
+                  <span>{{index+1}}</span>
+                  <span>/</span>
+                  <span>{{item.totalNum}}</span>
                 </div>
                 <div class="date">
-                  <span class="dateNum">23</span>
+                  <span class="dateNum">{{item.H}}</span>
                   <span class="dateIcon">:</span>
-                  <span class="dateNum">53</span>
+                  <span class="dateNum">{{item.F}}</span>
                   <span class="dateIcon">:</span>
-                  <span class="dateNum">53</span>
+                  <span class="dateNum">{{item.S}}</span>
                 </div>
-                <div class="userInfo">
-                  <ul class="user">
+                <div class="userInfo" v-for="(data,idx) in item.memberList" :key="idx" >
+                  <ul class="user" v-if="data.type==1">
                     <li class="usericon">
                       <img src="@/assets/images/user.png" alt />
                     </li>
                     <li class="userName">dsfjdfskfd</li>
-                    <li class="usersType">审核中</li>
+                    <li class="usersType" v-if="item.completeNum==0">待提交</li>
+                    <li class="usersType" v-if="item.completeNum==1">审核中</li>
+                    <li class="usersType" v-if="item.completeNum==2">已完成</li>
                   </ul>
                   <ul class="userpize">
                     <li class="pizeSum">
                       <span>X</span>
-                      1.0
+                      {{data.multiple}}
                     </li>
                     <li class="pizeTitle">我的奖励</li>
                   </ul>
                 </div>
                 <div class="teamList">
-                  <ul class="team">
+                  <ul class="team" v-if="item.memberList[0]&&item.memberList[0].type==2">
                     <li class="teamUser">
                       <img src="@/assets/images/user.png" alt />
                     </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
+                    <li class="teamName">{{item.memberList[0].nickName}}</li>
+                    <li class="teamType" v-if="item.memberList[0].status==0">待提交</li>
+                    <li class="teamType" v-if="item.memberList[0].status==1">审核中</li>
+                    <li class="teamType" v-if="item.memberList[0].status==2">已完成</li>
                   </ul>
-                  <ul class="team">
+                  <ul class="team" v-if="!item.memberList[0]">
                     <li class="teamUser">
-                      <img src="@/assets/images/headportrait2.png" alt />
+                      <img src="@/assets/images/add.png" alt />
                     </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
+                    <li class="teamName">立即邀请</li>
+                    <li class="teamType">待提交</li>
                   </ul>
-                  <ul class="team">
+
+                  <ul class="team" v-if="item.memberList[1]&&item.memberList[1].type==2">
                     <li class="teamUser">
-                      <img src="@/assets/images/headportrait2.png" alt />
+                      <img src="@/assets/images/user.png" alt />
                     </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
+                    <li class="teamName">{{item.memberList[1].nickName}}</li>
+                    <li class="teamType" v-if="item.memberList[1].status==0">待提交</li>
+                    <li class="teamType" v-if="item.memberList[1].status==1">审核中</li>
+                    <li class="teamType" v-if="item.memberList[1].status==2">已完成</li>
                   </ul>
-                  <ul class="team">
+                  <ul class="team" v-if="!item.memberList[1]">
                     <li class="teamUser">
-                      <img src="@/assets/images/headportrait2.png" alt />
+                      <img src="@/assets/images/add.png" alt />
                     </li>
-                    <li class="teamName">gfhyjhjkg</li>
-                    <li class="teamType">已完成</li>
+                    <li class="teamName">立即邀请</li>
+                    <li class="teamType">待提交</li>
+                  </ul>
+
+                  <ul class="team" v-if="item.memberList[2]&&item.memberList[2].type==2">
+                    <li class="teamUser">
+                      <img src="@/assets/images/user.png" alt />
+                    </li>
+                    <li class="teamName">{{item.memberList[2].nickName}}</li>
+                    <li class="teamType" v-if="item.memberList[2].status==0">待提交</li>
+                    <li class="teamType" v-if="item.memberList[2].status==1">审核中</li>
+                    <li class="teamType" v-if="item.memberList[2].status==2">已完成</li>
+                  </ul>
+                  <ul class="team" v-if="!item.memberList[2]">
+                    <li class="teamUser">
+                      <img src="@/assets/images/add.png" alt />
+                    </li>
+                    <li class="teamName">立即邀请</li>
+                    <li class="teamType">待提交</li>
+                  </ul>
+
+                  <ul class="team" v-if="item.memberList[3]&&item.memberList[3].type==2">
+                    <li class="teamUser">
+                      <img src="@/assets/images/user.png" alt />
+                    </li>
+                    <li class="teamName">{{item.memberList[3].nickName}}</li>
+                    <li class="teamType" v-if="item.memberList[3].status==0">待提交</li>
+                    <li class="teamType" v-if="item.memberList[3].status==1">审核中</li>
+                    <li class="teamType" v-if="item.memberList[3].status==2">已完成</li>
+                  </ul>
+                  <ul class="team" v-if="!item.memberList[3]">
+                    <li class="teamUser">
+                      <img src="@/assets/images/add.png" alt />
+                    </li>
+                    <li class="teamName">立即邀请</li>
+                    <li class="teamType">待提交</li>
+                  </ul>
+
+                   <ul class="team" v-if="item.memberList[4]&&item.memberList[4].type==2">
+                    <li class="teamUser">
+                      <img src="@/assets/images/user.png" alt />
+                    </li>
+                    <li class="teamName">{{item.memberList[4].nickName}}</li>
+                    <li class="teamType" v-if="item.memberList[4].status==0">待提交</li>
+                    <li class="teamType" v-if="item.memberList[4].status==1">审核中</li>
+                    <li class="teamType" v-if="item.memberList[4].status==2">已完成</li>
+                  </ul>
+                  <ul class="team" v-if="!item.memberList[4]">
+                    <li class="teamUser">
+                      <img src="@/assets/images/add.png" alt />
+                    </li>
+                    <li class="teamName">立即邀请</li>
+                    <li class="teamType">待提交</li>
                   </ul>
                 </div>
               </div>
@@ -213,6 +252,8 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
+      temashow: false,
+      teamList: [],
       swipertop: {
         initialSlide: 0,
         centeredSlides: true,
@@ -224,7 +265,7 @@ export default {
   },
   components: {},
   created() {
-    this.getImgReq();
+    this.getImg();
   },
   mounted() {},
   computed: {},
@@ -232,11 +273,56 @@ export default {
     onChange() {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
-    getImgReq() {
+    getImg() {
+      // this.$toast.loading({
+      //   duration: 0,
+      //   forbidClick: true, // 禁用背景点击
+      //   message: "加载中..."
+      // });
+      const classCode =
+        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode },
+          data => {
+            this.getImgReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ classCode })
+        );
+        this.getImgReq(data);
+      }
+    },
+    getImgReq(data) {
       $api
-        .getRequest("/user/task/v6/searchMy58TaskTeam")
+        .postRequest("/user/task/v6/searchMy58TaskTeam", data)
         .then(res => {
-          console.log(res);
+          if (res.code == 0) {
+            let list = res.datas;
+            for (let i = 0; i < list.length; i++) {
+              let item = list[i];
+              let date = new Date(item.overDate);
+              let H = date.getHours();
+              let F = date.getMinutes();
+              let S = date.getSeconds();
+              list[i].H = H;
+              list[i].F = F;
+              list[i].S = S;
+            }
+            // for(let j=0;j<list.length;j++){
+            //   let item =list[j].memberList;
+            //   for(let k=0;k<memberList.length;k++){
+            //    let 
+            //   }
+            // }
+            this.teamList = list;           
+          } else {
+            this.temashow = true;
+            this.$toast.fail(code.message);
+          }
         })
         .catch(err => {
           this.$toast.fail(err.message);
@@ -251,13 +337,13 @@ export default {
 .groupTask_page {
   overflow-y: scroll;
   .scroll_view {
-    margin-top: 40px;
+    margin-top: 64px;
     margin-bottom: 70px;
     padding-top: 152px;
     background-image: url("../assets/images/redpack.png");
     background-size: 100%;
     .header {
-      height: 40px;
+      height: 64px;
       width: 100%;
       background: #4a87ea;
       position: fixed;
@@ -266,9 +352,11 @@ export default {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-end;
       .back {
+        height: 28px;
         width: 30px;
+        margin-left: 10px;
         text-align: center;
         img {
           height: 17px;
@@ -277,6 +365,7 @@ export default {
         }
       }
       .title {
+        height: 34px;
         font-size: 18px;
         font-family: 微软雅黑;
         color: #fff;
@@ -284,11 +373,13 @@ export default {
         padding-left: 45px;
       }
       .titltBtn {
+        height: 28px;
         width: 80px;
         font-size: 14px;
         color: #ffff;
         font-weight: 400;
         text-align: center;
+        color: #fff;
       }
     }
     .tip {
@@ -501,6 +592,29 @@ export default {
                     text-decoration: none;
                     font-family: 微软雅黑;
                     color: #9f6150;
+                  }
+                }
+              }
+              .operation {
+                margin-top: 80px;
+                height: 115px;
+                .script {
+                  text-align: center;
+                  height: 22px;
+                  font-size: 18px;
+                  color: #5f211a;
+                  span {
+                    color: #e0413c;
+                    font-size: 22px;
+                  }
+                }
+                .creatBtn {
+                  margin-top: 20px;
+                  text-align: center;
+                  height: 294px;
+                  img {
+                    width: 294px;
+                    height: 53px;
                   }
                 }
               }
