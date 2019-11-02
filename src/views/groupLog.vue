@@ -7,13 +7,13 @@
   <div class="groupLog_page">
     <div class="scroll_view">
       <div class="header">
-        <div class="back">
+        <div class="back" @click="groupTask(true)">  
           <img class="sum_gold" src="@/assets/images/back.png" alt />
         </div>
         <div class="title">组队记录</div>
         <div class="titltBtn"></div>
       </div>
-      <div class="logList">
+      <div class="logList" @click="groupDetails(true)">
         <ul class="title">
           <li>结束时间</li>
           <li>我的队伍</li>
@@ -68,6 +68,16 @@ export default {
   mounted() {},
   computed: {},
   methods: {
+    groupDetails(flag) {
+      let href = window.location.href;
+      let str = href.split("#/");
+      window.location.href = `${str}#/groupDetails`;
+    },
+    groupTask(flag) {
+      let href = window.location.href;
+      let str = href.split("#/");
+      window.location.href = `${str}#/groupTask`;
+    },
     onChange() {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
@@ -122,7 +132,8 @@ export default {
     .header {
       height: 64px;
       width: 100%;
-      background: #4a87ea;
+      background-image: url("../assets/images/Rectangle.png");
+      background-size: 100%;
       position: fixed;
       z-index: 10;
       top: 0;
@@ -175,9 +186,9 @@ export default {
           width: 70px;
         }
         li:nth-child(2) {
-          width: 120px;   
+          width: 120px;
           box-sizing: border-box;
-          padding-left: 10px;     
+          padding-left: 10px;
         }
       }
       .list {

@@ -9,7 +9,7 @@
           <img class="sum_gold" src="@/assets/images/back.png" alt />
         </div>
         <div class="title">团队分享任务</div>
-        <div class="titltBtn">组队记录</div>
+        <div class="titltBtn" @click="grouLog(true)">组队记录</div>
       </div>
 
       <div class="tip">
@@ -47,6 +47,7 @@
                 <div class="userInfo">
                   <ul class="user">
                     <li class="usericon">
+                      <img src="@/assets/images/regcom.png" alt class="regcom" />
                       <img src="@/assets/images/user.png" alt />
                     </li>
                     <li class="userName">dsfjdfskfd</li>
@@ -88,9 +89,10 @@
                   <span class="dateIcon">:</span>
                   <span class="dateNum">{{item.S}}</span>
                 </div>
-                <div class="userInfo" v-for="(data,idx) in item.memberList" :key="idx" >
+                <div class="userInfo" v-for="(data,idx) in item.memberList" :key="idx">
                   <ul class="user" v-if="data.type==1">
                     <li class="usericon">
+                      <img src="@/assets/images/regcom.png" alt class="regcom" />
                       <img src="@/assets/images/user.png" alt />
                     </li>
                     <li class="userName">dsfjdfskfd</li>
@@ -175,7 +177,7 @@
                     <li class="teamType">待提交</li>
                   </ul>
 
-                   <ul class="team" v-if="item.memberList[4]&&item.memberList[4].type==2">
+                  <ul class="team" v-if="item.memberList[4]&&item.memberList[4].type==2">
                     <li class="teamUser">
                       <img src="@/assets/images/user.png" alt />
                     </li>
@@ -259,7 +261,7 @@ export default {
         centeredSlides: true,
         slidesPerView: 1.1,
         spaceBetween: 8,
-        loop: false
+        loop: true
       }
     };
   },
@@ -270,6 +272,11 @@ export default {
   mounted() {},
   computed: {},
   methods: {
+    grouLog(flag) {
+      let href = window.location.href;
+      let str = href.split("#/");
+      window.location.href = `${str}#/groupLog`;
+    },
     onChange() {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
@@ -315,10 +322,10 @@ export default {
             // for(let j=0;j<list.length;j++){
             //   let item =list[j].memberList;
             //   for(let k=0;k<memberList.length;k++){
-            //    let 
+            //    let
             //   }
             // }
-            this.teamList = list;           
+            this.teamList = list;
           } else {
             this.temashow = true;
             this.$toast.fail(code.message);
@@ -345,7 +352,8 @@ export default {
     .header {
       height: 64px;
       width: 100%;
-      background: #4a87ea;
+      background-image: url("../assets/images/Rectangle.png");
+      background-size: 100%;
       position: fixed;
       z-index: 10;
       top: 0;
@@ -438,7 +446,7 @@ export default {
       text-align: right;
       padding-right: 8px;
       position: fixed;
-      top: 246px;
+      top: 270px;
       right: 0;
       z-index: 100;
       color: #fff;
@@ -542,9 +550,18 @@ export default {
                     height: 60px;
                     text-align: center;
                     line-height: 60px;
+                    position: relative;
                     img {
                       width: 60px;
                       height: 60px;
+                    }
+                    .regcom {
+                      width: 38px;
+                      height: 17px;
+                      position: absolute;
+                      z-index: 10000;
+                      top: -9px;
+                      left: 10px;
                     }
                   }
                   .userName {

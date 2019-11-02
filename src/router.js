@@ -11,6 +11,14 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [  
     {      
+      path: '/groupDetails',
+      name: 'groupDetails',// 拼团任务
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "groupTask" */ './views/groupDetails.vue')
+    }, 
+    {      
       path: '/groupLog',
       name: 'groupLog',// 拼团任务
       meta: {
