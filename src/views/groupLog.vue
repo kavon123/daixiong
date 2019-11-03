@@ -26,10 +26,11 @@
           </li>
           <li class="memberImg">
             <img src="@/assets/images/member.png" alt />
+            <img src="@/assets/images/add.png" alt="">
             <img src="@/assets/images/member.png" alt />
             <img src="@/assets/images/member.png" alt />
             <img src="@/assets/images/member.png" alt />
-            <img src="@/assets/images/member.png" alt />
+            <!-- <img src="@/assets/images/member.png" alt /> -->
           </li>
           <li class="redPack">
             <img src="@/assets/images/redpackcup.png" alt />
@@ -63,9 +64,11 @@ export default {
   },
   components: {},
   created() {
+    
+  },
+  mounted() {
     this.getImg();
   },
-  mounted() {},
   computed: {},
   methods: {
     groupDetails(flag) {
@@ -79,7 +82,7 @@ export default {
       window.location.href = `${str}#/groupTask`;
     },
     onChange() {
-      this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
+      
     },
     getImg() {
       // this.$toast.loading({

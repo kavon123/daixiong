@@ -107,7 +107,7 @@ export default {
       window.location.href = `${str}#/groupLog`;
     },
     onChange() {
-      this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
+      
     },
     getImg() {
       // this.$toast.loading({

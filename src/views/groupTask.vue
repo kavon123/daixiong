@@ -31,8 +31,8 @@
       <div class="carousel">
         <div class="scroll_conten" @touchmove.prevent @click.prevent>
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
-            <swiper-slide class="afterBox">
-              <div class="basicInfo">
+           <swiper-slide class="afterBox">
+             <div class="basicInfo">
                 <div class="infoTitle">
                   <img src="@/assets/images/formteam.png" alt />
                   <span>创建队伍</span>
@@ -44,14 +44,14 @@
                   <span class="dateIcon">:</span>
                   <span class="dateNum">00</span>
                 </div>
-                <div class="userInfo">
+               <div class="userInfo">
                   <ul class="user">
                     <li class="usericon">
                       <img src="@/assets/images/regcom.png" alt class="regcom" />
                       <img src="@/assets/images/user.png" alt />
                     </li>
                     <li class="userName">dsfjdfskfd</li>
-                    <!-- <li class="usersType">审核中</li> -->
+                    <li class="usersType">审核中</li>
                   </ul>
                   <ul class="userpize">
                     <li class="pizeSum">
@@ -66,14 +66,13 @@
                     好朋友多做任务，多领
                     <span>20倍</span>奖励
                   </div>
-                  <div class="creatBtn">
+                  <div class="creatBtn" @click="creatTeam(true)">
                     <img src="@/assets/images/creact.png" alt />
                   </div>
                 </div>
               </div>
             </swiper-slide>
             <swiper-slide class="afterBox" v-for="(item,index) in teamList" :key="index">
-              <!--  v-if="temashow" -->
               <div class="basicInfo">
                 <div class="infoTitle">
                   <img src="@/assets/images/formteam.png" alt />
@@ -254,7 +253,7 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
-      temashow: false,
+      parms: "",
       teamList: [],
       swipertop: {
         initialSlide: 0,
@@ -262,16 +261,52 @@ export default {
         slidesPerView: 1.1,
         spaceBetween: 8,
         loop: true
-      }
+      },
+      activeIndex: 0
     };
   },
-  components: {},
-  created() {
-    this.getImg();
+  components: {
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  mounted() {},
+  created() {
+    let that = this;
+    let p = new Promise(function(resolve, reject) {
+      that.getImg();
+    });
+  },
+  mounted() {
+    this.getImgReq(this.parms);
+  },
   computed: {},
   methods: {
+    creatTeam(flag) {
+      $api
+        .postRequest("/user/task/v6/create58TaskTeam", this.parms)
+        .then(res => {
+          if (res.code == 0) {
+            this.$toast.fail("创建成功！");
+            let list = res.datas;
+            for (let i = 0; i < list.length; i++) {
+              let item = list[i];
+              let date = new Date(item.overDate);
+              let H = date.getHours();
+              let F = date.getMinutes();
+              let S = date.getSeconds();
+              list[i].H = H;
+              list[i].F = F;
+              list[i].S = S;
+            }
+            let arry = this.teamList.concat(list);
+            this.teamList = arry;
+            this.$forceUpdate();
+          } else {
+            this.$toast.fail(code.message);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail("创建失败！");
+        });
+    },
     grouLog(flag) {
       let href = window.location.href;
       let str = href.split("#/");
@@ -281,11 +316,6 @@ export default {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
     getImg() {
-      // this.$toast.loading({
-      //   duration: 0,
-      //   forbidClick: true, // 禁用背景点击
-      //   message: "加载中..."
-      // });
       const classCode =
         this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
       if (this.isIOS) {
@@ -293,19 +323,19 @@ export default {
           "DX_encryptionRequest",
           { classCode },
           data => {
-            this.getImgReq(data);
+            this.parms = data;
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
           JSON.stringify({ classCode })
         );
-        this.getImgReq(data);
+        this.parms = data;
       }
     },
-    getImgReq(data) {
+    getImgReq(parms) {
       $api
-        .postRequest("/user/task/v6/searchMy58TaskTeam", data)
+        .postRequest("/user/task/v6/searchMy58TaskTeam", parms)
         .then(res => {
           if (res.code == 0) {
             let list = res.datas;
@@ -319,15 +349,8 @@ export default {
               list[i].F = F;
               list[i].S = S;
             }
-            // for(let j=0;j<list.length;j++){
-            //   let item =list[j].memberList;
-            //   for(let k=0;k<memberList.length;k++){
-            //    let
-            //   }
-            // }
             this.teamList = list;
           } else {
-            this.temashow = true;
             this.$toast.fail(code.message);
           }
         })
