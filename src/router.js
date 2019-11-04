@@ -11,24 +11,40 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [  
     {      
-      path: '/groupDetails',
-      name: 'groupDetails',// 拼团任务
+      path: '/share',
+      name: 'share',// 分享落地页
       meta: {
         keepAlive: true
       },
-      component: () => import(/* webpackChunkName: "groupTask" */ './views/groupDetails.vue')
+      component: () => import(/* webpackChunkName: "sharePro_m" */ './views/share.vue')
+    }, 
+    // {      
+    //   path: '/sharePro_m',
+    //   name: 'sharePro_m',// 分享落地页-移动端
+    //   meta: {
+    //     keepAlive: true
+    //   },
+    //   component: () => import(/* webpackChunkName: "sharePro_m" */ './views/sharePro/sharePro_mob.vue')
+    // }, 
+    {      
+      path: '/groupDetails',
+      name: 'groupDetails',// 组队详情
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "groupDetails" */ './views/groupDetails.vue')
     }, 
     {      
       path: '/groupLog',
-      name: 'groupLog',// 拼团任务
+      name: 'groupLog',// 组队记录
       meta: {
         keepAlive: true
       },
-      component: () => import(/* webpackChunkName: "groupTask" */ './views/groupLog.vue')
+      component: () => import(/* webpackChunkName: "groupLog" */ './views/groupLog.vue')
     },      
     {
       path: '/groupTask',
-      name: 'groupTask',// 拼团任务
+      name: 'groupTask',//组队分享任务
       meta: {
         keepAlive: true
       },

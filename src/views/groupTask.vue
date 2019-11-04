@@ -31,8 +31,8 @@
       <div class="carousel">
         <div class="scroll_conten" @touchmove.prevent @click.prevent>
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
-           <swiper-slide class="afterBox">
-             <div class="basicInfo">
+            <swiper-slide class="afterBox">
+              <div class="basicInfo">
                 <div class="infoTitle">
                   <img src="@/assets/images/formteam.png" alt />
                   <span>创建队伍</span>
@@ -44,7 +44,7 @@
                   <span class="dateIcon">:</span>
                   <span class="dateNum">00</span>
                 </div>
-               <div class="userInfo">
+                <div class="userInfo">
                   <ul class="user">
                     <li class="usericon">
                       <img src="@/assets/images/regcom.png" alt class="regcom" />
@@ -79,7 +79,7 @@
                   <span>队伍</span>
                   <span>{{index+1}}</span>
                   <span>/</span>
-                  <span>{{item.totalNum}}</span>
+                  <span>{{teamList.length}}</span>
                 </div>
                 <div class="date">
                   <span class="dateNum">{{item.H}}</span>
