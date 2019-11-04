@@ -272,7 +272,7 @@ export default {
       font-size: 18px;
       font-weight: 600;
       margin-left: 50px;
-      margin-bottom: 32px;
+      padding-bottom: 90px;
     }
   }
   .btn_row {
@@ -301,7 +301,7 @@ export default {
     .down_btn {
       width: 180px;
       height: 45px;
-      background:#ff404e;
+      background: #ff404e;
       border-radius: 6px;
       text-align: center;
       line-height: 45px;

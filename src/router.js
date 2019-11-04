@@ -9,39 +9,47 @@ Vue.use(Router)
 export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
-  routes: [  
-    {      
+  routes: [
+    {
       path: '/share',
-      name: 'share',// 分享落地页
+      name: 'share',// 分享落地页-移动端
       meta: {
         keepAlive: true
       },
-      component: () => import(/* webpackChunkName: "sharePro_m" */ './views/share.vue')
-    }, 
-    // {      
-    //   path: '/sharePro_m',
-    //   name: 'sharePro_m',// 分享落地页-移动端
-    //   meta: {
-    //     keepAlive: true
-    //   },
-    //   component: () => import(/* webpackChunkName: "sharePro_m" */ './views/sharePro/sharePro_mob.vue')
-    // }, 
+      component: () => {
+        if (/Android|webOS| iPhone | iPad | iPod |BlackBerry|opera mini|opera mobile|appleWebkit.*mobile|mobile/i.test(
+          navigator.userAgent)) {
+          return import(/* webpackChunkName: "sharePro_m" */ './views/share.vue')
+        } else {
+          return import(/* webpackChunkName: "sharePro" */ './views/sharePro.vue')
+        }
+
+      }
+    },
     {      
+      path: '/sharePro',
+      name: 'sharePro',// 分享落地页-PC端
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "sharePro" */ './views/sharePro.vue')
+    }, 
+    {
       path: '/groupDetails',
       name: 'groupDetails',// 组队详情
       meta: {
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "groupDetails" */ './views/groupDetails.vue')
-    }, 
-    {      
+    },
+    {
       path: '/groupLog',
       name: 'groupLog',// 组队记录
       meta: {
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "groupLog" */ './views/groupLog.vue')
-    },      
+    },
     {
       path: '/groupTask',
       name: 'groupTask',//组队分享任务
@@ -49,7 +57,7 @@ export default new Router({
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "groupTask" */ './views/groupTask.vue')
-    },     
+    },
     {
       path: '/58',
       name: '58',

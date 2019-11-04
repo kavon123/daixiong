@@ -24,7 +24,7 @@
           <span class="sum">995260</span>
         </div>
       </div>
-      <div class="joinBtn">
+      <div class="joinBtn" @click="joinBtn(true)">
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
       </div>
@@ -118,7 +118,7 @@
                     <li class="teamType" v-if="item.memberList[0].status==2">已完成</li>
                   </ul>
                   <ul class="team" v-if="!item.memberList[0]">
-                    <li class="teamUser">
+                    <li class="teamUser" @click="add(true)">
                       <img src="@/assets/images/add.png" alt />
                     </li>
                     <li class="teamName">立即邀请</li>
@@ -135,7 +135,7 @@
                     <li class="teamType" v-if="item.memberList[1].status==2">已完成</li>
                   </ul>
                   <ul class="team" v-if="!item.memberList[1]">
-                    <li class="teamUser">
+                    <li class="teamUser" @click="add(true)">
                       <img src="@/assets/images/add.png" alt />
                     </li>
                     <li class="teamName">立即邀请</li>
@@ -152,7 +152,7 @@
                     <li class="teamType" v-if="item.memberList[2].status==2">已完成</li>
                   </ul>
                   <ul class="team" v-if="!item.memberList[2]">
-                    <li class="teamUser">
+                    <li class="teamUser" @click="add(true)">
                       <img src="@/assets/images/add.png" alt />
                     </li>
                     <li class="teamName">立即邀请</li>
@@ -169,7 +169,7 @@
                     <li class="teamType" v-if="item.memberList[3].status==2">已完成</li>
                   </ul>
                   <ul class="team" v-if="!item.memberList[3]">
-                    <li class="teamUser">
+                    <li class="teamUser" @click="add(true)">
                       <img src="@/assets/images/add.png" alt />
                     </li>
                     <li class="teamName">立即邀请</li>
@@ -186,7 +186,7 @@
                     <li class="teamType" v-if="item.memberList[4].status==2">已完成</li>
                   </ul>
                   <ul class="team" v-if="!item.memberList[4]">
-                    <li class="teamUser">
+                    <li class="teamUser" @click="add(true)">
                       <img src="@/assets/images/add.png" alt />
                     </li>
                     <li class="teamName">立即邀请</li>
@@ -259,8 +259,8 @@ export default {
         initialSlide: 0,
         centeredSlides: true,
         slidesPerView: 1.1,
-        spaceBetween: 8,
-        loop: true
+        spaceBetween: 8
+        // loop: true
       },
       activeIndex: 0
     };
@@ -279,6 +279,50 @@ export default {
   },
   computed: {},
   methods: {
+    add(flag) {
+      $api
+        .postRequest("/user/task/v6/searchTeamShareUrl", this.parms)
+        .then(res => {
+          console.log(res);
+          if (res.code == 0) {
+          } else {
+            this.$toast.fail(code.message);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail("创建失败！");
+        });
+    },
+    joinBtn(flag) {
+      let parm = "";
+      const classCode =
+        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { classCode, teamId: "1191334465153208320" },
+          data => {
+            parm = data;
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ classCode, teamId: "1191334465153208320" })
+        );
+        parm = data;
+      }
+      $api
+        .postRequest("/user/task/v6/add58TeamMember", parm)
+        .then(res => {
+          if (res.code == 0) {
+          } else {
+            this.$toast.fail(code.message);
+          }
+        })
+        .catch(err => {
+          this.$toast.fail("创建失败！");
+        });
+    },
     creatTeam(flag) {
       $api
         .postRequest("/user/task/v6/create58TaskTeam", this.parms)
