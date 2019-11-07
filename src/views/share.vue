@@ -8,12 +8,12 @@
 <template>
   <div class="groupDetails_page">
     <div class="scroll_view">
-      <div class="header">
+      <!-- <div class="header">
         <div class="searsh">
           <input type="text" placeholder value="快来! 我已经成功提现!" />
           <img src="@/views/sharePro/img/refresh.png" alt />
         </div>
-      </div>
+      </div> -->
       <div class="content">
         <div class="title">简单三步, 拿现金红包</div>
         <div class="flow">
@@ -71,6 +71,9 @@
       </div>
       <div class="btn_row">
         <div class="cop_link">复制链接邀请</div>
+        <!-- <div>
+          <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
+           </div> -->
         <div class="down_btn">下载APP领钱</div>
       </div>
     </div>
@@ -96,7 +99,8 @@ export default {
     };
   },
   components: {},
-  created() {},
+  created() {     
+  },
   mounted() {},
   computed: {},
   methods: {}
@@ -108,7 +112,7 @@ export default {
 .groupDetails_page {
   overflow-y: scroll;
   .scroll_view {
-    margin-top: 64px;
+    // margin-top: 64px;
     margin-bottom: 90px;
     background-image: url("./sharePro/img/sologan.png");
     background-size: 100%;
@@ -167,24 +171,24 @@ export default {
           width: 20px;
           height: 20px;
           text-align: center;
-          border: 1px dashed #888888;
+          // border: 1px dashed #888888;
           img {
-            width: 15px;
-            height: 15px;
+            width: 20px;
+          height: 20px;
             vertical-align: middle;
           }
         }
         li:nth-child(2) {
           div {
-            height: 134px;
-            width: 10px;
+            height: 138px;
+            width: 11px;
             border-right: 1px solid #db1725;
           }
         }
         li:nth-child(4) {
           div {
             height: 446px;
-            width: 10px;
+            width: 11px;
             border-right: 1px solid #db1725;
           }
         }
@@ -208,13 +212,13 @@ export default {
             img:nth-child(2n-1) {
               width: 52px;
               height: 52px;
-              border: 1px dashed #ff3366;
+              // border: 1px dashed #ff3366;
             }
             img:nth-child(2n) {
               margin: 0 16px;
               width: 26;
               height: 22px;
-              border: 1px dashed #ff3366;
+              // border: 1px dashed #ff3366;
             }
           }
           div:nth-child(2) {
@@ -234,7 +238,7 @@ export default {
           div {
             width: 305px;
             text-align: center;
-            border: 1px dashed #ff3366;
+            // border: 1px dashed #ff3366;
             vertical-align: middle;
           }
           div:nth-child(1) {
@@ -255,7 +259,7 @@ export default {
           div {
             width: 305px;
             text-align: center;
-            border: 1px dashed #ff3366;
+            // border: 1px dashed #ff3366;
             vertical-align: middle;
             img {
               width: 305px;

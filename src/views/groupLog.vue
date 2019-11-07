@@ -7,32 +7,38 @@
   <div class="groupLog_page">
     <div class="scroll_view">
       <div class="header">
-        <div class="back" @click="groupTask(true)">
+        <div class="back" @click="groupTask()">
           <img class="sum_gold" src="@/assets/images/back.png" alt />
         </div>
         <div class="title">组队记录</div>
         <div class="titltBtn"></div>
       </div>
-      <div class="logList" @click="groupDetails(true)">
+      <div class="noImg" v-if="teamList.length==0">
+        <img src="@/assets/images/noteamLog.png" alt />
+      </div>
+      <div class="logList" v-if="teamList.length>0" @touchmove="handleTouchMove">
+        <!-- @touchend="handleTouchEnd" -->
+        <!-- @touchstart.prevent="handleTouchStart" -->
+        <!-- @touchmove="handleTouchMove" -->
+        <!-- @click="handleLetterClick" -->
         <ul class="title">
           <li>结束时间</li>
           <li>我的队伍</li>
           <li>我的奖励</li>
         </ul>
+
         <ul class="list" v-for="(item,index) in  teamList" :key="index">
           <li class="date">
             <div>{{item.Ytd}}</div>
             <div>{{item.Time}}</div>
           </li>
           <li class="memberImg">
-            <img src="@/assets/images/member.png" alt />
-            <img src="@/assets/images/add.png" alt="">
-            <img src="@/assets/images/member.png" alt />
-            <img src="@/assets/images/member.png" alt />
-            <img src="@/assets/images/member.png" alt />
-            <!-- <img src="@/assets/images/member.png" alt /> -->
+            <div v-for="(num,i) in numberList" :key="i">
+              <img v-if="num<=item.totalNum" src="@/assets/images/member.png" alt />
+              <img v-if="num>item.totalNum" src="@/assets/images/add.png" alt />
+            </div>
           </li>
-          <li class="redPack">
+          <li class="redPack" @click="groupDetails(item.teamId)">
             <img src="@/assets/images/redpackcup.png" alt />
             <span>X</span>
             <span>{{item.multiple}}</span>
@@ -52,39 +58,200 @@ export default {
   data() {
     return {
       temashow: false,
-      teamList: [],
-      swipertop: {
-        initialSlide: 0,
-        centeredSlides: true,
-        slidesPerView: 1.1,
-        spaceBetween: 8,
-        loop: false
-      }
+      teamList: [
+        // {
+        //   teamId: "1192388284033187840",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295295000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388282661650432",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295295000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388281826983936",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295295000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388256132677632",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388255998459904",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388255172182016",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388254043914240",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388253288939520",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192388252613656576",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573295288000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // },
+        // {
+        //   teamId: "1192361580837388288",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573288929000,
+        //   multiple: 1,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: null,
+        //   amount: "20000"
+        // }
+      ],
+      numberList: [1, 2, 3, 4, 5],
+      params: { page: 1, size: 10 },
+      page: { totalSize: "", totalPage: "", currPage: "" },
+      tstart: "",
+      tend: "",
+      touch: false,
+      TouchDate: []
     };
   },
-  components: {},
-  created() {
-    
+
+  components: {
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  mounted() {
-    this.getImg();
+  created() {},
+  mounted() {},
+  activated() {
+    this.getImg(this.params);
   },
   computed: {},
   methods: {
-    groupDetails(flag) {
-      let href = window.location.href;
-      let str = href.split("#/");
-      window.location.href = `${str}#/groupDetails`;
-    },
-    groupTask(flag) {
-      let href = window.location.href;
-      let str = href.split("#/");
-      window.location.href = `${str}#/groupTask`;
-    },
-    onChange() {
+    handleTouchMove(e) {
+      // this.TouchDate.push(parseInt(e.changedTouches[0].clientY));
+      // if(this.page.currPage<this.page.totalPage){
+
+      // }else if( ){
+
+      // }
       
     },
-    getImg() {
+    // handleLetterClick(e) {},
+
+    handleTouchStart(e) {
+      this.tstart = e.touches[0].clientY;
+    },
+    handleTouchEnd(e) {
+      this.tend = e.changedTouches[0].clientY;
+    },
+
+    groupDetails(teamId) {
+      let href = window.location.href;
+      let str = href.split("#/")[0];
+      this.$store.state.teamId = teamId;
+      console.log(this.$store.state.teamId);
+      window.location.href = `${str}#/groupDetails`;
+    },
+    groupTask() {
+      let href = window.location.href;
+      let str = href.split("#/")[0];
+      window.location.href = `${str}#/groupTask`;
+    },
+    onChange() {},
+    getImg(params) {
       // this.$toast.loading({
       //   duration: 0,
       //   forbidClick: true, // 禁用背景点击
@@ -95,14 +262,14 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode },
+          { classCode, param: params },
           data => {
             this.getImgReq(data);
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode })
+          JSON.stringify({ classCode, param: params })
         );
         this.getImgReq(data);
       }
@@ -116,26 +283,31 @@ export default {
     },
     getImgReq(data) {
       $api
-        .postRequest("/user/task/v6/searchMy58TaskTeamHisPage", data)
+        .postRequest(`/user/task/v6/searchMy58TaskTeamHisPage`, data)
         .then(res => {
           if (res.code == 0) {
+            this.page.totalSize = res.totalSize;
+            this.page.totalPage = res.totalPage;
+            this.page.currPage = res.currPage;
+
             let list = res.datas.infoList;
             for (let i = 0; i < list.length; i++) {
               let item = list[i];
               let date = new Date(item.overDate);
               let Y = date.getFullYear();
-              let M = date.getMinutes() + 1;
+              let M = date.getMonth() + 1;
               let D = date.getDate();
               let H = date.getHours();
               let F = date.getMinutes();
               let S = date.getSeconds();
               let ytd = `${Y}-${this.timerToStr(M)}-${this.timerToStr(D)}`;
-              let time = `${this.timerToStr(H)}-${this.timerToStr(F)}-${this.timerToStr(S)}`;
+              let time = `${this.timerToStr(H)}:${this.timerToStr(
+                F
+              )}:${this.timerToStr(S)}`;
               list[i].Ytd = ytd;
               list[i].Time = time;
             }
             this.teamList = list;
-            console.log(this.teamList);
           } else {
             this.temashow = true;
             this.$toast.fail(code.message);
@@ -152,10 +324,12 @@ export default {
 
 <style lang='less' scoped>
 .groupLog_page {
-  overflow-y: scroll;
+  height: 100vh;
+  overflow: hidden;
   .scroll_view {
     margin-top: 64px;
     background: #fff;
+
     .header {
       height: 64px;
       width: 100%;
@@ -195,6 +369,15 @@ export default {
         font-weight: 400;
         text-align: center;
         color: #fff;
+      }
+    }
+    .noImg {
+      padding-top: 113px;
+      width: 100%;
+      text-align: center;
+      img {
+        width: 142px;
+        height: 133px;
       }
     }
     .logList {
@@ -238,29 +421,33 @@ export default {
         .memberImg {
           width: 120px;
           position: relative;
-          img {
+          div {
             width: 33px;
             height: 33px;
             position: absolute;
             top: -20px;
+            img {
+              width: 33px;
+              height: 33px;
+            }
           }
-          img:nth-child(1) {
+          div:nth-child(1) {
             left: 0;
             z-index: 10;
           }
-          img:nth-child(2) {
+          div:nth-child(2) {
             left: 16.5px;
             z-index: 9;
           }
-          img:nth-child(3) {
+          div:nth-child(3) {
             left: 33px;
             z-index: 8;
           }
-          img:nth-child(4) {
+          div:nth-child(4) {
             left: 49.5px;
             z-index: 7;
           }
-          img:nth-child(5) {
+          div:nth-child(5) {
             left: 66px;
             z-index: 6;
           }

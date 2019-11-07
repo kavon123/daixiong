@@ -1,5 +1,6 @@
 <template>
-  <div id="app" v-if="noPC">
+ <!-- v-if="noPC" -->
+  <div id="app" >
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
@@ -14,7 +15,7 @@ export default {
   name: "App",
   data() {
     return {
-      noPC: false
+      noPC: true
     };
   },
   methods: {

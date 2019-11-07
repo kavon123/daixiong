@@ -171,6 +171,7 @@
       </div>
     </div>
     <footer class="footer" :style="'height:'+paddingB+'px'">
+      <div class="paize" @click="groupTask()">组队领10倍奖励</div>
       <div
         v-if="resp.status !=1"
         @click="fnSubmit"
@@ -298,6 +299,11 @@ export default {
       setItemCode: "SET_ITEM_CODE",
       setMomentsUrl: "SET_MOMENTS_URL"
     }),
+    groupTask() {
+      let href = window.location.href;
+      let str = href.split("#/")[0];
+      window.location.href = `${str}#/groupTask`;
+    },
 
     beforeRead(file) {
       if (file.size > 10 * 1024 * 1024) {
@@ -539,7 +545,7 @@ export default {
         this.fnGetUrlReq(data);
       }
     },
-  
+
     fnGetUrlReq(data) {
       $api
         .postRequest("/lookup/searchLookupItem", data)
@@ -740,9 +746,6 @@ export default {
     const h = window.screen.height;
     if (h >= 812) {
       this.paddingB = 35 + 71;
-    }
-    if (!this.isIOS) {
-      android.DX_dismisLoading();
     }
   }
 };
@@ -1081,9 +1084,21 @@ p {
     background: #1e1656;
     height: 71px;
     padding-top: 13px;
+    .paize {
+      color: #791a22;
+      background: #ffd354;
+      border-radius: 5px;
+      width: 165px;
+      height: 45px;
+      line-height: 45px;
+      text-align: center;
+      font-size: 16px;
+      font-weight: bold;
+      margin-right: 16px;
+    }
 
     .submit_but {
-      width: 210px;
+      width: 165px;
       height: 45px;
       border: 1px solid #fff;
       // background: rgba(160, 146, 252, 0.3);

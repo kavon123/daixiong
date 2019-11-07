@@ -21,5 +21,6 @@ export default {
         },
         externalBalance: 0,
         externalTotalAmount: 0
-    }
+    },
+    teamId:"",
 }

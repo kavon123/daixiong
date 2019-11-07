@@ -3,39 +3,41 @@
 
 
 
+
+
+
+
+
+
 <template>
   <div class="groupDetails_page">
     <div class="scroll_view">
       <div class="header">
-        <div class="back" @click="grouLog()">
+        <div class="back" @click="groupTask()">
           <img class="sum_gold" src="@/assets/images/back.png" alt />
         </div>
-        <div class="title">组队详情</div>
+        <div class="title">我加入的队伍</div>
         <div class="titltBtn"></div>
       </div>
-
-      <div class="conter">
+      <div class="conter" v-if="team">
         <ul class="date">
           <li class="date_end">
             <div class="title">结束时间</div>
             <div class="dateNumber">{{team.time}}</div>
           </li>
-          <li class="date_residue" v-if="team.status!=1">
+          <li class="date_residue">
             <div class="number">{{team.end_h}}</div>
             <div class="icon">:</div>
             <div class="number">{{team.end_f}}</div>
             <div class="icon">:</div>
             <div class="number">{{team.end_s}}</div>
           </li>
-          <li class="date_residue" v-if="team.status==1">
-            <div class="end">已完成</div>
-          </li>
         </ul>
         <ul class="headerMan" v-for="(item,inx) in team.memberList" :key="inx">
           <li class="teamUser" v-if="item&&item.type==1">
             <img :src="item.image" alt class="userImg" />
             <div class="name">{{item.nickName}}</div>
-            <div class="type color_0" v-if="item.status==0">待提交</div>
+            <div class="type color_0" v-if="item.status==0">未提交</div>
             <div class="type color_1" v-if="item.status==1">审核中</div>
             <div class="type color_2" v-if="item.status==2">已完成</div>
           </li>
@@ -55,7 +57,7 @@
                 <img :src="team.memberList[i].image" alt />
               </li>
               <li class="name">{{team.memberList[i].nickName}}</li>
-              <li class="type color_0" v-if="team.memberList[i].status==0">待提交</li>
+              <li class="type color_0" v-if="team.memberList[i].status==0">未提交</li>
               <li class="type color_1" v-if="team.memberList[i].status==1">审核中</li>
               <li class="type color_2" v-if="team.memberList[i].status==2">已完成</li>
             </ul>
@@ -64,10 +66,23 @@
                 <img src="@/assets/images/add.png" alt />
               </li>
               <li class="name">邀请队友</li>
-              <li class="type">待提交</li>
+              <li class="type">未提交</li>
             </ul>
           </div>
         </div>
+      </div>
+      <div class="declare">
+        <div class="script_title">
+          <img src="@/assets/images/ruledescript.png" alt />
+        </div>
+        <p>1、用户最多只能同时加入1支队伍，但可创建20支队伍</p>
+        <p>2.、用户使用加入队伍功能，只能领取1次奖励，成功领取奖励后，加入功能消失。</p>
+      </div>
+
+      <div class="blak"></div>
+
+      <div class="foterBtn">
+        <div class="warnBtn" @click="groupTask">去组队</div>
       </div>
     </div>
   </div>
@@ -83,7 +98,50 @@ export default {
       temashow: false,
       teamList: [],
       teamId: "",
-      team: {},
+      team: "",
+      //   {
+      // teamId: "1191551200150056960",
+      // leaderId: "1158605294933299200",
+      // taskConfigId: null,
+      // status: "0",
+      // totalNum: 2,
+      // completeNum: 0,
+      // overDate: 1573095719000,
+      // createdDate: null,
+      // updateDate: null,
+      // memberList: [
+      //   {
+      //     memberId: "1191551200150056961",
+      //     teamId: "1191551200150056960",
+      //     userId: "1158605294933299200",
+      //     nickName: "测试",
+      //     image:
+      //       "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+      //     type: "1",
+      //     status: "1",
+      //     amount: 20000,
+      //     multiple: 0,
+      //     taskConfigId: null,
+      //     taskName: null,
+      //     rewardDescription: null
+      //   },
+      //   {
+      //     memberId: "1191656976801783808",
+      //     teamId: "1191551200150056960",
+      //     userId: "1191644992643457024",
+      //     nickName: "Tree",
+      //     image:
+      //       "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7KAQMk4AAFB9sqBQd4624.png",
+      //     type: "2",
+      //     status: "0",
+      //     amount: 50000,
+      //     multiple: 0,
+      //     taskConfigId: null,
+      //     taskName: null,
+      //     rewardDescription: null
+      //   }
+      // ]
+      //   },
       userList: [1, 2, 3, 4, 5],
       parms: ""
     };
@@ -91,37 +149,36 @@ export default {
   components: {
     ...mapGetters(["oUserinfo", "barString", "isIOS", "teamId"])
   },
-  created() {},
-  mounted() {},
-  activated() {
+  created() {
     this.getImg();
     this.getImgReq();
   },
+  mounted() {},
   computed: {},
   methods: {
-    grouLog() {
+    groupTask() {
       let href = window.location.href;
       let str = href.split("#/")[0];
-      window.location.href = `${str}#/groupLog`;
+      window.location.href = `${str}#/groupTask`;
     },
     getImg() {
-      console.log(this.$store.state.teamId);
-      let parms = this.$store.state.teamId;
+      //   console.log(this.$store.state.teamId);
+      //   let parms = this.$store.state.teamId;
 
-      // {"teamId":'1192011020049252352'};
+      //   // {"teamId":'1192011020049252352'};
       const classCode =
         this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { teamId: parms },
+          { classCode },
           data => {
             this.parms = data;
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ teamId: parms })
+          JSON.stringify({ classCode })
         );
         this.parms = data;
       }
@@ -135,7 +192,7 @@ export default {
     },
     getImgReq() {
       $api
-        .postRequest("/user/task/v6/searchTaskTeamById", this.parms)
+        .postRequest("/user/task/v6/searchMyJoinMemberTeam", this.parms)
         .then(res => {
           if (res.code == 0) {
             let list = res.datas;
@@ -181,9 +238,11 @@ export default {
   overflow-y: scroll;
   .scroll_view {
     margin-top: 64px;
-    padding-top: 15px;
-    height: 100vh;
-    background: #f5f5f5;
+    margin-bottom: 75px;
+    padding-top: 152px;
+    background-image: url("../assets/images/redpack.png");
+    background-size: 100%;
+
     .header {
       height: 64px;
       width: 100%;
@@ -228,7 +287,7 @@ export default {
     }
     .conter {
       margin: 0 20px;
-      background: #fff;
+      background: #fdf8e5;
       width: 335px;
       height: 362px;
       border-radius: 6px;
@@ -258,19 +317,13 @@ export default {
             text-align: center;
             vertical-align: middle;
           }
-          .end{
-            width:122px;
-            height: 30px;
-            text-align: center;
-            line-height: 30px;
-          }
           .number {
             width: 30px;
             height: 30px;
             background: #ed706b;
             font-size: 16px;
-            line-height: 30px;
             color: #fff;
+            line-height: 30px;
             border-radius: 5px;
           }
           .icon {
@@ -377,6 +430,55 @@ export default {
           color: #bfbfbf;
           border: 1px solid #bfbfbf;
         }
+      }
+    }
+    .declare {
+      margin: 40px 20px 20px 20px;
+      background: #fdf8e5;
+      border-radius: 6px;
+      padding: 45px 20px 20px 20px;
+      position: relative;
+      .script_title {
+        margin: 0 20px;
+        position: absolute;
+        text-align: center;
+        top: -20px;
+        img {
+          width: 100%;
+        }
+      }
+      p {
+        font-size: 12px;
+        font-weight: 400;
+        font-style: normal;
+        text-decoration: none;
+        font-family: 微软雅黑;
+        color: #7f463f;
+      }
+    }
+    .blak {
+      height: 20px;
+    }
+    .foterBtn {
+      // padding: 10px 20px;
+      width: 100%;
+      height: 75px;
+      position: fixed;
+      bottom: 0;
+      z-index: 100;
+      background: #450005;
+      line-height: 75px;
+      text-align: center;
+      div {
+        width: 335px;
+        height: 44px;
+        display: inline-block;
+        line-height: 44px;
+        font-size: 16px;
+        font-weight: 400;
+        text-align: center;
+        border-radius: 6px;
+        background: linear-gradient(to top, #ffb33c, #ffca3c, #ffde7c);
       }
     }
   }

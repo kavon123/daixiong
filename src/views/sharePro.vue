@@ -77,7 +77,8 @@ export default {
         centeredSlides: true,
         slidesPerView: 1.1,
         spaceBetween: 8,
-        loop: false
+        loop: false,
+        direction:horizontal,
       }
     };
   },
@@ -116,6 +117,7 @@ export default {
           font-weight: bold;
           font-style: italic;
           color: #c83130;
+          vertical-align:middle;
         }
         .LstIcon {
           width: 30px;
@@ -123,9 +125,10 @@ export default {
           vertical-align: middle;
         }
         li {
-          padding-left: 30%;
+          padding: 0 20%;
           .picture {
-            margin-top: 16px;
+            // margin-top: 10px;
+            // margin: auto;
           }
         }
         li:nth-child(1) {
@@ -134,7 +137,7 @@ export default {
           div {
             img {
               vertical-align: middle;
-              border: 1px dashed #888888;
+              // border: 1px dashed #888888;
             }
             img:nth-child(2n-1) {
               width: 70px;
@@ -169,7 +172,7 @@ export default {
             img {
               height: 177px;
               vertical-align: middle;
-              border: 1px dashed #888888;
+              // border: 1px dashed #888888;
             }
             img:nth-child(1) {
               width: 305px;
@@ -188,12 +191,12 @@ export default {
               width: 295px;
               height: 262px;
               vertical-align: middle;
-              border: 1px dashed #888888;
+              // border: 1px dashed #888888;
             }
           }
           .state {
             line-height: 125px;
-            text-align: center;
+            // text-align: center;
             height: 125px;
             font-size: 20px;
             color: #7a1e15;
@@ -205,16 +208,17 @@ export default {
       .footer {
         height: 210px;
         text-align: center;
+        background: #eee1ba;
         img {
           width: 125px;
           height: 125px;
           vertical-align: middle;
-          margin-top: 30px;          
+          margin-top: 30px;
         }
-        div{
+        div {
           color: #711010;
-          font-size:14px;
-          font-weight:bold;
+          font-size: 14px;
+          font-weight: bold;
         }
       }
     }

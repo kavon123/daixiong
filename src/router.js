@@ -10,6 +10,14 @@ export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
+    {   
+      path: '/myTeam',
+      name: 'myTeam',// 分享落地页-PC端
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "sharePro" */ './views/myTeam.vue')
+    },
     {
       path: '/share',
       name: 'share',// 分享落地页-移动端
