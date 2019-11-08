@@ -7,6 +7,13 @@
         <van-icon name="ellipsis" @click.stop="fnSetOperationPop" class="icon ellipsis" />
       </div>
     </div>
+    <div class="weixinTip" v-if="weiXinTip" @touchmove.prevent @click="binWeiXin">
+      <div class="cont">
+        <h3>请绑定微信</h3>
+        <p>因任务奖励需使用微信发放，请先将账号绑定微信，绑定后方可提交截图</p>
+        <div>去绑定</div>
+      </div>
+    </div>
     <div class="body">
       <div class="prompt_copy">
         <div class="prompt_content">
@@ -261,6 +268,7 @@ export default {
         status: null,
         remark: ""
       },
+      weiXinTip: false,
       rewardPop: false,
       fallbackPop: false,
       swipePop: false,
@@ -299,6 +307,9 @@ export default {
       setItemCode: "SET_ITEM_CODE",
       setMomentsUrl: "SET_MOMENTS_URL"
     }),
+    binWeiXin() {
+      alert("11111111111");
+    },
     groupTask() {
       let href = window.location.href;
       let str = href.split("#/")[0];
@@ -456,6 +467,7 @@ export default {
         .postRequest("/user/task/v3/sharePoster", data)
         .then(res => {
           this.$toast.clear();
+          console.log(res);
           if (res.code == 0) {
             this.$toast.success("提交成功等待审核！");
             this.fnInfo();
@@ -464,7 +476,11 @@ export default {
               params: { id: res.datas }
             });
           } else {
-            this.$toast.fail(res.msg);
+            if (res.msg == "NO_WECHAT") {
+              this.weiXinTip = true;
+            } else {
+              this.$toast.fail(res.msg);
+            }
           }
         })
         .catch(err => {
@@ -577,7 +593,7 @@ export default {
         .postRequest("/lookup/searchWechatPyqTaskType", data)
         .then(res => {
           if (res.code == 0) {
-            console.log("成功收到searchWechatType", res.datas.attribute1);
+            // console.log("成功收到searchWechatType", res.datas.attribute1);
             let shareType = res.datas.attribute1;
             this.showImgOrVideo = shareType; //classCode
             this.queryImgOrVid(this.showImgOrVideo);
@@ -635,7 +651,7 @@ export default {
             this.videoList = videoList;
             this.videoHasData = true;
             this.imgList = res.datas;
-            console.log("imgList", this.imgList);
+            // console.log("imgList", this.imgList);
             // this.createBase64List(this.imgList)
             this.$toast.clear();
           } else {
@@ -719,7 +735,7 @@ export default {
       this.currentDay = currentDay < 10 ? "0" + currentDay : currentDay;
     },
     slideChangeEnd(cIndex) {
-      console.log("cIndex", cIndex);
+      // console.log("cIndex", cIndex);
       this.currtVideo = cIndex;
     }
   },
@@ -886,6 +902,42 @@ p {
       }
       .ellipsis {
         transform: rotate(90deg);
+      }
+    }
+  }
+  .weixinTip {
+    z-index: 100;
+    position: fixed;
+    top: 0;
+    background: rgba(0, 0, 0, 0.5);
+
+    .cont {
+      background: #fff;
+      margin: 300px 38px;
+      border-radius: 6px;
+      padding: 26px 30px;
+      h3 {
+        text-align: center;
+        color: #333;
+        font-size: 17px;
+        font-weight: 400;
+      }
+      p {
+        font-size: 14px;
+        color: #888888;
+        line-height: 20px;
+      }
+      div {
+        margin: auto;
+        width: 140px;
+        height: 40px;
+        background: #367dfd;
+        border-radius: 5px;
+        text-align: center;
+        line-height: 40px;
+        font-size: 15px;
+        color: #ffffff;
+        margin-top: 28px;
       }
     }
   }

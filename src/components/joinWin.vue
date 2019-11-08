@@ -3,7 +3,7 @@
 
 
 <template>
-  <div class="win">
+  <div class="win" @touchmove.prevent>
     <ul class="conten">
       <li class="title">加入队伍</li>
       <li>请粘贴好友的邀请链接：</li>

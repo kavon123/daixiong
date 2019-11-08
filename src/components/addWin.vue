@@ -3,7 +3,7 @@
 
 
 <template>
-  <div class="win">
+  <div class="win" @touchmove.prevent>
     <ul class="conten">
       <li class="title">{{parentmsg.addTitle}}</li>
       <li>请复制邀请文案，并前往社交网站粘贴</li>

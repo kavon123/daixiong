@@ -26,7 +26,7 @@
         </div>
       </div>
       <joinWin v-if="joinWinShow" @func="closejoin" />
-      <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
+      <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd"/>
       <div class="joinBtn" @click="joinBtn(true)">
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
@@ -767,7 +767,7 @@ export default {
       background-image: url("../assets/images/Rectangle.png");
       background-size: 100%;
       position: fixed;
-      z-index: 10;
+      z-index: 100;
       top: 0;
       display: flex;
       flex-direction: row;

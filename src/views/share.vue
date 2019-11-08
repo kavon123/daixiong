@@ -74,7 +74,7 @@
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
            </div> -->
-        <div class="down_btn">下载APP领钱</div>
+        <div class="down_btn" @click="down">下载APP领钱</div>
       </div>
     </div>
   </div>
@@ -98,12 +98,22 @@ export default {
       }
     };
   },
-  components: {},
+  components: {
+      ...mapGetters(["oUserinfo", "barString", "isIOS"]),
+  },
   created() {     
   },
   mounted() {},
   computed: {},
-  methods: {}
+  methods: {
+    down(){
+      if(this.isIOS){
+         alert('2222')
+      }else{
+        alert('111111')
+      }
+    }
+  }
 };
 </script>
 
