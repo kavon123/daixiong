@@ -6,9 +6,11 @@
   <div class="win" @touchmove.prevent>
     <ul class="conten">
       <li class="title">{{parentmsg.addTitle}}</li>
-      <li>请复制邀请文案，并前往社交网站粘贴</li>
+      <li v-if="parentmsg.addTitle=='提醒队友'">亲，做完任务就开奖！快发完朋友圈提交任务，一起瓜分50元！</li>
+      <li v-if="parentmsg.addTitle!='提醒队友'">请复制邀请文案，并前往社交网站粘贴</li>
       <!-- <li>还差一人就开奖！加入队伍，立即瓜分40元红包！提现秒到！立刻来瓜分：https://mobile.umeng.com/platform/5d09b8b83fc19509f100102e</li> -->
-      <li>{{parentmsg.msg}}</li>
+      <li v-if="parentmsg.addTitle!='提醒队友'">{{parentmsg.msg}}</li>
+      <li v-if="parentmsg.addTitle=='提醒队友'">{{parentmsg.msg.substr(parentmsg.msg.indexOf("h") )}}</li>
       <li>推荐使用以下邀请方式:</li>
       <li>
         <div class="iconList">

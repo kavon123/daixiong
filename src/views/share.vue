@@ -70,7 +70,7 @@
         <div class="state">奖励自动派发至钱包！我已经成功提现，快加入吧！</div>
       </div>
       <div class="btn_row">
-        <div class="cop_link">复制链接邀请</div>
+        <div class="cop_link" @click="copy">复制链接邀请</div>
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
         </div>-->
@@ -104,15 +104,39 @@ export default {
   created() {},
   mounted() {},
   computed: {},
+  activated() {
+    document.title = "快来！我已经成功提现";
+  },
   methods: {
+    copy() {
+      debugger;
+      let msg = window.location.href;
+      let inp = document.createElement("input");
+      inp.style.display = "none";
+      inp.value = msg;
+      document.body.appendChild(inp);
+      inp.select();
+      document.execCommand("Copy");
+      alert("复制成功");
+
+      // window.clipboardData.setData("text/plain", msg);
+      // alert("复制成功！");
+    },
     down() {
+      let getUrl = window.location.href;
+      let itemUrl = getUrl.split("#/")[0];
+      let json = {};
+      var arr = getUrl.substr(getUrl.indexOf("?") + 1).split("&");
+      arr.forEach(item => {
+        var tmp = item.split("=");
+        json[tmp[0]] = tmp[1];
+      });
       // IOS打开链接
       var ios_schema = "dxapp://ios.dxmovie.com/open";
       // IOS下载URL
       var ios_download_url = "https://daixiong.tv/";
       // android 打开APP URL
-      var android_schema =
-        "dxapp://android.dxmovie.com/open?name=daixiong&url=http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      var android_schema = `dxapp://android.dxmovie.com/open?name=daixiong&url=${itemUrl}#/groupTask?webhashead=1&teamId=${json.teamId}`;
       // android下载链接
       var android_download_url = "https://daixiong.tv/";
       // 安卓判断

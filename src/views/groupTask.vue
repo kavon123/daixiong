@@ -628,7 +628,6 @@ export default {
           if (res.code == 0) {
             this.$toast.success("创建成功！");
             this.getImgReq(this.parms);
-
             // let list = res.datas;
             // for (let i = 0; i < list.length; i++) {
             //   let item = list[i];
@@ -651,7 +650,7 @@ export default {
 
             // this.$forceUpdate();
           } else {
-            this.$toast.fail(code.message);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
@@ -741,7 +740,7 @@ export default {
               this.creatTeam(true);
             }
           } else {
-            // this.$toast.fail(code.message);
+            // this.$toast.fail(res.msg);
           }
         })
         .catch(err => {

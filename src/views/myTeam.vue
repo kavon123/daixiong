@@ -220,7 +220,7 @@ export default {
             this.team = list;
           } else {
             this.temashow = true;
-            this.$toast.fail(code.message);
+            this.$toast.fail(res.msg);
           }
         })
         .catch(err => {
