@@ -32,7 +32,7 @@
         <span>加入队伍</span>
       </div>
       <div class="carousel">
-        <div class="scroll_conten" @touchmove.prevent @click.prevent>
+        <div class="scroll_conten"  @click.prevent>
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
             <swiper-slide class="afterBox">
               <div class="basicInfo">

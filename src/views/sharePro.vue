@@ -158,10 +158,11 @@ export default {
         .LstIcon {
           width: 30px;
           height: 30px;
+          margin-right: 10px;
           vertical-align: middle;
         }
         li {
-          padding-left:30%;
+          padding-left: 30%;
           .picture {
             // margin-top: 10px;
             // margin: auto;

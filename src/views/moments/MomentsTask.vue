@@ -12,7 +12,7 @@
         <h3>请绑定微信</h3>
         <p>因任务奖励需使用微信发放，请先将账号绑定微信，绑定后方可提交截图</p>
         <div @click="binWeiXin">去绑定</div>
-        <img src="./image/close.png" alt @click="close"/>
+        <img src="./image/close.png" alt @click="close" />
       </div>
     </div>
     <div class="body">
@@ -308,11 +308,15 @@ export default {
       setItemCode: "SET_ITEM_CODE",
       setMomentsUrl: "SET_MOMENTS_URL"
     }),
-    close(){
-      this.weiXinTip=false;
+    close() {
+      this.weiXinTip = false;
     },
     binWeiXin() {
-      alert("11111111111");
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_goBack");
+      } else {
+        android.DX_BingWechatRequest("bindWeChat");
+      }
     },
     groupTask() {
       let href = window.location.href;
@@ -919,7 +923,7 @@ p {
     background: rgba(0, 0, 0, 0.5);
     .cont {
       position: relative;
-      background: #fff;;
+      background: #fff;
       margin: 300px 38px;
       border-radius: 6px;
       padding: 26px 30px;
@@ -946,15 +950,14 @@ p {
         color: #ffffff;
         margin-top: 28px;
       }
-      img{
+      img {
         height: 30px;
-        width:30px;
+        width: 30px;
         position: absolute;
-        top:250px;
-        left:130px;
+        top: 250px;
+        left: 130px;
       }
     }
-    
   }
   .body {
     margin-top: 234px;

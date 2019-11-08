@@ -126,7 +126,7 @@ export default {
           var endTime = Date.now();
           var time = endTime - startTime;
           // 通过时间差判断，是否要去下载页
-          alert(time);
+          // alert(time);
           if (time < 2100) {
             document.body.removeChild(ifr);
             location.href = android_download_url;
