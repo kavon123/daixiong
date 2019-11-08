@@ -26,7 +26,7 @@
         </div>
       </div>
       <joinWin v-if="joinWinShow" @func="closejoin" />
-      <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd"/>
+      <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
       <div class="joinBtn" @click="joinBtn(true)">
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
@@ -178,8 +178,8 @@
                       <img :src="data.image" alt />
                     </li>
                     <li class="userName">{{data.nickName}}</li>
-                    <li class="usersType color_0" v-if="data.status==0">待提交</li>
-                    <li class="usersType color_1" v-if="data.status==1" @click="openLDWb">审核中</li>
+                    <li class="usersType color_0" v-if="data.status==0" @click="openLDWb">去提交</li>
+                    <li class="usersType color_1" v-if="data.status==1">审核中</li>
                     <li class="usersType color_2" v-if="data.status==2">已完成</li>
                   </ul>
 
@@ -550,7 +550,7 @@ export default {
       let href = window.location.href;
       let str = href.split("#/")[0];
       // let newUrl = `${str}#/share?webhashead=1`;
-      let newUrl = "http://202.60.235.20/dist/#/share?webhashead=1";
+      let newUrl = "http://202.60.235.20/dist/#/moments/:type?webhashead=1";
       // let newUrl = "http://202.60.235.20/dist/#/moments/58";
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
@@ -712,30 +712,34 @@ export default {
         .then(res => {
           if (res.code == 0) {
             let list = res.datas;
-            for (let i = 0; i < list.length; i++) {
-              let item = list[i];
+            if (list) {
+              for (let i = 0; i < list.length; i++) {
+                let item = list[i];
 
-              // let data = item.memberList;
-              // for (let i = 0; j < data.length; j++) {
-              //   if (data[j].type == 1) {
-              //     this.nickName = data.nickName;
-              //   }
-              // }
+                // let data = item.memberList;
+                // for (let i = 0; j < data.length; j++) {
+                //   if (data[j].type == 1) {
+                //     this.nickName = data.nickName;
+                //   }
+                // }
 
-              if (!this.teamId && item.totalNum < 5) {
-                this.teamId = item.teamId;
+                if (!this.teamId && item.totalNum < 5) {
+                  this.teamId = item.teamId;
+                }
+                let itemDate = new Date().getTime();
+                let endDate = item.overDate - itemDate;
+                let H = parseInt(endDate / 1000 / 60 / 60);
+                let F = parseInt((endDate / 1000 / 60) % 60);
+                let S = parseInt((endDate / 1000) % 60);
+                list[i].H = this.dateStr(H);
+                list[i].F = this.dateStr(F);
+                list[i].S = this.dateStr(S);
+                // this.teamList.push(list[i]);
               }
-              let itemDate = new Date().getTime();
-              let endDate = item.overDate - itemDate;
-              let H = parseInt(endDate / 1000 / 60 / 60);
-              let F = parseInt((endDate / 1000 / 60) % 60);
-              let S = parseInt((endDate / 1000) % 60);
-              list[i].H = this.dateStr(H);
-              list[i].F = this.dateStr(F);
-              list[i].S = this.dateStr(S);
-              // this.teamList.push(list[i]);
+              this.teamList = list;
+            } else {
+              this.creatTeam(true);
             }
-            this.teamList = list;
           } else {
             // this.$toast.fail(code.message);
           }
@@ -992,13 +996,13 @@ export default {
                     border: 1px solid #711010;
                     border-radius: 6px;
                   }
-                  .color_0{
-                    color: #E2524B;
-                    border:  1px solid #E2524B;
+                  .color_0 {
+                    color: #e2524b;
+                    border: 1px solid #e2524b;
                   }
-                  .color_2{
-                    color: #BFBFBF;
-                    border:  1px solid #BFBFBF; 
+                  .color_2 {
+                    color: #bfbfbf;
+                    border: 1px solid #bfbfbf;
                   }
                 }
                 .userpize {
@@ -1087,13 +1091,13 @@ export default {
                     border: 1px solid #711010;
                     border-radius: 6px;
                   }
-                   .color_0{
-                    color: #DF8052;
-                    border:  1px solid #DF8052;
+                  .color_0 {
+                    color: #df8052;
+                    border: 1px solid #df8052;
                   }
-                  .color_2{
-                    color: #BFBFBF;
-                    border:  1px solid #BFBFBF; 
+                  .color_2 {
+                    color: #bfbfbf;
+                    border: 1px solid #bfbfbf;
                   }
                 }
                 ul:nth-child(1) {

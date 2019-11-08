@@ -55,8 +55,10 @@
           <div class="state">奖励自动派发至钱包！我已经成功提现，快加入吧！</div>
         </li>
       </ul>
-      <div class="footer">
-        <img src="@/views/sharePro/share_pc/RqCode.png" alt />
+      <div class="footer vpaycode">
+        <!-- <img src="@/views/sharePro/share_pc/RqCode.png" alt id="RqCode" /> -->
+        <div id="qrcode" ref="qrcode"></div>
+
         <div>下载APP领钱</div>
       </div>
     </div>
@@ -66,27 +68,61 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import $api from "@/util/api.js";
+import QRCode from "qrcodejs2";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
+      qrcode: "",
       temashow: false,
-      teamList: [],
-      swipertop: {
-        initialSlide: 0,
-        centeredSlides: true,
-        slidesPerView: 1.1,
-        spaceBetween: 8,
-        loop: false,
-        direction:horizontal,
-      }
+      teamList: []
     };
   },
   components: {},
-  created() {},
+  created() {
+    let url = window.location.href;
+    let json = {};
+    var arr = url.substr(url.indexOf("?") + 1).split("&");
+
+    arr.forEach(item => {
+      var tmp = item.split("=");
+      json[tmp[0]] = tmp[1];
+    });
+    this.newUrl = `https://da9fdhgi.com/index/download?appkey=${json.appKey}`;
+
+    this.payOrder();
+  },
   mounted() {},
   computed: {},
-  methods: {}
+  methods: {
+    payOrder() {
+      let url = window.location.href;
+      let json = {};
+      var arr = url.substr(url.indexOf("?") + 1).split("&");
+      arr.forEach(item => {
+        var tmp = item.split("=");
+        json[tmp[0]] = tmp[1];
+      });
+      this.innerVisible = true;
+      // 二维码内容,一般是由后台返回的跳转链接,这里是写死的一个链接
+      this.qrcode = `https://da9fdhgi.com/index/download?appkey=${json.appKey}`;
+      // 使用$nextTick确保数据渲染
+      this.$nextTick(() => {
+        this.crateQrcode();
+      });
+    },
+    crateQrcode() {
+      this.qr = new QRCode("qrcode", {
+        width: 120,
+        height: 120, // 高度
+        text: this.qrcode // 二维码内容
+        // render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）
+        // background: '#f0f'
+        // foreground: '#ff0'
+      });
+      // console.log(this.qrcode)
+    }
+  }
 };
 </script>
 
@@ -117,7 +153,7 @@ export default {
           font-weight: bold;
           font-style: italic;
           color: #c83130;
-          vertical-align:middle;
+          vertical-align: middle;
         }
         .LstIcon {
           width: 30px;
@@ -125,7 +161,7 @@ export default {
           vertical-align: middle;
         }
         li {
-          padding: 0 20%;
+          padding-left:30%;
           .picture {
             // margin-top: 10px;
             // margin: auto;
@@ -209,11 +245,14 @@ export default {
         height: 210px;
         text-align: center;
         background: #eee1ba;
-        img {
+        padding-top: 30px;
+        #qrcode {
+          margin: auto;
+          border: 2px solid #fff;
           width: 125px;
           height: 125px;
           vertical-align: middle;
-          margin-top: 30px;
+          // margin-top: 30px;
         }
         div {
           color: #711010;

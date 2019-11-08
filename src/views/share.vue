@@ -13,7 +13,7 @@
           <input type="text" placeholder value="快来! 我已经成功提现!" />
           <img src="@/views/sharePro/img/refresh.png" alt />
         </div>
-      </div> -->
+      </div>-->
       <div class="content">
         <div class="title">简单三步, 拿现金红包</div>
         <div class="flow">
@@ -73,7 +73,7 @@
         <div class="cop_link">复制链接邀请</div>
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
-           </div> -->
+        </div>-->
         <div class="down_btn" @click="down">下载APP领钱</div>
       </div>
     </div>
@@ -99,18 +99,58 @@ export default {
     };
   },
   components: {
-      ...mapGetters(["oUserinfo", "barString", "isIOS"]),
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {     
-  },
+  created() {},
   mounted() {},
   computed: {},
   methods: {
-    down(){
-      if(this.isIOS){
-         alert('2222')
-      }else{
-        alert('111111')
+    down() {
+      // IOS打开链接
+      var ios_schema = "dxapp://ios.dxmovie.com/open";
+      // IOS下载URL
+      var ios_download_url = "https://daixiong.tv/";
+      // android 打开APP URL
+      var android_schema =
+        "dxapp://android.dxmovie.com/open?name=daixiong&url=http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      // android下载链接
+      var android_download_url = "https://daixiong.tv/";
+      // 安卓判断
+      if (/(Android)/i.test(navigator.userAgent)) {
+        var startTime = Date.now();
+        var ifr = document.createElement("iframe");
+        ifr.style.display = "none";
+        ifr.src = android_schema;
+        document.body.appendChild(ifr);
+        window.setTimeout(function() {
+          var endTime = Date.now();
+          var time = endTime - startTime;
+          // 通过时间差判断，是否要去下载页
+          alert(time);
+          if (time < 2100) {
+            document.body.removeChild(ifr);
+            location.href = android_download_url;
+          } else {
+            widows.close();
+          }
+        }, 2000);
+      } else if (/(iPhone|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
+        var startTime = Date.now();
+        var install = false;
+        var loadTime = new Date();
+        location.href = ios_schema;
+        setTimeout(function() {
+          var endTime = Date.now();
+          var time = endTime - startTime;
+          // 通过时间差判断，是否要去下载页
+          if (time < 800) {
+            if (confirm("检测到您手机可能没有安装app,马上去苹果商店下载吧~ ")) {
+              location.href = ios_download_url;
+            }
+          }
+        }, 800);
+      } else {
+        location.href = ios_download_url;
       }
     }
   }
@@ -184,7 +224,7 @@ export default {
           // border: 1px dashed #888888;
           img {
             width: 20px;
-          height: 20px;
+            height: 20px;
             vertical-align: middle;
           }
         }

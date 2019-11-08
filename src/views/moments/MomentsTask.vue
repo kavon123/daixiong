@@ -7,11 +7,12 @@
         <van-icon name="ellipsis" @click.stop="fnSetOperationPop" class="icon ellipsis" />
       </div>
     </div>
-    <div class="weixinTip" v-if="weiXinTip" @touchmove.prevent @click="binWeiXin">
+    <div class="weixinTip" v-if="weiXinTip" @touchmove.prevent>
       <div class="cont">
         <h3>请绑定微信</h3>
         <p>因任务奖励需使用微信发放，请先将账号绑定微信，绑定后方可提交截图</p>
-        <div>去绑定</div>
+        <div @click="binWeiXin">去绑定</div>
+        <img src="./image/close.png" alt @click="close"/>
       </div>
     </div>
     <div class="body">
@@ -307,6 +308,9 @@ export default {
       setItemCode: "SET_ITEM_CODE",
       setMomentsUrl: "SET_MOMENTS_URL"
     }),
+    close(){
+      this.weiXinTip=false;
+    },
     binWeiXin() {
       alert("11111111111");
     },
@@ -412,6 +416,9 @@ export default {
         .catch(err => {
           this.$toast.fail(err.message);
         });
+      if (!this.isIOS) {
+        android.DX_dismisLoading();
+      }
     },
 
     fnSubmit() {
@@ -910,9 +917,9 @@ p {
     position: fixed;
     top: 0;
     background: rgba(0, 0, 0, 0.5);
-
     .cont {
-      background: #fff;
+      position: relative;
+      background: #fff;;
       margin: 300px 38px;
       border-radius: 6px;
       padding: 26px 30px;
@@ -939,7 +946,15 @@ p {
         color: #ffffff;
         margin-top: 28px;
       }
+      img{
+        height: 30px;
+        width:30px;
+        position: absolute;
+        top:250px;
+        left:130px;
+      }
     }
+    
   }
   .body {
     margin-top: 234px;

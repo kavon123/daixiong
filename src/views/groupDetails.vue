@@ -20,16 +20,16 @@
             <div class="title">结束时间</div>
             <div class="dateNumber">{{team.time}}</div>
           </li>
-          <li class="date_residue" v-if="team.status!=1">
+          <li class="date_residue">
             <div class="number">{{team.end_h}}</div>
             <div class="icon">:</div>
             <div class="number">{{team.end_f}}</div>
             <div class="icon">:</div>
             <div class="number">{{team.end_s}}</div>
           </li>
-          <li class="date_residue" v-if="team.status==1">
+          <!-- <li class="date_residue" v-if="team.status==1">
             <div class="end">已完成</div>
-          </li>
+          </li>-->
         </ul>
         <ul class="headerMan" v-for="(item,inx) in team.memberList" :key="inx">
           <li class="teamUser" v-if="item&&item.type==1">
@@ -160,6 +160,11 @@ export default {
             list["end_h"] = this.timerToStr(end_h);
             list["end_f"] = this.timerToStr(end_f);
             list["end_s"] = this.timerToStr(end_s);
+            if (list.status == 1||list.status == 2) {
+              list["end_h"] = "00";
+              list["end_f"] = "00";
+              list["end_s"] = "00";
+            }
             this.team = list;
           } else {
             this.temashow = true;
@@ -258,12 +263,18 @@ export default {
             text-align: center;
             vertical-align: middle;
           }
-          .end{
-            width:122px;
-            height: 30px;
-            text-align: center;
-            line-height: 30px;
-          }
+          // .end {
+          //   width: 110px;
+          //   height: 40px;
+          //   text-align: center;
+          //   line-height: 40px;
+          //   font-size: 22px;
+          //   color: #711010;
+          //   font-weight: 800;
+          //   border: 1px solid #711010;
+          //   border-radius: 5px;
+          //   // background: #711010;
+          // }
           .number {
             width: 30px;
             height: 30px;
