@@ -14,6 +14,7 @@
           <img src="@/views/sharePro/img/refresh.png" alt />
         </div>
       </div>-->
+      <div class="copyTip" v-if="copyFlag">复制链接成功！</div>
       <div class="content">
         <div class="title">简单三步, 拿现金红包</div>
         <div class="flow">
@@ -70,7 +71,7 @@
         <div class="state">奖励自动派发至钱包！我已经成功提现，快加入吧！</div>
       </div>
       <div class="btn_row">
-        <div class="cop_link" @click="copy">复制链接邀请</div>
+        <div class="cop_link" @click="copyLinl">复制链接邀请</div>
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
         </div>-->
@@ -87,15 +88,7 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
-      temashow: false,
-      teamList: [],
-      swipertop: {
-        initialSlide: 0,
-        centeredSlides: true,
-        slidesPerView: 1.1,
-        spaceBetween: 8,
-        loop: false
-      }
+      copyFlag: false
     };
   },
   components: {
@@ -108,20 +101,24 @@ export default {
     document.title = "快来！我已经成功提现";
   },
   methods: {
-    copy() {
-      debugger;
-      let msg = window.location.href;
+    copy(data) {
       let inp = document.createElement("input");
-      inp.style.display = "none";
-      inp.value = msg;
+      inp.value = data;
       document.body.appendChild(inp);
       inp.select();
-      document.execCommand("Copy");
-      alert("复制成功");
-
-      // window.clipboardData.setData("text/plain", msg);
-      // alert("复制成功！");
+      let rtesult = document.execCommand("Copy");
+      if (rtesult) {
+        this.copyFlag = true;
+        setTimeout(() => {
+          this.copyFlag = false;
+        }, 2000);
+      }
     },
+    copyLinl() {
+      let msg = window.location.href;
+      this.copy(msg);
+    },
+
     down() {
       let getUrl = window.location.href;
       let itemUrl = getUrl.split("#/")[0];
@@ -131,12 +128,14 @@ export default {
         var tmp = item.split("=");
         json[tmp[0]] = tmp[1];
       });
+      this.copyLinl();
       // IOS打开链接
       var ios_schema = "dxapp://ios.dxmovie.com/open";
       // IOS下载URL
       var ios_download_url = "https://daixiong.tv/";
       // android 打开APP URL
-      var android_schema = `dxapp://android.dxmovie.com/open?name=daixiong&url=${itemUrl}#/groupTask?webhashead=1&teamId=${json.teamId}`;
+      //name = "TaskCenter"  就跳到任务中心， name="Dx58TaskShare"  就跳到 团队分享
+      var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webhashead=1&teamId=${json.teamId}`;
       // android下载链接
       var android_download_url = "https://daixiong.tv/";
       // 安卓判断
@@ -191,6 +190,20 @@ export default {
     background-image: url("./sharePro/img/sologan.png");
     background-size: 100%;
     padding-top: 235px;
+    .copyTip {
+      background: rgb(75, 69, 69);
+      width: 100%;
+      font-size: 18px;
+      text-align: center;
+      line-height: 30px;
+      height: 30px;
+      color: #ff404e;
+      margin: 30px;
+      border-radius: 5px;
+      position: fixed;
+      top: 500px;
+      z-index: 10;
+    }
     .header {
       background: #fff;
       position: fixed;

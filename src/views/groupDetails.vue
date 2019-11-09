@@ -35,8 +35,8 @@
           <li class="teamUser" v-if="item&&item.type==1">
             <img :src="item.image" alt class="userImg" />
             <div class="name">{{item.nickName}}</div>
-            <div class="type color_0" v-if="item.status==0">待提交</div>
-            <div class="type color_1" v-if="item.status==1">审核中</div>
+            <div class="type color_0" v-if="item.status==0" @click="openLDWb">去提交</div>
+            <div class="type color_1" v-if="item.status==1" @click="openLDWb">审核中</div>
             <div class="type color_2" v-if="item.status==2">已完成</div>
           </li>
           <li class="parze" v-if="item&&item.type==1">
@@ -99,6 +99,17 @@ export default {
   },
   computed: {},
   methods: {
+    openLDWb() {
+      let href = window.location.href;
+      let str = href.split("#/")[0];
+      // let newUrl = `${str}#/share?webhashead=1`;
+      let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
+      } else {
+        const data = android.DX_openLDWb(newUrl);
+      }
+    },
     grouLog() {
       let href = window.location.href;
       let str = href.split("#/")[0];
@@ -160,7 +171,7 @@ export default {
             list["end_h"] = this.timerToStr(end_h);
             list["end_f"] = this.timerToStr(end_f);
             list["end_s"] = this.timerToStr(end_s);
-            if (list.status == 1||list.status == 2) {
+            if (list.status == 1 || list.status == 2) {
               list["end_h"] = "00";
               list["end_f"] = "00";
               list["end_s"] = "00";
@@ -327,6 +338,10 @@ export default {
             color: #e2524b;
             border: 1px solid #e2524b;
           }
+          .color_1 {
+            color: #5e2019;
+            border: 1px solid #5e2019;
+          }
           .color_2 {
             color: #bfbfbf;
             border: 1px solid #bfbfbf;
@@ -383,6 +398,10 @@ export default {
         .color_0 {
           color: #df8052;
           border: 1px solid #df8052;
+        }
+        .color_1 {
+          color: #5e2019;
+          border: 1px solid #5e2019;
         }
         .color_2 {
           color: #bfbfbf;

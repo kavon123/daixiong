@@ -6,11 +6,13 @@
   <div class="win" @touchmove.prevent>
     <ul class="conten">
       <li class="title">{{parentmsg.addTitle}}</li>
-      <li v-if="parentmsg.addTitle=='提醒队友'">亲，做完任务就开奖！快发完朋友圈提交任务，一起瓜分50元！</li>
-      <li v-if="parentmsg.addTitle!='提醒队友'">请复制邀请文案，并前往社交网站粘贴</li>
+      <li>请复制邀请文案，并前往社交网站粘贴</li>
       <!-- <li>还差一人就开奖！加入队伍，立即瓜分40元红包！提现秒到！立刻来瓜分：https://mobile.umeng.com/platform/5d09b8b83fc19509f100102e</li> -->
-      <li v-if="parentmsg.addTitle!='提醒队友'">{{parentmsg.msg}}</li>
-      <li v-if="parentmsg.addTitle=='提醒队友'">{{parentmsg.msg.substr(parentmsg.msg.indexOf("h") )}}</li>
+      <li v-if="parentmsg.addTitle!='提醒队友'" class="stText">{{parentmsg.msg}}</li>
+      <li
+        v-if="parentmsg.addTitle=='提醒队友'"
+        class="stText"
+      >{{`亲，做完任务就开奖！快发完朋友圈提交任务，一起瓜分50元！${parentmsg.msg.substr(parentmsg.msg.indexOf("h") )}`}}</li>
       <li>推荐使用以下邀请方式:</li>
       <li>
         <div class="iconList">
@@ -74,16 +76,19 @@ export default {
   components: {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {},
+  created() {
+  },
   mounted() {},
   computed: {},
-  methods: {
+  methods: {  
     sendMsg() {
       // 按钮的点击事件
       this.$emit("func"); // 调用父组件传递过来的方法，同时把数据传递出去
     },
     copy() {
-      let msg = this.parentmsg.msg;
+      let ele = document.getElementsByClassName("stText")[0];
+      // let msg = this.parentmsg.msg;
+      let msg = ele.innerText;
       console.log(msg);
       if (this.isIOS) {
         this.$bridge.callhandler("DX_copy", msg, data => {
@@ -114,9 +119,9 @@ export default {
   z-index: 999;
   .conten {
     margin: auto;
-    margin-top: 150px;
+    margin-top: 160px;
     width: 300px;
-    height: 422px;
+    // height: 422px;
     border-radius: 9px;
     background: rgba(255, 255, 255, 1);
     padding: 26px 31px 30px 31px;

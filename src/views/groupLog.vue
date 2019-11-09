@@ -16,36 +16,40 @@
       <div class="noImg" v-if="teamList.length==0">
         <img src="@/assets/images/noteamLog.png" alt />
       </div>
-      <div class="logList" v-if="teamList.length>0" @touchmove="handleTouchMove">
-        <!-- @touchend="handleTouchEnd" -->
-        <!-- @touchstart.prevent="handleTouchStart" -->
-        <!-- @touchmove="handleTouchMove" -->
-        <!-- @click="handleLetterClick" -->
-        <ul class="title">
-          <li>结束时间</li>
-          <li>我的队伍</li>
-          <li>我的奖励</li>
-        </ul>
+      <swiper class="swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
+        <swiper-slide>1</swiper-slide>
+        <swiper-slide class="logList" v-if="teamList.length>0" @touchmove="handleTouchMove">
+          <!-- @touchend="handleTouchEnd" -->
+          <!-- @touchstart.prevent="handleTouchStart" -->
+          <!-- @touchmove="handleTouchMove" -->
+          <!-- @click="handleLetterClick" -->
+          <ul class="title">
+            <li>结束时间</li>
+            <li>我的队伍</li>
+            <li>我的奖励</li>
+          </ul>
 
-        <ul class="list" v-for="(item,index) in  teamList" :key="index">
-          <li class="date">
-            <div>{{item.Ytd}}</div>
-            <div>{{item.Time}}</div>
-          </li>
-          <li class="memberImg">
-            <div v-for="(num,i) in numberList" :key="i">
-              <img v-if="num<=item.totalNum" src="@/assets/images/member.png" alt />
-              <img v-if="num>item.totalNum" src="@/assets/images/add.png" alt />
-            </div>
-          </li>
-          <li class="redPack" @click="groupDetails(item.teamId)">
-            <img src="@/assets/images/redpackcup.png" alt />
-            <span>X</span>
-            <span>{{item.multiple}}</span>
-            <img src="@/assets/images/go.png" alt />
-          </li>
-        </ul>
-      </div>
+          <ul class="list" v-for="(item,index) in  teamList" :key="index">
+            <li class="date">
+              <div>{{item.Ytd}}</div>
+              <div>{{item.Time}}</div>
+            </li>
+            <li class="memberImg">
+              <div v-for="(num,i) in numberList" :key="i">
+                <img v-if="num<=item.totalNum" src="@/assets/images/member.png" alt />
+                <img v-if="num>item.totalNum" src="@/assets/images/add.png" alt />
+              </div>
+            </li>
+            <li class="redPack" @click="groupDetails(item.teamId)">
+              <img src="@/assets/images/redpackcup.png" alt />
+              <span>X</span>
+              <span>{{item.multiple}}</span>
+              <img src="@/assets/images/go.png" alt />
+            </li>
+          </ul>
+        </swiper-slide>
+        <swiper-slide>3</swiper-slide>
+      </swiper>
     </div>
   </div>
 </template>
@@ -59,154 +63,167 @@ export default {
     return {
       temashow: false,
       teamList: [
-        // {
-        //   teamId: "1192388284033187840",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295295000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388282661650432",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295295000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388281826983936",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295295000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388256132677632",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388255998459904",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388255172182016",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388254043914240",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388253288939520",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192388252613656576",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573295288000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // },
-        // {
-        //   teamId: "1192361580837388288",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573288929000,
-        //   multiple: 1,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: null,
-        //   amount: "20000"
-        // }
+        {
+          teamId: "1192388284033187840",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295295000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388282661650432",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295295000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388281826983936",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295295000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388256132677632",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388255998459904",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388255172182016",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388254043914240",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388253288939520",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192388252613656576",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573295288000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        },
+        {
+          teamId: "1192361580837388288",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573288929000,
+          multiple: 1,
+          createdDate: null,
+          updateDate: null,
+          memberList: null,
+          amount: "20000"
+        }
       ],
       numberList: [1, 2, 3, 4, 5],
       params: { page: 1, size: 10 },
-      page: { totalSize: "", totalPage: "", currPage: "" },
+      page: { totalSize: "", totalPage: "", currPage: "" }, //	总数   	总页数  当前页数
       tstart: "",
       tend: "",
       touch: false,
-      TouchDate: []
+      TouchDate: [],
+      swipertop: {
+        initialSlide: 0,
+        direction: "vertical",
+        centeredSlides: true,
+        slidesPerView: 1,
+        slideTo: 1,
+        spaceBetween: 0,
+        onSlideChangeEnd: function(swiper) {
+          alert(swiper.activeIndex + "");
+          // swiper.activeIndex 这个就是索引， 从 0 开始！ 可看一共有多少元素！
+        },
+        // loop: true
+      }
     };
   },
 
@@ -214,29 +231,48 @@ export default {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {},
-  mounted() {},
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
   activated() {
+    this.$refs.Swiper.swiper.slideTo(1, 1, false);
     this.getImg(this.params);
   },
   computed: {},
   methods: {
+    handleScroll() {
+      let scrollTop =
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop;
+      let h =
+        window.innerHeight ||
+        document.documentElement.clientHeight ||
+        document.body.clientHeight; //屏幕的高度
+      let prodListHeight =
+        document.querySelector(".logList").offsetHeight - h - 20; //.myOrderListWrapper 商品列表容器
+      console.log(scrollTop, ":::", prodListHeight);
+      if (scrollTop > prodListHeight) {
+        console.log("下");
+      } else {
+        console.log("上");
+      }
+    },
+
     handleTouchMove(e) {
-      // this.TouchDate.push(parseInt(e.changedTouches[0].clientY));
-      // if(this.page.currPage<this.page.totalPage){
-
-      // }else if( ){
-
-      // }
-      
+      //   // this.TouchDate.push(parseInt(e.changedTouches[0].clientY));
+      //   // if(this.page.currPage<this.page.totalPage){
+      //   // }else if( ){
+      //   // }
     },
-    // handleLetterClick(e) {},
+    // // handleLetterClick(e) {},
 
-    handleTouchStart(e) {
-      this.tstart = e.touches[0].clientY;
-    },
-    handleTouchEnd(e) {
-      this.tend = e.changedTouches[0].clientY;
-    },
+    // handleTouchStart(e) {
+    //   this.tstart = e.touches[0].clientY;
+    // },
+    // handleTouchEnd(e) {
+    //   this.tend = e.changedTouches[0].clientY;
+    // },
 
     groupDetails(teamId) {
       let href = window.location.href;
@@ -250,7 +286,23 @@ export default {
       let str = href.split("#/")[0];
       window.location.href = `${str}#/groupTask`;
     },
-    onChange() {},
+    onChange() {
+      // console.log(this.$refs.Swiper.swiper.activeIndex);
+      let activeIndex = this.$refs.Swiper.swiper.activeIndex;
+      if (activeIndex == 0) {
+        this.$refs.Swiper.swiper.slideTo(1, 1, false);
+        if (this.page.currPage > 1) {
+          this.params.page = Number(this.page.currPage) - 1;
+          this.getImg(this.params);
+        }
+      } else if (activeIndex == 2) {
+        this.$refs.Swiper.swiper.slideTo(1, 1, false);
+        if (this.page.currPage < this.page.totalPage) {
+          this.params.page = Number(this.page.currPage) + 1;
+          this.getImg(this.params);
+        }
+      }
+    },
     getImg(params) {
       // this.$toast.loading({
       //   duration: 0,
@@ -262,14 +314,15 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode, param: params },
+          { classCode, page: params.page, size: params.size },
+          params,
           data => {
             this.getImgReq(data);
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode, param: params })
+          JSON.stringify({ classCode, page: params.page, size: params.size })
         );
         this.getImgReq(data);
       }
@@ -286,9 +339,12 @@ export default {
         .postRequest(`/user/task/v6/searchMy58TaskTeamHisPage`, data)
         .then(res => {
           if (res.code == 0) {
-            this.page.totalSize = res.totalSize;
-            this.page.totalPage = res.totalPage;
-            this.page.currPage = res.currPage;
+            this.page.totalSize = res.datas.totalSize;
+            this.page.totalPage = res.datas.totalPage;
+            this.page.currPage = res.datas.currPage;
+            console.log(
+              `总数${this.page.totalSize} -- 总页${this.page.totalPage}--当前页${this.page.currPage}`
+            );
 
             let list = res.datas.infoList;
             for (let i = 0; i < list.length; i++) {
@@ -316,6 +372,7 @@ export default {
         .catch(err => {
           this.$toast.fail(err.message);
         });
+      this.$forceUpdate();
     }
   }
 };
@@ -380,99 +437,102 @@ export default {
         height: 133px;
       }
     }
-    .logList {
-      .title {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        height: 62px;
-        li {
-          color: #333;
-          font-weight: bold;
-          font-size: 16px;
-        }
-        li:nth-child(1) {
-          width: 70px;
-        }
-        li:nth-child(2) {
-          width: 120px;
-          box-sizing: border-box;
-          padding-left: 10px;
-        }
-      }
-      .list {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
-        align-items: center;
-        height: 62px;
-        border-bottom: 1px solid #e6e6e6;
-        .date {
-          width: 70px;
-          div {
-            width: 100%;
-            text-align: center;
-            color: #999;
-            font-weight: 400;
-            line-height: 20px;
+    .swipe {
+      height: 100vh;
+      .logList {
+        .title {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+          height: 30px;
+          li {
+            color: #333;
+            font-weight: bold;
+            font-size: 16px;
+          }
+          li:nth-child(1) {
+            width: 70px;
+          }
+          li:nth-child(2) {
+            width: 120px;
+            box-sizing: border-box;
+            padding-left: 10px;
           }
         }
-        .memberImg {
-          width: 120px;
-          position: relative;
-          div {
-            width: 33px;
-            height: 33px;
-            position: absolute;
-            top: -20px;
-            img {
-              width: 33px;
-              height: 33px;
+        .list {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          align-items: center;
+          height: 62px;
+          border-bottom: 1px solid #e6e6e6;
+          .date {
+            width: 70px;
+            div {
+              width: 100%;
+              text-align: center;
+              color: #999;
+              font-weight: 400;
+              line-height: 20px;
             }
           }
-          div:nth-child(1) {
-            left: 0;
-            z-index: 10;
-          }
-          div:nth-child(2) {
-            left: 16.5px;
-            z-index: 9;
-          }
-          div:nth-child(3) {
-            left: 33px;
-            z-index: 8;
-          }
-          div:nth-child(4) {
-            left: 49.5px;
-            z-index: 7;
-          }
-          div:nth-child(5) {
-            left: 66px;
-            z-index: 6;
+          .memberImg {
+            width: 120px;
+            position: relative;
+            div {
+              width: 33px;
+              height: 33px;
+              position: absolute;
+              top: -20px;
+              img {
+                width: 33px;
+                height: 33px;
+              }
+            }
+            div:nth-child(1) {
+              left: 0;
+              z-index: 10;
+            }
+            div:nth-child(2) {
+              left: 16.5px;
+              z-index: 9;
+            }
+            div:nth-child(3) {
+              left: 33px;
+              z-index: 8;
+            }
+            div:nth-child(4) {
+              left: 49.5px;
+              z-index: 7;
+            }
+            div:nth-child(5) {
+              left: 66px;
+              z-index: 6;
+            }
           }
         }
-      }
-      .redPack {
-        img:nth-child(1) {
-          width: 17px;
-          height: 12px;
-          margin-right: 4px;
-        }
-        span:nth-child(2) {
-          color: #e0413c;
-          font-size: 14px;
-          font-weight: 400;
-        }
-        span:nth-child(3) {
-          color: #e0413c;
-          font-size: 18px;
-          font-weight: 400;
-        }
-        img:nth-child(4) {
-          width: 8px;
-          height: 13px;
-          margin-left: 14px;
+        .redPack {
+          img:nth-child(1) {
+            width: 17px;
+            height: 12px;
+            margin-right: 4px;
+          }
+          span:nth-child(2) {
+            color: #e0413c;
+            font-size: 14px;
+            font-weight: 400;
+          }
+          span:nth-child(3) {
+            color: #e0413c;
+            font-size: 18px;
+            font-weight: 400;
+          }
+          img:nth-child(4) {
+            width: 8px;
+            height: 13px;
+            margin-left: 14px;
+          }
         }
       }
     }

@@ -315,10 +315,8 @@ export default {
       if (this.isIOS) {
         this.$bridge.callhandler("DX_goBack");
       } else {
-        let result = android.DX_BingWechatRequest("bindWeChat");
-        if (result) {
-          this.close();
-        }
+        android.DX_BingWechatRequest("bindWeChat");
+        this.close();
       }
     },
     groupTask() {
