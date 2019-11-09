@@ -33,7 +33,7 @@
         <span>加入队伍</span>
       </div>
       <div class="carousel">
-        <div class="scroll_conten" @click.prevent>
+        <div class="scroll_conten">
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
             <swiper-slide class="afterBox">
               <div class="basicInfo">
@@ -172,8 +172,13 @@
                   </div>
                 </div>
 
-                <div class="userInfo" v-for="(data,idx) in item.memberList" :key="idx">
-                  <ul class="user" v-if="data.type==1">
+                <div
+                  class="userInfo"
+                  v-for="(data,idx) in item.memberList"
+                  :key="idx"
+                  v-if="data.type==1"
+                >
+                  <ul class="user">
                     <li class="usericon">
                       <img src="@/assets/images/regcom.png" alt class="regcom" />
                       <img :src="data.image" alt />
@@ -181,7 +186,7 @@
                     <li class="userName">{{data.nickName}}</li>
                     <li class="usersType color_0" v-if="data.status==0" @click="openLDWb">去提交</li>
                     <li class="usersType color_1" v-if="data.status==1" @click="openLDWb">审核中</li>
-                    <li class="usersType color_2" v-if="data.status==2">已完成</li>
+                    <li class="usersType color_2" v-if="data.status==2" @click="openLDWb">已完成</li>
                   </ul>
 
                   <ul class="userpize" v-if="data.type==1">
@@ -285,7 +290,7 @@
 <script>
 import { mapMutations, mapGetters } from "vuex";
 import $api from "@/util/api.js";
-import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { Swiper, swiperSlide } from "vue-awesome-swiper";
 import addWin from "@/components/addWin";
 import joinWin from "@/components/joinWin";
 import SharejoinWin from "@/components/SharejoinWin";
@@ -523,9 +528,9 @@ export default {
         observeParents: true,
         onSlideChangeEnd: function(swiper) {
           swiper.update();
-          mySwiper.startAutoplay();
-          mySwiper.reLoop();
-        },
+          swiper.startAutoplay();
+          swiper.reLoop();
+        }
         // loop: true
       },
       activeIndex: 0
@@ -543,11 +548,11 @@ export default {
   mounted() {
     this.getImgReq(this.parms);
     this.getPizeSum();
-    // this.Sharejoin();
+    this.$nextTick(() => {});
   },
+
   activated() {
     this.Sharejoin();
-    this.$refs.Swiper.swiper.slideTo(1, 1, false);
   },
   computed: {},
   methods: {
@@ -561,12 +566,11 @@ export default {
     openLDWb() {
       let href = window.location.href;
       let str = href.split("#/")[0];
-      // let newUrl = `${str}#/share?webhashead=1`;
-      let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      let newUrl = `${str}#/moments/58?webhashead=1`;
+      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
       } else {
-        console.log("去提交");
         let data = android.DX_openLDWb(newUrl);
       }
     },
@@ -576,7 +580,6 @@ export default {
     Sharejoin() {
       //通过分享加入
       let ClipData = android.getTeamClipData();
-      console.log(`~*~${ClipData}~*~`);
       let data = {};
       let inx = ClipData.indexOf("?") + 1;
       let dataStr = ClipData.substr(inx);
@@ -585,17 +588,12 @@ export default {
         var tmp = item.split("=");
         data[tmp[0]] = tmp[1];
       });
-      // console.log(data);
-      // let reg = new RegExp("(^|&)" + teamId + "=([^&]*)(&|$)");
-      // let teamId = ClipData.substr(1).match(reg);
       let teamId = data["teamId"];
-      console.log(`~~~~~~~~~~~~~~~~~~~~~~${teamId}`);
       if (teamId) {
         this.teamId = teamId;
         $api
           .postRequest("/user/task/v6/searchMyJoinMemberTeam", this.parms)
           .then(res => {
-            console.log(res);
             if (!res.datas) {
               this.SjoinWinShow = true;
             }
@@ -676,24 +674,6 @@ export default {
           if (res.code == 0) {
             this.$toast.success("创建成功！");
             this.getImgReq(this.parms);
-            // let list = res.datas;
-            // for (let i = 0; i < list.length; i++) {
-            //   let item = list[i];
-            //   // if (!this.teamId && item.totalNum < 5) {
-            //   //   this.teamId = item.teamId;
-            //   // }
-            //   let itemDate = new Date().getTime();
-            //   let endDate = item.overDate - itemDate;
-            //   let H = parseInt(endDate / 1000 / 60 / 60);
-            //   let F = parseInt((endDate / 1000 / 60) % 60);
-            //   let S = parseInt((endDate / 1000) % 60);
-            //   list[i].H = this.dateStr(H);
-            //   list[i].F = this.dateStr(F);
-            //   list[i].S = this.dateStr(S);
-            //   this.teamList.push(list[i])
-            // }
-
-            // this.$forceUpdate();
           } else {
             this.$toast.fail(res.msg);
           }
@@ -709,7 +689,6 @@ export default {
     },
     onChange() {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
-      // console.log(this.$refs.Swiper.swiper.activeIndex);
     },
     getImg() {
       const classCode =
@@ -782,6 +761,10 @@ export default {
                 // this.teamList.push(list[i]);
               }
               this.teamList = list;
+              setTimeout(() => {
+                this.$refs.Swiper.swiper.slideTo(1, 1, false);
+              }, 200);
+
             } else {
               this.creatTeam(true);
             }

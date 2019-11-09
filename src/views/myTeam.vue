@@ -185,10 +185,11 @@ export default {
         });
     },
     openLDWb() {
+      console.log("去提交");
       let href = window.location.href;
       let str = href.split("#/")[0];
-      // let newUrl = `${str}#/share?webhashead=1`;
-      let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      let newUrl = `${str}#/moments/58?webhashead=1`;
+      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
       } else {
