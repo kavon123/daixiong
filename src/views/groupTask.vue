@@ -533,7 +533,8 @@ export default {
         }
         // loop: true
       },
-      activeIndex: 0
+      activeIndex: 0,
+      isIOS:this.$store.state.isIOS,
     };
   },
   components: {
@@ -631,7 +632,7 @@ export default {
           }
         })
         .catch(err => {
-          this.$toast.fail("创建失败！");
+          this.$toast.fail("系统异常，获取邀请码失败！");
         });
     },
     joinBtn(flag) {
