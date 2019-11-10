@@ -43,15 +43,15 @@ export default {
   components: {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {  
-  },
+  created() {},
   mounted() {},
   computed: {},
-  methods: {   
+  methods: {
     join() {
       let str = document.getElementsByClassName("text")[0].value;
       console.log(str);
-      let Id = str.split("teamId=")[1];
+      // let Id = str.split("teamId=")[1];
+      let id = str.match(/￥(\S*)￥/)[1];
       let parm = "";
       const classCode =
         this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
