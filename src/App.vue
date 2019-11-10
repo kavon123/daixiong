@@ -1,6 +1,6 @@
 <template>
- <!-- v-if="noPC" -->
-  <div id="app" >
+  <!-- v-if="noPC" -->
+  <div id="app">
     <keep-alive>
       <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapMutations ,mapGetters } from "vuex";
 import { judgeClient } from "@/util/methods.js";
 export default {
   name: "App",
@@ -22,9 +22,13 @@ export default {
     ...mapMutations({
       setIsIOS: "SET_IS_IOS"
     })
+    
+  },
+  computed: {
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {
-    const platform = judgeClient();
+    let platform = judgeClient();
     this.noPC = platform !== "PC";
     this.setIsIOS(platform === "IOS");
   }

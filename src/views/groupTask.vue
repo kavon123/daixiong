@@ -537,13 +537,16 @@ export default {
     };
   },
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"]),
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"]),
     addWin,
     joinWin,
     SharejoinWin
   },
   created() {
     this.getImg();
+  },
+  computed: {
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   mounted() {
     this.getImgReq(this.parms);
@@ -557,6 +560,7 @@ export default {
   computed: {},
   methods: {
     fnGoBack() {
+      // console.log(this.$store.state.isIOS, "this.isios");
       if (this.isIOS) {
         this.$bridge.callhandler("DX_goBack");
       } else {
@@ -566,8 +570,8 @@ export default {
     openLDWb() {
       let href = window.location.href;
       let str = href.split("#/")[0];
-      let newUrl = `${str}#/moments/58?webhashead=1`;
-      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      let newUrl = `${str}#/moments/58?webHasHead=1`;
+      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webHasHead=1";
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
       } else {
@@ -764,7 +768,6 @@ export default {
               setTimeout(() => {
                 this.$refs.Swiper.swiper.slideTo(1, 1, false);
               }, 200);
-
             } else {
               this.creatTeam(true);
             }

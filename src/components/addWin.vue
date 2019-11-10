@@ -145,7 +145,7 @@ export default {
       width: 238px;
       height: 90px;
       line-height: 18px;
-      word-wrap: break-word;
+      // word-wrap: break-word;
       margin-bottom: 21px;
     }
     li:nth-child(4) {

@@ -102,8 +102,8 @@ export default {
     openLDWb() {
       let href = window.location.href;
       let str = href.split("#/")[0];
-      let newUrl = `${str}#/moments/58?webhashead=1`;
-      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webhashead=1";
+      let newUrl = `${str}#/moments/58?webHasHead=1`;
+      // let newUrl = "http://202.60.235.20/dist/#/moments/58?webHasHead=1";
       if (this.isIOS) {
         this.$bridge.callhandler("DX_openLDWb", { newUrl }, data => {});
       } else {
@@ -116,7 +116,7 @@ export default {
       window.location.href = `${str}#/groupLog`;
     },
     getImg() {
-      console.log(this.$store.state.teamId);
+      // console.log(this.$store.state.teamId);
       let parms = this.$store.state.teamId;
 
       // {"teamId":'1192011020049252352'};

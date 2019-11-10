@@ -135,7 +135,7 @@ export default {
       var ios_download_url = "https://daixiong.tv/";
       // android 打开APP URL
       //name = "TaskCenter"  就跳到任务中心， name="Dx58TaskShare"  就跳到 团队分享
-      var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webhashead=1&teamId=${json.teamId}`;
+      var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webHasHead=1&teamId=${json.teamId}`;
       // android下载链接
       var android_download_url = "https://daixiong.tv/";
       // 安卓判断
