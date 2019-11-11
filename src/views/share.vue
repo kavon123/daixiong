@@ -130,9 +130,12 @@ export default {
       });
       this.copyLinl();
       // IOS打开链接
-      var ios_schema = "dxapp://ios.dxmovie.com/open";
+      debugger;
+      var ios_schema = `${json.schemes}://?openTask=1`;
+      console.log(ios_schema)
       // IOS下载URL
-      var ios_download_url = "https://daixiong.tv/";
+      var ios_download_url = `https://itunes.apple.com/cn/app/id${json.appleID}`;
+       console.log(ios_download_url)
       // android 打开APP URL
       //name = "TaskCenter"  就跳到任务中心， name="Dx58TaskShare"  就跳到 团队分享
       var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webHasHead=1&teamId=${json.teamId}`;
@@ -243,7 +246,7 @@ export default {
       font-size: 20px;
       color: #711010;
       font-weight: 600;
-      width: 192px;
+      text-align: center;
       height: 28px;
       margin: 14px 91px 16px 91px;
     }

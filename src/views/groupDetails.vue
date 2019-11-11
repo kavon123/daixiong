@@ -85,17 +85,17 @@ export default {
       teamId: "",
       team: {},
       userList: [1, 2, 3, 4, 5],
-      parms: ""
+      parms: "",
+      isIOS: this.$store.state.isIOS
     };
   },
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS", "teamId"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS", "teamId"])
   },
   created() {},
   mounted() {},
   activated() {
-    this.getImg();
-    this.getImgReq();
+    this.getParms();
   },
   computed: {},
   methods: {
@@ -115,7 +115,7 @@ export default {
       let str = href.split("#/")[0];
       window.location.href = `${str}#/groupLog`;
     },
-    getImg() {
+    getParms() {
       // console.log(this.$store.state.teamId);
       let parms = this.$store.state.teamId;
 
@@ -128,6 +128,7 @@ export default {
           { teamId: parms },
           data => {
             this.parms = data;
+            this.getTeamDetails(data);
           }
         );
       } else {
@@ -135,6 +136,7 @@ export default {
           JSON.stringify({ teamId: parms })
         );
         this.parms = data;
+        this.getTeamDetails(data);
       }
     },
     timerToStr(time) {
@@ -144,9 +146,9 @@ export default {
         return time;
       }
     },
-    getImgReq() {
+    getTeamDetails(parms) {
       $api
-        .postRequest("/user/task/v6/searchTaskTeamById", this.parms)
+        .postRequest("/user/task/v6/searchTaskTeamById", parms)
         .then(res => {
           if (res.code == 0) {
             let list = res.datas;

@@ -59,6 +59,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "groupLog" */ './views/groupLog.vue')
     },
     {
+      path: '/groupTask1',
+      name: 'groupTask1',//组队分享任务
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "groupTask" */ './views/groupTask1.vue')
+    },
+    {
       path: '/groupTask',
       name: 'groupTask',//组队分享任务
       meta: {

@@ -221,14 +221,15 @@ export default {
         onSlideChangeEnd: function(swiper) {
           alert(swiper.activeIndex + "");
           // swiper.activeIndex 这个就是索引， 从 0 开始！ 可看一共有多少元素！
-        },
+        }
         // loop: true
-      }
+      },
+      isIOS: this.$store.state.isIOS,
     };
   },
 
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {},
   mounted() {
@@ -236,7 +237,7 @@ export default {
   },
   activated() {
     this.$refs.Swiper.swiper.slideTo(1, 1, false);
-    this.getImg(this.params);
+    this.getParms(this.params);
   },
   computed: {},
   methods: {
@@ -293,38 +294,30 @@ export default {
         this.$refs.Swiper.swiper.slideTo(1, 1, false);
         if (this.page.currPage > 1) {
           this.params.page = Number(this.page.currPage) - 1;
-          this.getImg(this.params);
+          this.getParms(this.params);
         }
       } else if (activeIndex == 2) {
         this.$refs.Swiper.swiper.slideTo(1, 1, false);
         if (this.page.currPage < this.page.totalPage) {
           this.params.page = Number(this.page.currPage) + 1;
-          this.getImg(this.params);
+          this.getParms(this.params);
         }
       }
     },
-    getImg(params) {
-      // this.$toast.loading({
-      //   duration: 0,
-      //   forbidClick: true, // 禁用背景点击
-      //   message: "加载中..."
-      // });
-      const classCode =
-        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+    getParms(params) {     
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode, page: params.page, size: params.size },
-          params,
+          { page: params.page, size: params.size },
           data => {
-            this.getImgReq(data);
+            this.getTeamLog(data);
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode, page: params.page, size: params.size })
+          JSON.stringify({ page: params.page, size: params.size })
         );
-        this.getImgReq(data);
+        this.getTeamLog(data);
       }
     },
     timerToStr(time) {
@@ -334,7 +327,7 @@ export default {
         return time;
       }
     },
-    getImgReq(data) {
+    getTeamLog(data) {
       $api
         .postRequest(`/user/task/v6/searchMy58TaskTeamHisPage`, data)
         .then(res => {

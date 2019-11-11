@@ -313,7 +313,8 @@ export default {
     },
     binWeiXin() {
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_goBack");
+        this.$bridge.callhandler("bindWeChat", {}, data => {});
+        this.close();
       } else {
         android.DX_BingWechatRequest("bindWeChat");
         this.close();

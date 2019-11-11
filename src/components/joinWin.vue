@@ -52,20 +52,18 @@ export default {
       console.log(str);
       // let Id = str.split("teamId=")[1];
       let id = str.match(/￥(\S*)￥/)[1];
-      let parm = "";
-      const classCode =
-        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+      let parm = "";     
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode, teamId: Id },
+          {teamId: Id },
           data => {
             parm = data;
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode, teamId: Id })
+          JSON.stringify({teamId: Id })
         );
         parm = data;
       }

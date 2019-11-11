@@ -31,37 +31,39 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
-      parms: ""
+      parms: "",
+      isIOS: this.$store.state.isIOS
     };
   },
   props: ["data"],
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {},
+  created() {
+    this.getParms();
+  },
   mounted() {},
   computed: {},
   methods: {
-    join() {
-      let parm = "";
-      const classCode =
-        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+    getParms() {
       if (this.isIOS) {
         this.$bridge.callhandler(
           "DX_encryptionRequest",
-          { classCode, teamId: this.data },
+          { teamId: this.data },
           data => {
-            parm = data;
+            this.parms = data;
           }
         );
       } else {
         const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode, teamId: this.data })
+          JSON.stringify({ teamId: this.data })
         );
-        parm = data;
+        this.parms = data;
       }
+    },
+    join() {
       $api
-        .postRequest("/user/task/v6/add58TeamMember", parm)
+        .postRequest("/user/task/v6/add58TeamMember", this.parms)
         .then(res => {
           if (res.code == 0) {
             this.$toast.success("加入成功");

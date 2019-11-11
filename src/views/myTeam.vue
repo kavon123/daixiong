@@ -147,19 +147,22 @@ export default {
       // ]
       //   },
       userList: [1, 2, 3, 4, 5],
-      parms: ""
+      parms: "",
+      isIOS: this.$store.state.isIOS
     };
   },
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS", "teamId"]),
+    // ...mapGetters(["oUserinfo", "barString", "isIOS", "teamId"]),
     addWin
   },
   created() {
-    this.getImg();
-    this.getImgReq();
+    this.getParms();
   },
   mounted() {},
   computed: {},
+  activated() {
+    this.getParms();
+  },
   methods: {
     closeAdd() {
       this.addWinShow = false;
@@ -201,26 +204,17 @@ export default {
       let str = href.split("#/")[0];
       window.location.href = `${str}#/groupTask`;
     },
-    getImg() {
-      //   console.log(this.$store.state.teamId);
-      //   let parms = this.$store.state.teamId;
-
-      //   // {"teamId":'1192011020049252352'};
-      const classCode =
-        this.platformType === 2 ? "WECHAT_POSTER_YG" : "WECHAT_POSTER_58";
+    getParms() {
+      console.log(this.isIOS, "22222222222");
       if (this.isIOS) {
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          { classCode },
-          data => {
-            this.parms = data;
-          }
-        );
+        this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
+          this.parms = data;
+          this.getMyTeam(data);
+        });
       } else {
-        const data = android.DX_encryptionRequest(
-          JSON.stringify({ classCode })
-        );
+        const data = android.DX_encryptionRequest(JSON.stringify({}));
         this.parms = data;
+        this.getMyTeam(data);
       }
     },
     timerToStr(time) {
@@ -230,9 +224,9 @@ export default {
         return time;
       }
     },
-    getImgReq() {
+    getMyTeam(parms) {
       $api
-        .postRequest("/user/task/v6/searchMyJoinMemberTeam", this.parms)
+        .postRequest("/user/task/v6/searchMyJoinMemberTeam", parms)
         .then(res => {
           if (res.code == 0) {
             let list = res.datas;

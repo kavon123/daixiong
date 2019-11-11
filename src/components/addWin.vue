@@ -69,32 +69,34 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
-      parms: ""
+      parms: "",
+      isIOS: this.$store.state.isIOS
     };
   },
   props: ["parentmsg"],
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {
-  },
+  created() {},
   mounted() {},
   computed: {},
-  methods: {  
+  methods: {
     sendMsg() {
       // 按钮的点击事件
       this.$emit("func"); // 调用父组件传递过来的方法，同时把数据传递出去
     },
     copy() {
       let ele = document.getElementsByClassName("stText")[0];
-      // let msg = this.parentmsg.msg;
       let msg = ele.innerText;
-      console.log(msg);
       if (this.isIOS) {
-        this.$bridge.callhandler("DX_copy", msg, data => {
-          if (data == 1) {
-            this.$toast.success("复制成功！");
-          }
+        this.$bridge.callhandler("getRouseApp", {}, data => {
+          // console.log(data, "获取跳转参数");
+          msg = `${msg}&appleID=${data.appleID}&schemes=${data.schemes}`;
+          this.$bridge.callhandler("DX_copy", msg, data => {
+            if (data == 1) {
+              this.$toast.success("复制成功！");
+            }
+          });
         });
       } else {
         const data = android.DX_copy(msg);
@@ -145,7 +147,7 @@ export default {
       width: 238px;
       height: 90px;
       line-height: 18px;
-      // word-wrap: break-word;
+      word-wrap: break-word;
       margin-bottom: 21px;
     }
     li:nth-child(4) {
