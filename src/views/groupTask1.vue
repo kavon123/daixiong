@@ -13,6 +13,8 @@
       </div>
 
       <div class="tip">
+        <img src="@/assets/images/regrec.png" alt class="regrec" />
+        <img src="@/assets/images/regrec.png" alt class="regrecR" />
         <div>
           <span class="title">团队任务 :</span>
           <span class="category">58棋牌分享</span>
@@ -23,12 +25,6 @@
           <span class="sum">{{pizeSum}}</span>
         </div>
       </div>
-
-      <div class="mid">
-        <img src="@/assets/home/invite.png" alt @click="add(teamId,'提醒队友')" />
-        <img src="@/assets/home/join.png" alt @click="add(teamId,'邀请队友')" />
-      </div>
-
       <joinWin v-if="joinWinShow" @func="closejoin" />
       <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
       <SharejoinWin v-if="SjoinWinShow" :data="teamId" @func="colseSharejoin" />
@@ -36,7 +32,6 @@
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
       </div>
-
       <div class="carousel">
         <div class="scroll_conten">
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
@@ -208,11 +203,11 @@
         <p>5.每个人最多只能成为一次队员，成为队长的次数不限；</p>
         <p>6.每个人同时最多拥有20支队伍；</p>
       </div>
-      <!-- <div class="blak"></div>
+      <div class="blak"></div>
       <div class="foterBtn">
         <div class="warnBtn" @click="add(teamId,'提醒队友')">提醒队员做任务</div>
         <div class="invterBtn" @click="add(teamId,'邀请队友')">邀请队员</div>
-      </div>-->
+      </div>
     </div>
   </div>
 </template>
@@ -464,7 +459,7 @@ export default {
         // loop: true
       },
       activeIndex: 0,
-      isIOS: this.$store.state.isIOS
+      isIOS: this.$store.state.isIOS,
     };
   },
   components: {
@@ -474,10 +469,10 @@ export default {
     SharejoinWin
   },
   created() {
-    // this.getParms();
+    this.getParms();
   },
   computed: {
-    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   mounted() {
     this.$nextTick(() => {});
@@ -510,7 +505,7 @@ export default {
     colseSharejoin() {
       this.SjoinWinShow = false;
     },
-    ClipJioin(ClipData, parms) {
+    ClipJioin(ClipData,parms) {
       let data = {};
       let inx = ClipData.indexOf("?") + 1;
       let dataStr = ClipData.substr(inx);
@@ -540,14 +535,14 @@ export default {
         let ClipData = android.getTeamClipData();
         if (ClipData) {
           console.log(ClipData, "获取剪贴板内容222");
-          this.ClipJioin(ClipData, parms);
+          this.ClipJioin(ClipData,parms);
         }
       } else {
         this.$bridge.callhandler("getTeamClipData", {}, data => {
           let ClipData = data;
           if (ClipData) {
             console.log(ClipData, "获取剪贴板内容222");
-            this.ClipJioin(ClipData, parms);
+            this.ClipJioin(ClipData,parms);
           }
         });
       }
@@ -773,7 +768,7 @@ export default {
       }
     }
     .tip {
-      height: 50px;
+      height: 60px;
       background: #fdf8e5;
       margin: 0 20px;
       border-radius: 6px;
@@ -781,6 +776,23 @@ export default {
       flex-direction: row;
       justify-content: space-around;
       align-items: center;
+      position: relative;
+      .regrec {
+        width: 8px;
+        height: 34px;
+        position: absolute;
+        top: 52px;
+        left: 20px;
+        z-index: 10;
+      }
+      .regrecR {
+        width: 8px;
+        height: 34px;
+        position: absolute;
+        top: 52px;
+        right: 20px;
+        z-index: 10;
+      }
       div {
         line-height: 24px;
         .title {
@@ -808,21 +820,6 @@ export default {
         }
       }
     }
-    .mid {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
-      height: 80px;
-      background-image: url("../assets/home/open.png");
-      background-size: 100%;
-      margin: 0 20px;
-      margin-top: 10px;
-      // line-height: 80px;
-      img {
-        vertical-align: middle;
-      }
-    }
     .joinBtn {
       width: 85px;
       height: 30px;
@@ -846,16 +843,14 @@ export default {
       }
     }
     .carousel {
-      // margin-top: 17px;
+      margin-top: 17px;
       position: relative;
       .scroll_conten {
         .conten {
           .afterBox {
             height: 350px;
             .basicInfo {
-              // background: #fdf8e5;
-              background-image: url("../assets/home/lun_bgm.png");
-              background-size: 100%;
+              background: #fdf8e5;
               border-radius: 4px;
               position: relative;
               .datalis {

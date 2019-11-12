@@ -2,7 +2,7 @@
 
 
 <template>
-  <div class="groupTask_page">
+  <div class="groupTask_page" @touchmove.prevent>
     <div class="scroll_view">
       <div class="header">
         <div class="back" @click="fnGoBack">
@@ -11,10 +11,11 @@
         <div class="title">团队分享任务</div>
         <div class="titltBtn" @click="grouLog(true)">组队记录</div>
       </div>
+      <div class="checkScript" @click="checkScript(true)">
+        <img src="@/assets/home/script_btn.png" alt />
+      </div>
 
       <div class="tip">
-        <img src="@/assets/images/regrec.png" alt class="regrec" />
-        <img src="@/assets/images/regrec.png" alt class="regrecR" />
         <div>
           <span class="title">团队任务 :</span>
           <span class="category">58棋牌分享</span>
@@ -22,16 +23,25 @@
         <div>
           <span class="title">累计奖金 :</span>
           <img src="@/assets/images/redpackcup.png" alt />
-          <span class="sum">{{pizeSum}}</span>
+          <span class="sum">{{pizeSum.totalAmount}}</span>
         </div>
       </div>
+
+      <div class="mid">
+        <img src="@/assets/home/invite.png" alt @click="add(teamId,'提醒队友')" />
+        <img src="@/assets/home/join.png" alt @click="add(teamId,'邀请队友')" />
+      </div>
+
       <joinWin v-if="joinWinShow" @func="closejoin" />
       <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
       <SharejoinWin v-if="SjoinWinShow" :data="teamId" @func="colseSharejoin" />
-      <div class="joinBtn" @click="joinBtn(true)">
+      <scriptWin v-if="scriptWinShow" @func="colseScript" />
+
+      <!-- <div class="joinBtn" @click="joinBtn(true)">
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
-      </div>
+      </div>-->
+
       <div class="carousel">
         <div class="scroll_conten">
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
@@ -97,6 +107,10 @@
                   </div>
                 </div>
 
+                <div class="end">
+                  <div @click="end(item.teamId)">提前结束</div>
+                </div>
+
                 <div
                   class="userInfo"
                   v-for="(data,idx) in item.memberList"
@@ -157,57 +171,6 @@
           </swiper>
         </div>
       </div>
-
-      <div class="declare">
-        <div class="script_title">
-          <img src="@/assets/images/ruledescript.png" alt />
-        </div>
-        <p>规则说明：</p>
-        <p>1.团队中完成任务的人数越多奖励越高；</p>
-        <div class="tab">
-          <div>
-            <img src="@/assets/images/×1men.png" alt />
-            <span>队长奖励 X 1.0</span>
-            <span>队员奖励 X 1.0</span>
-          </div>
-          <div>
-            <img src="@/assets/images/×3men.png" alt />
-            <span>队长奖励 X 1.6</span>
-            <span>队员奖励 X 1.3</span>
-          </div>
-          <div>
-            <img src="@/assets/images/×5men.png" alt />
-            <span>队长奖励 X 2.0</span>
-            <span>队员奖励 X 1.5</span>
-          </div>
-        </div>
-        <p>
-          2.团队任务时间为48小时，48小时内邀请好友加入团队，并提交58棋牌分享任务，即视为组队成功；在以下两种情况下队伍会自动结束
-          <br />
-          <b>a.队伍中所有人均已完成任务</b>
-          <br />
-          <b>b.队伍倒计时结束</b>
-        </p>
-        <p>
-          3.奖励发放规则：
-          <br />若我的奖励为2.0倍，则用户总领取的奖励金额为 2×2.0=4 元，其中包含2元基础任务奖励，和2元团队任务奖励。
-        </p>
-        <!-- <p>4.任务基础奖励，将在个人任务审核通过后发放，团队奖励将在组队任务结束时，根据完成情况，逐一发放；</p>
-        <p>
-          5.团队任务为分享任务的延续，若用户已完成分享任务次数达到10次及以上，则在此页面完成任务只能获得额外奖励，不再获得基础奖励；
-          <br />
-          <b>示例：队长已完成分享任务10次以上，且组队5人均已完成任务，则队伍结算时，队长的奖励为 2元 × 1.0 =2 元</b>
-        </p>
-        <p>6.加入队伍后，在倒计时结束前任意时间完成过任务，即视为完成任务；</p>-->
-        <p>4.队伍中所有人均可邀请新队员；</p>
-        <p>5.每个人最多只能成为一次队员，成为队长的次数不限；</p>
-        <p>6.每个人同时最多拥有20支队伍；</p>
-      </div>
-      <div class="blak"></div>
-      <div class="foterBtn">
-        <div class="warnBtn" @click="add(teamId,'提醒队友')">提醒队员做任务</div>
-        <div class="invterBtn" @click="add(teamId,'邀请队友')">邀请队员</div>
-      </div>
     </div>
   </div>
 </template>
@@ -219,6 +182,7 @@ import { Swiper, swiperSlide } from "vue-awesome-swiper";
 import addWin from "@/components/addWin";
 import joinWin from "@/components/joinWin";
 import SharejoinWin from "@/components/SharejoinWin";
+import scriptWin from "@/components/scriptWin";
 export default {
   data() {
     return {
@@ -231,217 +195,217 @@ export default {
       parms: "",
       forList: [1, 2, 3, 4, 5],
       teamList: [
-        // {
-        //   teamId: "1191551200150056960",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 2,
-        //   completeNum: 0,
-        //   overDate: 1573095719000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191551200150056961",
-        //       teamId: "1191551200150056960",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "1",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     },
-        //     {
-        //       memberId: "1191656976801783808",
-        //       teamId: "1191551200150056960",
-        //       userId: "1191644992643457024",
-        //       nickName: "Tree",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7KAQMk4AAFB9sqBQd4624.png",
-        //       type: "2",
-        //       status: "0",
-        //       amount: 50000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191602410332807168",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573107928000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191602410337001472",
-        //       teamId: "1191602410332807168",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191638703842451456",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573116581000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191638703842451457",
-        //       teamId: "1191638703842451456",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191668541873643520",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573123695000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191668541873643521",
-        //       teamId: "1191668541873643520",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191694975014985728",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573129997000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191694975014985729",
-        //       teamId: "1191694975014985728",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191733881768960000",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573139273000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191733881768960001",
-        //       teamId: "1191733881768960000",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // },
-        // {
-        //   teamId: "1191733898458095616",
-        //   leaderId: "1158605294933299200",
-        //   taskConfigId: null,
-        //   status: "0",
-        //   totalNum: 1,
-        //   completeNum: 1,
-        //   overDate: 1573139277000,
-        //   createdDate: null,
-        //   updateDate: null,
-        //   memberList: [
-        //     {
-        //       memberId: "1191733898458095617",
-        //       teamId: "1191733898458095616",
-        //       userId: "1158605294933299200",
-        //       nickName: "测试",
-        //       image:
-        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-        //       type: "1",
-        //       status: "2",
-        //       amount: 20000,
-        //       multiple: 0,
-        //       taskConfigId: null,
-        //       taskName: null,
-        //       rewardDescription: null
-        //     }
-        //   ]
-        // }
+        {
+          teamId: "1191551200150056960",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 2,
+          completeNum: 0,
+          overDate: 1573095719000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191551200150056961",
+              teamId: "1191551200150056960",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "1",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            },
+            {
+              memberId: "1191656976801783808",
+              teamId: "1191551200150056960",
+              userId: "1191644992643457024",
+              nickName: "Tree",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7KAQMk4AAFB9sqBQd4624.png",
+              type: "2",
+              status: "0",
+              amount: 50000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191602410332807168",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573107928000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191602410337001472",
+              teamId: "1191602410332807168",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191638703842451456",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573116581000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191638703842451457",
+              teamId: "1191638703842451456",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191668541873643520",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573123695000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191668541873643521",
+              teamId: "1191668541873643520",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191694975014985728",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573129997000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191694975014985729",
+              teamId: "1191694975014985728",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191733881768960000",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573139273000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191733881768960001",
+              teamId: "1191733881768960000",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        },
+        {
+          teamId: "1191733898458095616",
+          leaderId: "1158605294933299200",
+          taskConfigId: null,
+          status: "0",
+          totalNum: 1,
+          completeNum: 1,
+          overDate: 1573139277000,
+          createdDate: null,
+          updateDate: null,
+          memberList: [
+            {
+              memberId: "1191733898458095617",
+              teamId: "1191733898458095616",
+              userId: "1158605294933299200",
+              nickName: "测试",
+              image:
+                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+              type: "1",
+              status: "2",
+              amount: 20000,
+              multiple: 0,
+              taskConfigId: null,
+              taskName: null,
+              rewardDescription: null
+            }
+          ]
+        }
       ],
       teamId: "",
       swipertop: {
@@ -460,19 +424,21 @@ export default {
       },
       activeIndex: 0,
       isIOS: this.$store.state.isIOS,
+      scriptWinShow: false
     };
   },
   components: {
     // ...mapGetters(["oUserinfo", "barString", "isIOS"]),
     addWin,
     joinWin,
-    SharejoinWin
+    SharejoinWin,
+    scriptWin
   },
   created() {
     this.getParms();
   },
   computed: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   mounted() {
     this.$nextTick(() => {});
@@ -483,6 +449,41 @@ export default {
   },
   computed: {},
   methods: {
+    end(dates) {
+      console.log(dates, "aaaaaaaaaaaaaaaaaa");
+      let parms = "";
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { teamId: dates },
+          data => {
+            parms = data;
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest({ teamId: dates });
+        parms = data;
+      }
+      console.log(parms, "1111111111");
+      $api
+        .postRequest("/user/task/v6/close58Team ", parms)
+        .then(res => {
+          if (res.code == 0) {
+            this.pizeSum = res.datas;
+          } else {
+            this.$toast.fail(code.message);
+          }
+        })
+        .catch(err => {
+          // this.$toast.fail(err.message);
+        });
+    },
+    colseScript() {
+      this.scriptWinShow = false;
+    },
+    checkScript() {
+      this.scriptWinShow = true;
+    },
     fnGoBack() {
       // console.log(this.$store.state.isIOS, "this.isios");
       if (this.isIOS) {
@@ -505,7 +506,7 @@ export default {
     colseSharejoin() {
       this.SjoinWinShow = false;
     },
-    ClipJioin(ClipData,parms) {
+    ClipJioin(ClipData, parms) {
       let data = {};
       let inx = ClipData.indexOf("?") + 1;
       let dataStr = ClipData.substr(inx);
@@ -535,14 +536,14 @@ export default {
         let ClipData = android.getTeamClipData();
         if (ClipData) {
           console.log(ClipData, "获取剪贴板内容222");
-          this.ClipJioin(ClipData,parms);
+          this.ClipJioin(ClipData, parms);
         }
       } else {
         this.$bridge.callhandler("getTeamClipData", {}, data => {
           let ClipData = data;
           if (ClipData) {
             console.log(ClipData, "获取剪贴板内容222");
-            this.ClipJioin(ClipData,parms);
+            this.ClipJioin(ClipData, parms);
           }
         });
       }
@@ -651,7 +652,7 @@ export default {
     },
     getPizeSum(parms) {
       $api
-        .postRequest("/user/task/v6/searchMy58TeamTotalAmount", parms)
+        .postRequest("/user/task/v6/searchMy58TeamAmount", parms)
         .then(res => {
           if (res.code == 0) {
             this.pizeSum = res.datas;
@@ -719,13 +720,11 @@ export default {
 
 <style lang='less' scoped>
 .groupTask_page {
-  overflow-y: scroll;
+  background-image: url("../assets/images/redpack.png");
+  background-size: 100%;
   .scroll_view {
     margin-top: 64px;
-    margin-bottom: 70px;
-    padding-top: 152px;
-    background-image: url("../assets/images/redpack.png");
-    background-size: 100%;
+    padding-top: 192px;
     .header {
       height: 64px;
       width: 100%;
@@ -767,32 +766,28 @@ export default {
         color: #fff;
       }
     }
+    .checkScript {
+      position: absolute;
+      top: 98.5px;
+      right: 0;
+      width: 25px;
+      height: 72px;
+      text-align: right;
+      img {
+        width: 25px;
+        height: 72px;
+      }
+    }
     .tip {
-      height: 60px;
+      height: 50px;
       background: #fdf8e5;
-      margin: 0 20px;
+      margin: 0 18px;
+      margin-bottom: 20px;
       border-radius: 6px;
       display: flex;
       flex-direction: row;
       justify-content: space-around;
       align-items: center;
-      position: relative;
-      .regrec {
-        width: 8px;
-        height: 34px;
-        position: absolute;
-        top: 52px;
-        left: 20px;
-        z-index: 10;
-      }
-      .regrecR {
-        width: 8px;
-        height: 34px;
-        position: absolute;
-        top: 52px;
-        right: 20px;
-        z-index: 10;
-      }
       div {
         line-height: 24px;
         .title {
@@ -820,6 +815,23 @@ export default {
         }
       }
     }
+    .mid {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
+      height: 80px;
+      background-image: url("../assets/home/open.png");
+      background-size: 100%;
+      margin: 0 18px;
+      margin-top: 10px;
+      // line-height: 80px;
+      img {
+        vertical-align: middle;
+        width: 164px;
+        height: 53px;
+      }
+    }
     .joinBtn {
       width: 85px;
       height: 30px;
@@ -843,16 +855,23 @@ export default {
       }
     }
     .carousel {
-      margin-top: 17px;
+      // margin-top: 17px;
       position: relative;
+      // height: 100vh;
+
       .scroll_conten {
         .conten {
           .afterBox {
-            height: 350px;
             .basicInfo {
-              background: #fdf8e5;
-              border-radius: 4px;
+              height: 382px;
+              // background: #fdf8e5;
+              background-image: url("../assets/home/lun_bgm.png");
+              padding-bottom: 24px;
+              background-size: 100%;
+              border-radius: 6px;
+              background-repeat: no-repeat;
               position: relative;
+
               .datalis {
                 height: 80px;
                 display: flex;
@@ -912,6 +931,30 @@ export default {
                   }
                 }
               }
+              .end {
+                height: 31px;
+
+                position: absolute;
+                top: 68px;
+                right: 20px;
+                z-index: 100;
+                div {
+                  width: 72px;
+                  height: 25px;
+                  font-size: 12px;
+                  color: #791a22;
+                  font-weight: 500;
+                  background: linear-gradient(
+                    top,
+                    #ffb33c 100%,
+                    #ffca3c 100%,
+                    #ffde7c 100%
+                  );
+                  border-radius: 5px;
+                  line-height: 25px;
+                  text-align: center;
+                }
+              }
               .userInfo {
                 position: absolute;
                 top: 80px;
@@ -920,7 +963,7 @@ export default {
                 flex-direction: row;
                 justify-content: space-between;
                 align-items: center;
-                height: 120px;
+                height: 125px;
                 .user {
                   padding-left: 50px;
                   position: relative;
@@ -997,6 +1040,7 @@ export default {
                   }
                 }
               }
+
               .operation {
                 height: 150px;
                 .script {
@@ -1021,7 +1065,8 @@ export default {
               }
               .teamList {
                 // position: relative;
-                height: 150px;
+                padding-top: 20px;
+                height: 162px;
                 display: flex;
                 flex-direction: row;
                 justify-content: space-around;
@@ -1087,91 +1132,9 @@ export default {
         }
       }
     }
-    .declare {
-      margin: 40px 20px 20px 20px;
-      background: #fdf8e5;
-      border-radius: 6px;
-      padding: 45px 20px 20px 20px;
-      position: relative;
-      .script_title {
-        margin: 0 20px;
-        position: absolute;
-        text-align: center;
-        top: -20px;
-        img {
-          width: 100%;
-        }
-      }
-      p {
-        font-size: 12px;
-        font-weight: 400;
-        font-style: normal;
-        text-decoration: none;
-        font-family: 微软雅黑;
-        color: #7f463f;
-        b {
-          font-weight: 400;
-          color: #977b78;
-        }
-      }
-      .tab {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        div {
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          align-items: center;
-          img {
-            width: 53px;
-            height: 53px;
-          }
-          span {
-            font-size: 12px;
-            font-weight: 400;
-            font-style: normal;
-            text-decoration: none;
-            font-family: 微软雅黑;
-            color: #7f463f;
-          }
-        }
-      }
-    }
-    .blak {
-      height: 20px;
-    }
-    .foterBtn {
-      // padding: 10px 20px;
-      width: 100%;
-      height: 70px;
-      position: fixed;
-      bottom: 0;
-      z-index: 100;
-      background: #450005;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-around;
-      align-items: center;
-      div {
-        width: 150px;
-        height: 45px;
-        line-height: 45px;
-        font-size: 16px;
-        font-weight: 400;
-        text-align: center;
-        border-radius: 6px;
-      }
-      .warnBtn {
-        border: 1px solid #fff;
-        color: #fff;
-      }
-      .invterBtn {
-        background: #ffd354;
-        color: #791a22;
-      }
-    }
+    // .blak {
+    //   height: 123px;
+    // }
   }
 }
 </style>
