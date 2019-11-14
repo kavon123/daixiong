@@ -28,24 +28,25 @@
       </div>
 
       <div class="mid">
-        <img src="@/assets/home/invite.png" alt @click="add(teamId,'提醒队友')" />
-        <img src="@/assets/home/join.png" alt @click="add(teamId,'邀请队友')" />
+        <img src="@/assets/home/invite.png" alt @click="add(teamId,'邀请队友')" />
+        <img src="@/assets/home/join.png" alt @click="add(teamId,'提醒队友')" />
       </div>
 
       <joinWin v-if="joinWinShow" @func="closejoin" />
       <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
       <SharejoinWin v-if="SjoinWinShow" :data="teamId" @func="colseSharejoin" />
       <scriptWin v-if="scriptWinShow" @func="colseScript" />
+      <endTip v-if="endTipShow" @func="colsEndTip" :parms="endParms" @refresh="getParms" />
 
-      <!-- <div class="joinBtn" @click="joinBtn(true)">
+      <div class="joinBtn" @click="joinBtn(true)">
         <img src="@/assets/images/teammar.png" alt />
         <span>加入队伍</span>
-      </div>-->
+      </div>
 
       <div class="carousel">
         <div class="scroll_conten">
           <swiper class="conten swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
-            <swiper-slide class="afterBox">
+            <!-- <swiper-slide class="afterBox">
               <div class="basicInfo">
                 <div class="datalis">
                   <div class="infoTitle">
@@ -86,9 +87,14 @@
                   </div>
                 </div>
               </div>
-            </swiper-slide>
+            </swiper-slide>-->
 
-            <swiper-slide class="afterBox" v-for="(item,index) in teamList" :key="index">
+            <swiper-slide
+              class="afterBox"
+              v-for="(item,index) in teamList"
+              :key="index"
+              v-if="index==0"
+            >
               <div class="basicInfo">
                 <div class="datalis">
                   <div class="infoTitle">
@@ -108,7 +114,7 @@
                 </div>
 
                 <div class="end">
-                  <div @click="end(item.teamId)">提前结束</div>
+                  <div @click="end(item.teamId,item.status)">提前结束</div>
                 </div>
 
                 <div
@@ -183,6 +189,8 @@ import addWin from "@/components/addWin";
 import joinWin from "@/components/joinWin";
 import SharejoinWin from "@/components/SharejoinWin";
 import scriptWin from "@/components/scriptWin";
+import endTip from "@/components/endTip";
+
 export default {
   data() {
     return {
@@ -195,217 +203,217 @@ export default {
       parms: "",
       forList: [1, 2, 3, 4, 5],
       teamList: [
-        {
-          teamId: "1191551200150056960",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 2,
-          completeNum: 0,
-          overDate: 1573095719000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191551200150056961",
-              teamId: "1191551200150056960",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "1",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            },
-            {
-              memberId: "1191656976801783808",
-              teamId: "1191551200150056960",
-              userId: "1191644992643457024",
-              nickName: "Tree",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7KAQMk4AAFB9sqBQd4624.png",
-              type: "2",
-              status: "0",
-              amount: 50000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191602410332807168",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573107928000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191602410337001472",
-              teamId: "1191602410332807168",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191638703842451456",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573116581000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191638703842451457",
-              teamId: "1191638703842451456",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191668541873643520",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573123695000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191668541873643521",
-              teamId: "1191668541873643520",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191694975014985728",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573129997000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191694975014985729",
-              teamId: "1191694975014985728",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191733881768960000",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573139273000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191733881768960001",
-              teamId: "1191733881768960000",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        },
-        {
-          teamId: "1191733898458095616",
-          leaderId: "1158605294933299200",
-          taskConfigId: null,
-          status: "0",
-          totalNum: 1,
-          completeNum: 1,
-          overDate: 1573139277000,
-          createdDate: null,
-          updateDate: null,
-          memberList: [
-            {
-              memberId: "1191733898458095617",
-              teamId: "1191733898458095616",
-              userId: "1158605294933299200",
-              nickName: "测试",
-              image:
-                "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
-              type: "1",
-              status: "2",
-              amount: 20000,
-              multiple: 0,
-              taskConfigId: null,
-              taskName: null,
-              rewardDescription: null
-            }
-          ]
-        }
+        // {
+        //   teamId: "1191551200150056960",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 2,
+        //   completeNum: 0,
+        //   overDate: 1573095719000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191551200150056961",
+        //       teamId: "1191551200150056960",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "1",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     },
+        //     {
+        //       memberId: "1191656976801783808",
+        //       teamId: "1191551200150056960",
+        //       userId: "1191644992643457024",
+        //       nickName: "Tree",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7KAQMk4AAFB9sqBQd4624.png",
+        //       type: "2",
+        //       status: "0",
+        //       amount: 50000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191602410332807168",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573107928000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191602410337001472",
+        //       teamId: "1191602410332807168",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191638703842451456",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573116581000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191638703842451457",
+        //       teamId: "1191638703842451456",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191668541873643520",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573123695000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191668541873643521",
+        //       teamId: "1191668541873643520",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191694975014985728",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573129997000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191694975014985729",
+        //       teamId: "1191694975014985728",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191733881768960000",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573139273000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191733881768960001",
+        //       teamId: "1191733881768960000",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // },
+        // {
+        //   teamId: "1191733898458095616",
+        //   leaderId: "1158605294933299200",
+        //   taskConfigId: null,
+        //   status: "0",
+        //   totalNum: 1,
+        //   completeNum: 1,
+        //   overDate: 1573139277000,
+        //   createdDate: null,
+        //   updateDate: null,
+        //   memberList: [
+        //     {
+        //       memberId: "1191733898458095617",
+        //       teamId: "1191733898458095616",
+        //       userId: "1158605294933299200",
+        //       nickName: "测试",
+        //       image:
+        //         "http://154.206.62.162:8888/video/M00/01/D2/ms4-ol1ok7GAHnW6AADeHfmAYo4566.png",
+        //       type: "1",
+        //       status: "2",
+        //       amount: 20000,
+        //       multiple: 0,
+        //       taskConfigId: null,
+        //       taskName: null,
+        //       rewardDescription: null
+        //     }
+        //   ]
+        // }
       ],
       teamId: "",
       swipertop: {
@@ -424,7 +432,11 @@ export default {
       },
       activeIndex: 0,
       isIOS: this.$store.state.isIOS,
-      scriptWinShow: false
+      scriptWinShow: false,
+      endTipShow: false,
+      endParms: {},
+      gitClipData:false,
+  
     };
   },
   components: {
@@ -432,7 +444,8 @@ export default {
     addWin,
     joinWin,
     SharejoinWin,
-    scriptWin
+    scriptWin,
+    endTip
   },
   created() {
     this.getParms();
@@ -441,35 +454,20 @@ export default {
     // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   mounted() {
-    this.$nextTick(() => {});
+    this.$nextTick(() => {    
+      this.Sharejoin(this.parms)
+    });
   },
 
-  activated() {
-    // this.Sharejoin();
-  },
+  activated() {},
   computed: {},
   methods: {
-    end(dates) {
-      console.log(dates, "aaaaaaaaaaaaaaaaaa");
-      let parms = "";
-      if (this.isIOS) {
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          { teamId: dates },
-          data => {
-            parms = data;
-          }
-        );
-      } else {
-        const data = android.DX_encryptionRequest({ teamId: dates });
-        parms = data;
-      }
-      console.log(parms, "1111111111");
+    endReq(parms) {
       $api
         .postRequest("/user/task/v6/close58Team ", parms)
         .then(res => {
           if (res.code == 0) {
-            this.pizeSum = res.datas;
+            this.$toast.success(res.datas);
           } else {
             this.$toast.fail(code.message);
           }
@@ -478,6 +476,31 @@ export default {
           // this.$toast.fail(err.message);
         });
     },
+    colsEndTip() {
+      this.endTipShow = false;
+    },
+    end(id, status) {
+      if (status == 0) {
+        this.endParms.teamId = id;
+        this.endParms.status = status;
+        this.endTipShow = true;
+        return;
+      }
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { teamId: id },
+          data => {
+            this.endReq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ teamId: id })
+        );
+        this.endReq(data);
+      }
+    },
     colseScript() {
       this.scriptWinShow = false;
     },
@@ -485,7 +508,6 @@ export default {
       this.scriptWinShow = true;
     },
     fnGoBack() {
-      // console.log(this.$store.state.isIOS, "this.isios");
       if (this.isIOS) {
         this.$bridge.callhandler("DX_goBack");
       } else {
@@ -532,17 +554,16 @@ export default {
       }
     },
     Sharejoin(parms) {
+      //获取剪贴板数据
       if (!this.isIOS) {
         let ClipData = android.getTeamClipData();
         if (ClipData) {
-          console.log(ClipData, "获取剪贴板内容222");
           this.ClipJioin(ClipData, parms);
         }
       } else {
         this.$bridge.callhandler("getTeamClipData", {}, data => {
           let ClipData = data;
           if (ClipData) {
-            console.log(ClipData, "获取剪贴板内容222");
             this.ClipJioin(ClipData, parms);
           }
         });
@@ -557,7 +578,6 @@ export default {
     add(temaId, title) {
       this.msgCode.addTitle = title;
       //邀请加入队伍
-      console.log(this.parms, "dddddddddddd");
       $api
         .postRequest("/user/task/v6/searchTeamShareUrl", this.parms)
         .then(res => {
@@ -633,14 +653,14 @@ export default {
           this.parms = data;
           this.getSeachTeam(data);
           this.getPizeSum(data);
-          this.Sharejoin(data);
+          // this.Sharejoin(data);
         });
       } else {
         const data = android.DX_encryptionRequest({});
         this.parms = data;
         this.getSeachTeam(data);
         this.getPizeSum(data);
-        this.Sharejoin(data);
+        // this.Sharejoin(data);
       }
     },
     dateStr(str) {
@@ -673,15 +693,7 @@ export default {
             let list = res.datas;
             if (list) {
               for (let i = 0; i < list.length; i++) {
-                let item = list[i];
-
-                // let data = item.memberList;
-                // for (let i = 0; j < data.length; j++) {
-                //   if (data[j].type == 1) {
-                //     this.nickName = data.nickName;
-                //   }
-                // }
-
+                let item = list[0];
                 if (!this.teamId && item.totalNum < 5) {
                   this.teamId = item.teamId;
                 }
@@ -696,9 +708,13 @@ export default {
                 // this.teamList.push(list[i]);
               }
               this.teamList = list;
-              setTimeout(() => {
-                this.$refs.Swiper.swiper.slideTo(1, 1, false);
-              }, 200);
+              // console.log(this.teamList.length, "aaaa");
+              // if ((this.teamList.length = 0)) {
+              //   this.creatTeam(true);
+              // }
+              // setTimeout(() => {
+              //   this.$refs.Swiper.swiper.slideTo(1, 1, false);
+              // }, 200);
             } else {
               this.creatTeam(true);
             }
@@ -843,7 +859,7 @@ export default {
       text-align: right;
       padding-right: 8px;
       position: fixed;
-      top: 270px;
+      top: 200px;
       right: 0;
       z-index: 100;
       color: #fff;

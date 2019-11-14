@@ -37,7 +37,6 @@
       </p>
       <p>4.队伍中所有人均可邀请新队员；</p>
       <p>5.每个人最多只能成为一次队员，成为队长的次数不限；</p>
-      <p>6.每个人同时最多拥有20支队伍；</p>
     </div>
     <div class="closeBtn">
       <img src="@/assets/scol/close.png" alt @click="sendMsg" />
