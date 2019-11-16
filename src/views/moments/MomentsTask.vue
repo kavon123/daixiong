@@ -179,7 +179,7 @@
       </div>
     </div>
     <footer class="footer" :style="'height:'+paddingB+'px'">
-      <div class="paize" @click="groupTask()">组队领10倍奖励</div>
+      <!-- <div class="paize" @click="groupTask()">组队领10倍奖励</div> -->
       <div
         v-if="resp.status !=1"
         @click="fnSubmit"
@@ -1170,15 +1170,19 @@ p {
     }
 
     .submit_but {
-      width: 165px;
+      width: 210px;
       height: 45px;
       border: 1px solid #fff;
-      // background: rgba(160, 146, 252, 0.3);
+      background: rgba(160, 146, 252, 0.3);
       border-radius: 6px;
       text-align: center;
+      color: #fff;
       font-size: 16px;
       font-weight: 400;
-      color: #fff;
+      text-align: center;
+      // color: #791a22;
+      // background: #ffd354;
+      border-radius: 5px;
       line-height: 14px;
       line-height: 45px;
     }

@@ -3,6 +3,7 @@
 
 <template>
   <div class="groupTask_page" @touchmove.prevent>
+    <!--  -->
     <div class="scroll_view">
       <div class="header">
         <div class="back" @click="fnGoBack">
@@ -17,8 +18,9 @@
 
       <div class="tip">
         <div>
-          <span class="title">团队任务 :</span>
-          <span class="category">58棋牌分享</span>
+          <span class="title">今日奖金:</span>
+          <img src="@/assets/images/redpackcup.png" alt />
+          <span class="category">{{pizeSum.currentDateAmount}}</span>
         </div>
         <div>
           <span class="title">累计奖金 :</span>
@@ -34,7 +36,7 @@
 
       <joinWin v-if="joinWinShow" @func="closejoin" />
       <addWin v-if="addWinShow" :parentmsg="msgCode" @func="closeAdd" />
-      <SharejoinWin v-if="SjoinWinShow" :data="teamId" @func="colseSharejoin" />
+      <SharejoinWin v-if="SjoinWinShow" :data="teamId" @func="colseSharejoin()" />
       <scriptWin v-if="scriptWinShow" @func="colseScript" />
       <endTip v-if="endTipShow" @func="colsEndTip" :parms="endParms" @refresh="getParms" />
 
@@ -100,9 +102,9 @@
                   <div class="infoTitle">
                     <img src="@/assets/images/formteam.png" alt />
                     <span>队伍</span>
-                    <span>{{index+1}}</span>
+                    <!-- <span>{{index+1}}</span>
                     <span>/</span>
-                    <span>{{teamList.length}}</span>
+                    <span>{{teamList.length}}</span>-->
                   </div>
                   <div class="date">
                     <span class="dateNum">{{item.H}}</span>
@@ -131,13 +133,13 @@
                     <li class="userName">{{data.nickName}}</li>
                     <li class="usersType color_0" v-if="data.status==0" @click="openLDWb">去提交</li>
                     <li class="usersType color_1" v-if="data.status==1" @click="openLDWb">审核中</li>
-                    <li class="usersType color_2" v-if="data.status==2" @click="openLDWb">已完成</li>
+                    <li class="usersType color_2" v-if="data.status==2">已完成</li>
                   </ul>
 
                   <ul class="userpize" v-if="data.type==1">
                     <li class="pizeSum">
-                      <span>X</span>
-                      {{data.multiple}}
+                      <img src="@/assets/images/redpackcup.png" alt />
+                      <span>{{data.amount}}</span>
                     </li>
                     <li class="pizeTitle">我的奖励</li>
                   </ul>
@@ -160,10 +162,12 @@
                       <li
                         class="teamType color_0"
                         v-if="!item.memberList[i]||item.memberList[i].status==0"
+                        @click="openLDWb"
                       >待提交</li>
                       <li
                         class="teamType color_1"
                         v-if="item.memberList[i]&&item.memberList[i].status==1"
+                        @click="openLDWb"
                       >审核中</li>
                       <li
                         class="teamType color_2"
@@ -435,12 +439,11 @@ export default {
       scriptWinShow: false,
       endTipShow: false,
       endParms: {},
-      gitClipData:false,
-  
+      gitClipData: false,
+      joinFlag: false,
     };
   },
   components: {
-    // ...mapGetters(["oUserinfo", "barString", "isIOS"]),
     addWin,
     joinWin,
     SharejoinWin,
@@ -451,11 +454,10 @@ export default {
     this.getParms();
   },
   computed: {
-    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   mounted() {
-    this.$nextTick(() => {    
-      this.Sharejoin(this.parms)
+    this.$nextTick(() => {
+      // this.Sharejoin(this.parms);
     });
   },
 
@@ -555,6 +557,11 @@ export default {
     },
     Sharejoin(parms) {
       //获取剪贴板数据
+      if (this.joinFlag) {
+        return;
+      } else {
+        this.joinFlag = true;
+      }
       if (!this.isIOS) {
         let ClipData = android.getTeamClipData();
         if (ClipData) {
@@ -653,14 +660,14 @@ export default {
           this.parms = data;
           this.getSeachTeam(data);
           this.getPizeSum(data);
-          // this.Sharejoin(data);
+          this.Sharejoin(data);
         });
       } else {
         const data = android.DX_encryptionRequest({});
         this.parms = data;
         this.getSeachTeam(data);
         this.getPizeSum(data);
-        // this.Sharejoin(data);
+        this.Sharejoin(data);
       }
     },
     dateStr(str) {
@@ -736,11 +743,16 @@ export default {
 
 <style lang='less' scoped>
 .groupTask_page {
-  background-image: url("../assets/images/redpack.png");
-  background-size: 100%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+
   .scroll_view {
+    background-image: url("../assets/images/redpack.png");
+    background-size: 100%;
+    height: 100vh;
     margin-top: 64px;
-    padding-top: 192px;
+    padding-top: 152px;
     .header {
       height: 64px;
       width: 100%;
@@ -859,7 +871,7 @@ export default {
       text-align: right;
       padding-right: 8px;
       position: fixed;
-      top: 200px;
+      top: 180px;
       right: 0;
       z-index: 100;
       color: #fff;
@@ -1038,8 +1050,15 @@ export default {
                     font-family: 微软雅黑;
                     color: #ff6666;
                     text-align: left;
+                    img {
+                      vertical-align: middle;
+                      width: 24px;
+                      height: 18px;
+                      margin-right: 4px;
+                    }
                     span {
-                      font-size: 16px;
+                      // font-size: 16px;
+                      font-weight: 800;
                     }
                   }
                   .pizeTitle {

@@ -10,7 +10,7 @@ export default new Router({
   mode: 'hash',
   base: process.env.BASE_URL,
   routes: [
-    {   
+    {
       path: '/myTeam',
       name: 'myTeam',// 分享落地页-PC端
       meta: {
@@ -34,14 +34,14 @@ export default new Router({
 
       }
     },
-    {      
+    {
       path: '/sharePro',
       name: 'sharePro',// 分享落地页-PC端
       meta: {
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "sharePro" */ './views/sharePro.vue')
-    }, 
+    },
     {
       path: '/groupDetails',
       name: 'groupDetails',// 组队详情
@@ -51,21 +51,37 @@ export default new Router({
       component: () => import(/* webpackChunkName: "groupDetails" */ './views/groupDetails.vue')
     },
     {
-      path: '/groupLog',
-      name: 'groupLog',// 组队记录
+      path: '/groupLog1',
+      name: 'groupLog1',// 组队记录
       meta: {
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "groupLog" */ './views/groupLog.vue')
     },
     {
-      path: '/groupTask1',
+      path: '/groupLog',
+      name: 'groupLog',// 组队记录
+      meta: {
+        keepAlive: true
+      },
+      component: () => import(/* webpackChunkName: "groupLog" */ './views/groupLog1.vue')
+    },
+    {
+      path: '/',
       name: 'groupTask1',//组队分享任务
       meta: {
         keepAlive: true
       },
       component: () => import(/* webpackChunkName: "groupTask" */ './views/groupTask1.vue')
     },
+    // {
+    //   path: '/groupTask1',
+    //   name: 'groupTask1',//组队分享任务
+    //   meta: {
+    //     keepAlive: true
+    //   },
+    //   component: () => import(/* webpackChunkName: "groupTask" */ './views/groupTask1.vue')
+    // },
     {
       path: '/groupTask',
       name: 'groupTask',//组队分享任务

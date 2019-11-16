@@ -10,12 +10,14 @@ import './assets/style/base.css'
 
 
 
+
+
 Vue.config.productionTip = false;
 
 Vue.prototype.$bridge = Bridge;
 
-// const vConsole = new VConsole();
-// console.log(vConsole.version)
+  // const vConsole = new VConsole();
+  // console.log(vConsole.version)
 // if (process.env.NODE_ENV == 'development') {
 //   Vue.config.devtools = true
 // } else {

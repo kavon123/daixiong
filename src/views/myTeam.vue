@@ -36,6 +36,7 @@
         </ul>
         <ul class="headerMan" v-for="(item,inx) in team.memberList" :key="inx">
           <li class="teamUser" v-if="item&&item.type==1">
+            <img src="@/assets/images/regcom.png" alt class="regcom" />
             <img :src="item.image" alt class="userImg" />
             <div class="name">{{item.nickName}}</div>
             <div class="type color_0" v-if="item.status==0" @click="openLDWb">去提交</div>
@@ -44,8 +45,8 @@
           </li>
           <li class="parze" v-if="item&&item.type==1">
             <div class="sum">
-              <span>X</span>
-              {{item.multiple}}
+              <img src="@/assets/images/redpackcup.png" alt />
+              <span>{{item.amount}}</span>
             </div>
             <div class="title">我的奖励</div>
           </li>
@@ -58,8 +59,8 @@
                 <img :src="team.memberList[i].image" alt />
               </li>
               <li class="name">{{team.memberList[i].nickName}}</li>
-              <li class="type color_0" v-if="team.memberList[i].status==0">待提交</li>
-              <li class="type color_1" v-if="team.memberList[i].status==1">审核中</li>
+              <li class="type color_0" v-if="team.memberList[i].status==0" @click="openLDWb">待提交</li>
+              <li class="type color_1" v-if="team.memberList[i].status==1" @click="openLDWb">审核中</li>
               <li class="type color_2" v-if="team.memberList[i].status==2">已完成</li>
             </ul>
             <ul v-if="team.memberList.length<data">
@@ -156,7 +157,7 @@ export default {
     addWin
   },
   created() {
-    this.getParms();
+    // this.getParms();
   },
   mounted() {},
   computed: {},
@@ -205,7 +206,7 @@ export default {
       window.location.href = `${str}#/groupTask`;
     },
     getParms() {
-      console.log(this.isIOS, "22222222222");
+      // console.log(this.isIOS, "22222222222");
       if (this.isIOS) {
         this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
           this.parms = data;
@@ -329,7 +330,7 @@ export default {
       margin: 0 20px;
       background: #fdf8e5;
       width: 335px;
-      height: 362px;
+      height: 372px;
       border-radius: 6px;
       .date {
         height: 90px;
@@ -381,6 +382,15 @@ export default {
         align-items: center;
         .teamUser {
           text-align: center;
+          position: relative;
+          .regcom {
+            width: 38px;
+            height: 17px;
+            position: absolute;
+            z-index: 10;
+            top: -10px;
+            left: 18px;
+          }
           .userImg {
             border-radius: 50%;
             width: 60px;
@@ -421,10 +431,17 @@ export default {
         .parze {
           .sum {
             text-align: right;
-            font-size: 50px;
+            font-size: 30px;
             color: #e0413c;
+            img {
+              vertical-align:middle;
+              width: 24px;
+              height: 18px;
+              margin-right: 4px;
+            }
             span {
-              font-size: 28px;
+              // font-size: 28px;
+              font-weight: 800;
             }
           }
           .title {

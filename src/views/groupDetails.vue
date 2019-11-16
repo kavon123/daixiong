@@ -41,8 +41,8 @@
           </li>
           <li class="parze" v-if="item&&item.type==1">
             <div class="sum">
-              <span>X</span>
-              {{item.multiple}}
+              <img src="@/assets/images/redpackcup.png" alt />
+              <span>{{item.amount}}</span>
             </div>
             <div class="title">我的奖励</div>
           </li>
@@ -55,9 +55,9 @@
                 <img :src="team.memberList[i].image" alt />
               </li>
               <li class="name">{{team.memberList[i].nickName}}</li>
-              <li class="type color_0" v-if="team.memberList[i].status==0">待提交</li>
-              <li class="type color_1" v-if="team.memberList[i].status==1">审核中</li>
-              <li class="type color_2" v-if="team.memberList[i].status==2">已完成</li>
+              <li class="type color_0" v-if="team.memberList[i].status==0" @click="openLDWb">待提交</li>
+              <li class="type color_1" v-if="team.memberList[i].status==1" @click="openLDWb">审核中</li>
+              <li class="type color_2" v-if="team.memberList[i].status==2" >已完成</li>
             </ul>
             <ul v-if="team.memberList.length<data">
               <li class="temaImg">
@@ -248,7 +248,7 @@ export default {
       margin: 0 20px;
       background: #fff;
       width: 335px;
-      height: 362px;
+      height: 372px;
       border-radius: 6px;
       .date {
         height: 90px;
@@ -352,11 +352,18 @@ export default {
         .parze {
           .sum {
             text-align: right;
-            font-size: 50px;
+            font-size: 28px;
             color: #e0413c;
-            span {
-              font-size: 28px;
+            img {
+              vertical-align: middle;
+              width: 24px;
+              height: 18px;
+              margin-right: 4px;
             }
+            span {
+              // font-size: 16px;
+              font-weight: 800;
+            }          
           }
           .title {
             text-align: right;

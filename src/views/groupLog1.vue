@@ -16,13 +16,8 @@
       <div class="noImg" v-if="teamList.length==0">
         <img src="@/assets/images/noteamLog.png" alt />
       </div>
-      <swiper class="swipe" @slideChange="onChange" :options="swipertop" ref="Swiper">
-        <swiper-slide>1</swiper-slide>
-        <swiper-slide class="logList" v-if="teamList.length>0" @touchmove="handleTouchMove">
-          <!-- @touchend="handleTouchEnd" -->
-          <!-- @touchstart.prevent="handleTouchStart" -->
-          <!-- @touchmove="handleTouchMove" -->
-          <!-- @click="handleLetterClick" -->
+      <div class="swipe" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
+        <div class="logList" v-if="teamList.length>0">
           <ul class="title">
             <li>结束时间</li>
             <li>我的队伍</li>
@@ -46,9 +41,8 @@
               <img src="@/assets/images/go.png" alt />
             </li>
           </ul>
-        </swiper-slide>
-        <swiper-slide>3</swiper-slide>
-      </swiper>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -63,6 +57,8 @@ export default {
       temashow: false,
       teamList: [
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388284033187840",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -77,6 +73,8 @@ export default {
         //   amount: "0"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388282661650432",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -91,6 +89,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388281826983936",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -105,6 +105,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388256132677632",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -119,6 +121,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388255998459904",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -133,6 +137,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388255172182016",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -147,6 +153,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388254043914240",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -161,6 +169,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388253288939520",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -175,6 +185,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192388252613656576",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -189,6 +201,8 @@ export default {
         //   amount: "20000"
         // },
         // {
+        //   Ytd: "2019-11-16",
+        //   Time: "12:53:24",
         //   teamId: "1192361580837388288",
         //   leaderId: "1158605294933299200",
         //   taskConfigId: null,
@@ -210,69 +224,90 @@ export default {
       tend: "",
       touch: false,
       TouchDate: [],
-      swipertop: {
-        initialSlide: 0,
-        direction: "vertical",
-        centeredSlides: true,
-        slidesPerView: 1,
-        slideTo: 1,
-        spaceBetween: 0,
-        onSlideChangeEnd: function(swiper) {
-          alert(swiper.activeIndex + "");
-          // swiper.activeIndex 这个就是索引， 从 0 开始！ 可看一共有多少元素！
-        }
-        // loop: true
-      },
-      isIOS: this.$store.state.isIOS
+      // swipertop: {
+      //   initialSlide: 0,
+      //   direction: "vertical",
+      //   centeredSlides: true,
+      //   slidesPerView: 1,
+      //   slideTo: 1,
+      //   spaceBetween: 0,
+      //   onSlideChangeEnd: function(swiper) {
+      //     alert(swiper.activeIndex + "");
+      //     // swiper.activeIndex 这个就是索引， 从 0 开始！ 可看一共有多少元素！
+      //   }
+      //   // loop: true
+      // },
+      isIOS: this.$store.state.isIOS,
+      startY: "", //滑动起始为位置
+      moveY: "", //滑动距离
+      disY: "" //位移位置
     };
   },
 
-  components: {
-    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
-  },
+  components: {},
   created() {},
-  mounted() {
-    window.addEventListener("scroll", this.handleScroll);
-  },
+  mounted() {},
   activated() {
-    this.$refs.Swiper.swiper.slideTo(1, 1, false);
+    // this.$refs.Swiper.swiper.slideTo(1, 1, false);
     this.getParms(this.params);
   },
   computed: {},
   methods: {
-    handleScroll() {
-      let scrollTop =
-        window.pageYOffset ||
-        document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      let h =
-        window.innerHeight ||
-        document.documentElement.clientHeight ||
-        document.body.clientHeight; //屏幕的高度
-      let prodListHeight =
-        document.querySelector(".logList").offsetHeight - h - 20; //.myOrderListWrapper 商品列表容器
-      console.log(scrollTop, ":::", prodListHeight);
-      if (scrollTop > prodListHeight) {
-        console.log("下");
-      } else {
-        console.log("上");
+    touchStart: function(ev) {
+      ev = ev || event;
+      // ev.preventDefault();
+      if (ev.touches.length == 1) {
+        //tounches类数组，等于1时表示此时有只有一只手指在触摸屏幕
+        this.startY = ev.touches[0].clientY; // 记录开始位置
       }
     },
 
-    handleTouchMove(e) {
-      //   // this.TouchDate.push(parseInt(e.changedTouches[0].clientY));
-      //   // if(this.page.currPage<this.page.totalPage){
-      //   // }else if( ){
-      //   // }
+    touchMove: function(ev) {
+      ev = ev || event;
+      // ev.preventDefault();
+      if (ev.touches.length == 1) {
+        //滑动时距离浏览器上侧的距离
+        this.moveY = ev.touches[0].clientY;
+        //实时的滑动的距离-起始位置=实时移动的位置
+        this.disY = this.moveY - this.startY;
+      }
     },
-    // // handleLetterClick(e) {},
+    touchEnd: function(ev) {
+      ev = ev || event;
+      // ev.preventDefault();
+      if (ev.changedTouches.length == 1) {
+        let endY = ev.changedTouches[0].clientY;
+        this.disY = endY - this.startY;
+        console.log(this.disY);
+        if (this.disY > 0) {
+          if (this.page.currPage > 1) {
+            this.$toast.loading({
+              duration: 0,
+              forbidClick: true, // 禁用背景点击
+              message: ""
+            });
 
-    // handleTouchStart(e) {
-    //   this.tstart = e.touches[0].clientY;
-    // },
-    // handleTouchEnd(e) {
-    //   this.tend = e.changedTouches[0].clientY;
-    // },
+            this.params.page = Number(this.page.currPage) - 1;
+            this.getParms(this.params);
+          } else {
+            this.$toast.fail("当前是首页！");
+          }
+        } else if (this.disY < 0) {
+          if (this.page.currPage < this.page.totalPage) {
+            this.$toast.loading({
+              duration: 0,
+              forbidClick: true, // 禁用背景点击
+              message: ""
+            });
+
+            this.params.page = Number(this.page.currPage) + 1;
+            this.getParms(this.params);
+          } else {
+            this.$toast.fail("当前是尾页！");
+          }
+        }
+      }
+    },
 
     groupDetails(teamId) {
       let href = window.location.href;
@@ -286,23 +321,7 @@ export default {
       let str = href.split("#/")[0];
       window.location.href = `${str}#/groupTask`;
     },
-    onChange() {
-      // console.log(this.$refs.Swiper.swiper.activeIndex);
-      let activeIndex = this.$refs.Swiper.swiper.activeIndex;
-      if (activeIndex == 0) {
-        this.$refs.Swiper.swiper.slideTo(1, 1, false);
-        if (this.page.currPage > 1) {
-          this.params.page = Number(this.page.currPage) - 1;
-          this.getParms(this.params);
-        }
-      } else if (activeIndex == 2) {
-        this.$refs.Swiper.swiper.slideTo(1, 1, false);
-        if (this.page.currPage < this.page.totalPage) {
-          this.params.page = Number(this.page.currPage) + 1;
-          this.getParms(this.params);
-        }
-      }
-    },
+
     getParms(params) {
       if (this.isIOS) {
         this.$bridge.callhandler(
@@ -355,6 +374,7 @@ export default {
               list[i].Ytd = ytd;
               list[i].Time = time;
             }
+            this.$toast.clear();
             this.teamList = list;
           } else {
             this.temashow = true;
@@ -445,11 +465,12 @@ export default {
           }
           li:nth-child(1) {
             width: 70px;
+            margin-left: 6px;
           }
           li:nth-child(2) {
             width: 130px;
             box-sizing: border-box;
-            padding-left:26px;
+            padding-left: 20px;
             // text-align: center;
           }
           li:nth-child(3) {

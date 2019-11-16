@@ -77,7 +77,7 @@ export default {
         });
     },
     sendMsg() {
-      this.$emit("func");
+        this.$emit("func");
     }
   }
 };

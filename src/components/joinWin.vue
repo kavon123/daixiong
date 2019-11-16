@@ -3,14 +3,16 @@
 
 
 <template>
-  <div class="win" @touchmove.prevent>
+  <div class="win">
+    <!-- @touchmove.prevent -->
     <ul class="conten">
       <li class="title">加入队伍</li>
       <li>请粘贴好友的邀请链接：</li>
       <!-- <li>还差一人就开奖！加入队伍，立即瓜分40元红包！提现秒到！立刻来瓜分：https://mobile.umeng.com/platform/5d09b8b83fc19509f100102e</li> -->
       <li>
         <!-- <div>还差一人就开奖！加入队伍，立即瓜分50元红包！提现秒到！立刻来瓜分：https://mobile.umeng.com/platform/5d09b8b83fc19509f100102e</div> -->
-        <textarea name class="text"></textarea>
+        <textarea name class="text" v-on:blur="change"></textarea>
+        <!-- textarea name="textareal" cols="字符宽度" rows="行数" -->
       </li>
       <li>
         <p>1. 加入队伍功能，每个用户仅可使用一次，使用后请创建新队伍来领取奖励</p>
@@ -18,7 +20,7 @@
       </li>
 
       <li>
-        <div @click="join()">确定加入</div>
+        <div @click="join">确定加入</div>
       </li>
     </ul>
     <div class="closeBtn">
@@ -36,42 +38,33 @@ import { swiper, swiperSlide } from "vue-awesome-swiper";
 export default {
   data() {
     return {
-      parms: ""
+      parms: "",
+      isIOS: this.$store.state.isIOS
     };
   },
   props: ["parentmsg"],
   components: {
-    ...mapGetters(["oUserinfo", "barString", "isIOS"])
+    // ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
   created() {},
-  mounted() {},
+  mounted() {
+    this.$nextTick(() => {
+      document.getElementsByClassName("text")[0].value = "";
+    });
+  },
   computed: {},
   methods: {
-    join() {
-      let str = document.getElementsByClassName("text")[0].value;
-      console.log(str);
-      // let Id = str.split("teamId=")[1];
-      let id = str.match(/￥(\S*)￥/)[1];
-      let parm = "";     
-      if (this.isIOS) {
-        this.$bridge.callhandler(
-          "DX_encryptionRequest",
-          {teamId: Id },
-          data => {
-            parm = data;
-          }
-        );
-      } else {
-        const data = android.DX_encryptionRequest(
-          JSON.stringify({teamId: Id })
-        );
-        parm = data;
-      }
+    change() {
+      //ios阻止弹出收回键盘后页面错位
+      window.scrollTo(0, 0);
+    },
+    joinQpq(parm) {
       $api
         .postRequest("/user/task/v6/add58TeamMember", parm)
         .then(res => {
           if (res.code == 0) {
             this.$toast.success("加入成功");
+            this.sendMsg();
           } else {
             this.$toast.fail(res.msg);
           }
@@ -79,6 +72,34 @@ export default {
         .catch(err => {
           this.$toast.fail("加入失败!");
         });
+    },
+    join() {
+      let str = document.getElementsByClassName("text")[0].value;
+      if (!str) {
+        this.$toast.fail("请在输入框内粘贴好友分享的邀请！");
+        return;
+      }
+
+      // let Id = str.split("teamId=")[1];
+      let Id = str.match(/￥(\S*)￥/)[1];
+      if (!Id) {
+        this.$toast.fail("请在输入框内粘贴好友分享的邀请！");
+        return;
+      }
+      if (this.isIOS) {
+        this.$bridge.callhandler(
+          "DX_encryptionRequest",
+          { teamId: Id },
+          data => {
+            this.joinQpq(data);
+          }
+        );
+      } else {
+        const data = android.DX_encryptionRequest(
+          JSON.stringify({ teamId: Id })
+        );
+        this.joinQpq(data);
+      }
     },
     sendMsg() {
       this.$emit("func");
