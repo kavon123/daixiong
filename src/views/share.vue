@@ -140,7 +140,7 @@ export default {
       //name = "TaskCenter"  就跳到任务中心， name="Dx58TaskShare"  就跳到 团队分享
       var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webHasHead=1&teamId=${json.teamId}`;
       // android下载链接
-      var android_download_url = "https://daixiong.tv/";
+      var android_download_url = `https://da9fdhgi.com/index/download?appkey=${json.appKey}`;
       // 安卓判断
       if (/(Android)/i.test(navigator.userAgent)) {
         var startTime = Date.now();
