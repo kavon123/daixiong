@@ -75,7 +75,7 @@
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
         </div>-->
-        <div class="down_btn" @click="down">下载APP领钱</div>
+        <div class="down_btn" id="down_btn" >下载APP领钱</div>
       </div>
     </div>
   </div>
@@ -94,8 +94,14 @@ export default {
   components: {
     ...mapGetters(["oUserinfo", "barString", "isIOS"])
   },
-  created() {},
-  mounted() {},
+  created() {
+    this.init();
+  },
+  mounted() {
+    this.$nextTick(() => {
+      // this.awakenDown();
+    });
+  },
   computed: {},
   activated() {
     document.title = "快来！我已经成功提现";
@@ -114,11 +120,40 @@ export default {
         }, 2000);
       }
     },
+
     copyLinl() {
       let msg = window.location.href;
       this.copy(msg);
     },
+    init() {
+      var oScript = document.createElement("script");
+      oScript.type = "text/javascript";
+      oScript.src = "//res.cdn.openinstall.io/openinstall.js";
+      document.body.appendChild(oScript);
+      setTimeout(() => {
+        var data = OpenInstall.parseUrlParams();
+        new OpenInstall(
+          {
+            appKey: "bo6mw7",
+            onready: function() {
+              var m = this;
+              var button = document.getElementById("down_btn");
+              // button.style.visibility = "visible";
 
+              /*在app已安装的情况尝试拉起app*/
+              m.schemeWakeup();
+              /*用户点击某个按钮时(假定按钮id为downloadButton)，安装app*/
+              button.onclick = function() {
+                m.wakeupOrInstall();
+                return false;
+              };
+            }
+          },
+          data
+        );
+      }, 300);
+    },
+    awakenDown() {},
     down() {
       let getUrl = window.location.href;
       let itemUrl = getUrl.split("#/")[0];
@@ -132,10 +167,10 @@ export default {
       // IOS打开链接
       debugger;
       var ios_schema = `${json.schemes}://?openTask=1`;
-      console.log(ios_schema)
+      console.log(ios_schema);
       // IOS下载URL
       var ios_download_url = `https://itunes.apple.com/cn/app/id${json.appleID}`;
-       console.log(ios_download_url)
+      console.log(ios_download_url);
       // android 打开APP URL
       //name = "TaskCenter"  就跳到任务中心， name="Dx58TaskShare"  就跳到 团队分享
       var android_schema = `dxapp://android.dxmovie.com/open?name=TaskCenter&url=${itemUrl}#/groupTask?webHasHead=1&teamId=${json.teamId}`;

@@ -440,7 +440,7 @@ export default {
       endTipShow: false,
       endParms: {},
       gitClipData: false,
-      joinFlag: false,
+      joinFlag: false
     };
   },
   components: {
@@ -453,8 +453,7 @@ export default {
   created() {
     this.getParms();
   },
-  computed: {
-  },
+  computed: {},
   mounted() {
     this.$nextTick(() => {
       // this.Sharejoin(this.parms);
@@ -464,6 +463,21 @@ export default {
   activated() {},
   computed: {},
   methods: {
+    clickSum(title) {
+      let name = "";
+      let code = "";
+      switch (title) {
+        case "提醒队友":
+          code = "RW-13";
+          name = "58 poster task remind and invite friends";
+          break;
+        case "邀请队友":
+          code = "RW-80";
+          name = "invite friends do task";
+          break;
+      }
+      android.DX_statisticsUserEvent(code, "click", name);
+    },
     endReq(parms) {
       $api
         .postRequest("/user/task/v6/close58Team ", parms)
@@ -594,6 +608,9 @@ export default {
             nweMsg += `&teamId=${temaId}`;
             this.msgCode.msg = nweMsg;
             this.addWinShow = true;
+            if (!this.isIOS) {
+              this.clickSum(title);
+            }
           } else {
             this.$toast.fail(code.message);
           }
