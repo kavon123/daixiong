@@ -476,7 +476,11 @@ export default {
           name = "invite friends do task";
           break;
       }
-      android.DX_statisticsUserEvent(code, "click", name);
+      if (this.isIOS) {
+        this.$bridge.callhandler("DX_statisticsUserEvent", code);
+      } else {
+        android.DX_statisticsUserEvent(code, "click", name);
+      }
     },
     endReq(parms) {
       $api
@@ -608,9 +612,7 @@ export default {
             nweMsg += `&teamId=${temaId}`;
             this.msgCode.msg = nweMsg;
             this.addWinShow = true;
-            if (!this.isIOS) {
-              this.clickSum(title);
-            }
+            this.clickSum(title);
           } else {
             this.$toast.fail(code.message);
           }

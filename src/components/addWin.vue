@@ -99,6 +99,10 @@ export default {
           });
         });
       } else {
+        let userInfo = android.getUserInfo();//获取当前用户信息
+        let userInfoObj = JSON.parse(userInfo);
+        // console.log(userInfoObj,"+++++++++");
+        msg += `&inviteUserId=${userInfoObj.userID}`;
         const data = android.DX_copy(msg);
         if (data == 1) {
           this.$toast.success("复制成功！");

@@ -75,7 +75,7 @@
         <!-- <div>
           <a href="dxapp://android.dxmovie.com/open?name=daixiong">打开APP</a>
         </div>-->
-        <div class="down_btn" id="down_btn" >下载APP领钱</div>
+        <div class="down_btn" id="down_btn">下载APP领钱</div>
       </div>
     </div>
   </div>
@@ -132,9 +132,10 @@ export default {
       document.body.appendChild(oScript);
       setTimeout(() => {
         var data = OpenInstall.parseUrlParams();
+        let parms = { inviteUserId: data.inviteUserId };
         new OpenInstall(
           {
-            appKey: "bo6mw7",
+            appKey: "g366qy",
             onready: function() {
               var m = this;
               var button = document.getElementById("down_btn");
@@ -149,11 +150,10 @@ export default {
               };
             }
           },
-          data
+          parms
         );
       }, 300);
     },
-    awakenDown() {},
     down() {
       let getUrl = window.location.href;
       let itemUrl = getUrl.split("#/")[0];
