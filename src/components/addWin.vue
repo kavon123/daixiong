@@ -89,25 +89,25 @@ export default {
       let ele = document.getElementsByClassName("stText")[0];
       let msg = ele.innerText;
       if (this.isIOS) {
-        this.$bridge.callhandler("getRouseApp", {}, data => {
-          // console.log(data, "获取跳转参数");
-          msg = `${msg}&appleID=${data.appleID}&schemes=${data.schemes}`;
-          this.$bridge.callhandler("DX_copy", msg, data => {
-            if (data == 1) {
+        this.$bridge.callhandler("getUserInfo", {}, data => {
+          let userInfoObj = data;
+          msg += `&inviteUserId=${userInfoObj.userIDStr}`;
+          this.$bridge.callhandler("DX_copy", msg, getdata => {
+            if (getdata == 1) {
               this.$toast.success("复制成功！");
             }
           });
         });
       } else {
-        let userInfo = android.getUserInfo();//获取当前用户信息
+        let userInfo = android.getUserInfo(); //获取当前用户信息
         let userInfoObj = JSON.parse(userInfo);
         // console.log(userInfoObj,"+++++++++");
-        msg += `&inviteUserId=${userInfoObj.userID}`;
+        msg += `&inviteUserId=${userInfoObj.userIDStr}`;
         const data = android.DX_copy(msg);
         if (data == 1) {
           this.$toast.success("复制成功！");
         }
-      }
+      }   
     }
   }
 };

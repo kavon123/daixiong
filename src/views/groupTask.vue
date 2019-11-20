@@ -476,6 +476,7 @@ export default {
           name = "invite friends do task";
           break;
       }
+      console.log(this.isIOS);
       if (this.isIOS) {
         this.$bridge.callhandler("DX_statisticsUserEvent", code);
       } else {
@@ -549,6 +550,7 @@ export default {
       this.SjoinWinShow = false;
     },
     ClipJioin(ClipData, parms) {
+      //获取剪贴板分享文案
       let data = {};
       let inx = ClipData.indexOf("?") + 1;
       let dataStr = ClipData.substr(inx);
@@ -574,6 +576,7 @@ export default {
       }
     },
     Sharejoin(parms) {
+      //复制的分享文案加入
       //获取剪贴板数据
       if (this.joinFlag) {
         return;
@@ -601,6 +604,7 @@ export default {
       this.addWinShow = false;
     },
     add(temaId, title) {
+      //获取邀请文案和链接
       this.msgCode.addTitle = title;
       //邀请加入队伍
       $api
@@ -634,6 +638,7 @@ export default {
     },
 
     searchMyteam(data) {
+      //查询我加入的团队
       $api
         .postRequest("/user/task/v6/searchMyJoinMemberTeam", data)
         .then(res => {
@@ -674,6 +679,7 @@ export default {
       this.activeIndex = this.$refs.Swiper.swiper.activeIndex;
     },
     getParms() {
+      //传递参数加密
       if (this.isIOS) {
         this.$bridge.callhandler("DX_encryptionRequest", {}, data => {
           this.parms = data;
@@ -690,6 +696,7 @@ export default {
       }
     },
     dateStr(str) {
+      //日期格式转换
       if (str < 10) {
         return `0${str}`;
       } else {
@@ -697,6 +704,7 @@ export default {
       }
     },
     getPizeSum(parms) {
+      //获取奖励信息
       $api
         .postRequest("/user/task/v6/searchMy58TeamAmount", parms)
         .then(res => {
@@ -712,6 +720,7 @@ export default {
     },
 
     getSeachTeam(parms) {
+      //请求当前所有的团队
       $api
         .postRequest("/user/task/v6/searchMy58TaskTeam", parms)
         .then(res => {

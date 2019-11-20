@@ -132,7 +132,7 @@ export default {
       document.body.appendChild(oScript);
       setTimeout(() => {
         var data = OpenInstall.parseUrlParams();
-        let parms = { inviteUserId: data.inviteUserId };
+        let parms ={ inviteUserId: data.inviteUserId };
         new OpenInstall(
           {
             appKey: "g366qy",
