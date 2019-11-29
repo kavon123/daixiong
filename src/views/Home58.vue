@@ -182,7 +182,7 @@
                    :chestChildTask="chestChildTask"></chest-modal>
     </van-popup>
     <m-58 v-if="generateShow"
-          @close="fnPop" />
+          @close="fnPop"  :password="pwd" />
     <m-rele-suc v-if="sucShow"
                 :name="oUserinfo.userId"
                 @close="fnPop" />
@@ -246,6 +246,7 @@ export default {
   },
   data () {
     return {
+      pwd :'a12345',
       mDownloadShow: false,
       inviteShow: false,
       totalSize: 0,
@@ -387,6 +388,9 @@ export default {
             const oUserinfo = Object.assign(this.oUserinfo, res.datas);
             this.setUserInfo(oUserinfo);
             this.bIsLogin = false;
+            if(res.datas.pwd){
+               this.pwd =res.datas.pwd;
+            };           
             //hasBind 0 新注册(新生成) ,1新绑定 2 老账户
             if (res.datas.hasBind == 0) {
               this.generateShow = true;

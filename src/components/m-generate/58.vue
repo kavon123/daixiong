@@ -16,7 +16,7 @@
             </div>
             <div class="item">
               <div class="item_text">初始密码</div>
-              <div class="item_input">123456</div>
+              <div class="item_input">{{password}}</div>
             </div>
           </div>
           <div class="footer">
@@ -37,6 +37,7 @@ export default {
   computed: {
     ...mapGetters(["isIOS", "oUserinfo"])
   },
+  props: ["password"],
   methods: {
     funSetOver(event) {
       const _this = this;
