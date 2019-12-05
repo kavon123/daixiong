@@ -97,7 +97,7 @@
 
         <div class="user_but"
              @click="fnPromoteList"
-             v-if="totalSize>7">
+             v-if="totalSize>=7">
           更多
           <van-icon name="arrow" />
         </div>
