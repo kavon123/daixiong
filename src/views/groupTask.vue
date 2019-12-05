@@ -616,7 +616,7 @@ export default {
             nweMsg += `&teamId=${temaId}`;
             this.msgCode.msg = nweMsg;
             this.addWinShow = true;
-            this.clickSum(title);
+            // this.clickSum(title);
           } else {
             this.$toast.fail(code.message);
           }
